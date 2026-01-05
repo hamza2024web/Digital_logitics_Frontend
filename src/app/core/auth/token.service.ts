@@ -10,18 +10,27 @@ export class TokenService {
 
   constructor() {}
 
-  // Sauvegarder l'access token dans session storage
   setAccessToken(token : string): void{
     sessionStorage.setItem(this.ACCESS_TOKEN_KEY, token);
   }
 
-  // Récupérer l'access token
   getAccessToken(): string | null {
     return sessionStorage.getItem(this.ACCESS_TOKEN_KEY);
   }
 
-  // Supprimer l'access token
   removeAccessToken(): void {
     sessionStorage.removeItem(this.ACCESS_TOKEN_KEY);
+  }
+
+  setRefreshToken(token: string): void {
+    sessionStorage.setItem(this.REFRESH_TOKEN_KEY,token);
+  }
+
+  getRefreshToken(): string | null {
+    return sessionStorage.getItem(this.REFRESH_TOKEN_KEY);
+  }
+
+  removeRefreshToken(): void {
+    sessionStorage.removeItem(this.REFRESH_TOKEN_KEY);
   }
 }

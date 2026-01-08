@@ -20,7 +20,7 @@ export interface RefreshTokenRequest {
 }
 
 export interface TokenPayload {
-  sub : string;
-  iat : number;
-  exp : number;
+  sub : string; // Email de l'utilisateurs
+  iat : number; // Date de création ( timestamp )
+  exp : number; // Date d'expiration ( timestamp )
 }

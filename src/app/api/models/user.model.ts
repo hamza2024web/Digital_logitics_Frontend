@@ -15,6 +15,21 @@ export interface LoginRequest {
   password : string;
 }
 
+export interface RegisterRequest {
+  firstName : string;
+  lastName : string;
+  email : string;
+  password : string;
+}
+
+export interface RegisterResponse {
+  firstName : string;
+  lastName : string;
+  email : string;
+  role : 'CLIENT';
+  active : boolean;
+}
+
 export interface RefreshTokenRequest {
   refreshToken : string;
 }

@@ -1,4 +1,4 @@
-. login-container {
+.login-container {
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -142,7 +142,7 @@
     cursor: not-allowed;
   }
 
-  . loader {
+  .loader {
     display: flex;
     align-items: center;
     justify-content: center;

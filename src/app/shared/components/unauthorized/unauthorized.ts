@@ -57,7 +57,7 @@ import { Router } from '@angular/router';
       margin-bottom: 30px;
     }
 
-    . btn-primary {
+    .btn-primary {
       padding: 12px 30px;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: white;

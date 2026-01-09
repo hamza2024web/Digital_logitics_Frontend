@@ -96,7 +96,7 @@ import {AuthService} from '../../../../core/auth/auth.service';
     }
   `]
 })
-export class AdminDashboardComponent {
+export class WarehouseDashboardComponent {
   userEmail = '';
   userRole = '';
 

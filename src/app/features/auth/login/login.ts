@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {CommonModule} from '@angular/common';
-import {AuthService} from '../../../../core/auth/auth.service';
+import {AuthService} from '../../../core/auth/auth.service';
 import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
@@ -11,7 +11,7 @@ import {ActivatedRoute, Router} from '@angular/router';
   templateUrl: './login.html',
   styleUrl: './login.scss',
 })
-export class Login {
+export class LoginComponent {
   loginForm! : FormGroup;
   isLoading = false;
   errorMessage = '';

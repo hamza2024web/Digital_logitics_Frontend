@@ -1,1 +1,162 @@
-<p>rigister works!</p>
+<div class="register-container">
+  <div class="register-card">
+
+    <!-- Header -->
+    <div class="register-header">
+      <h1>Créer un compte</h1>
+      <p>Rejoignez la plateforme Digital Logistics</p>
+    </div>
+
+    <!-- Message de succès -->
+    <div *ngIf="successMessage" class="alert alert-success">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+      </svg>
+      <span>{{ successMessage }}</span>
+    </div>
+
+    <!-- Message d'erreur -->
+    <div *ngIf="errorMessage" class="alert alert-error">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="8" x2="12" y2="12"></line>
+        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+      </svg>
+      <span>{{ errorMessage }}</span>
+    </div>
+
+    <!-- Formulaire -->
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
+
+      <!-- Prénom et Nom -->
+      <div class="form-row">
+        <!-- Prénom -->
+        <div class="form-group">
+          <label for="firstName">Prénom</label>
+          <input
+            type="text"
+            id="firstName"
+            formControlName="firstName"
+            placeholder="John"
+            [class.invalid]="firstName?.invalid && firstName?.touched"
+          />
+          <div *ngIf="firstName?.invalid && firstName?.touched" class="error-message">
+            <small *ngIf="firstName?.errors?.['required']">Le prénom est requis</small>
+            <small *ngIf="firstName?.errors?.['minlength']">Minimum 2 caractères</small>
+          </div>
+        </div>
+
+        <!-- Nom -->
+        <div class="form-group">
+          <label for="lastName">Nom</label>
+          <input
+            type="text"
+            id="lastName"
+            formControlName="lastName"
+            placeholder="Doe"
+            [class.invalid]="lastName?.invalid && lastName?. touched"
+          />
+          <div *ngIf="lastName?. invalid && lastName?.touched" class="error-message">
+            <small *ngIf="lastName?.errors?.['required']">Le nom est requis</small>
+            <small *ngIf="lastName?. errors?.['minlength']">Minimum 2 caractères</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Email -->
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input
+          type="email"
+          id="email"
+          formControlName="email"
+          placeholder="votre. email@exemple.com"
+          [class. invalid]="email?.invalid && email?.touched"
+        />
+        <div *ngIf="email?.invalid && email?.touched" class="error-message">
+          <small *ngIf="email?. errors?.['required']">L'email est requis</small>
+          <small *ngIf="email?.errors?.['email']">Format d'email invalide</small>
+        </div>
+      </div>
+
+      <!-- Mot de passe -->
+      <div class="form-group">
+        <label for="password">Mot de passe</label>
+        <input
+          type="password"
+          id="password"
+          formControlName="password"
+          placeholder="••••••••"
+          [class.invalid]="password?.invalid && password?.touched"
+        />
+        <div *ngIf="password?.invalid && password?.touched" class="error-message">
+          <small *ngIf="password?.errors?.['required']">Le mot de passe est requis</small>
+          <small *ngIf="password?.errors?.['minlength']">Minimum 6 caractères</small>
+        </div>
+      </div>
+
+      <!-- Confirmer mot de passe -->
+      <div class="form-group">
+        <label for="confirmPassword">Confirmer le mot de passe</label>
+        <input
+          type="password"
+          id="confirmPassword"
+          formControlName="confirmPassword"
+          placeholder="••••••••"
+          [class.invalid]="(confirmPassword?.invalid && confirmPassword?.touched) || (!passwordsMatch && confirmPassword?.touched)"
+        />
+        <div *ngIf="confirmPassword?.touched" class="error-message">
+          <small *ngIf="confirmPassword?.errors?.['required']">Veuillez confirmer le mot de passe</small>
+          <small *ngIf="! passwordsMatch && ! confirmPassword?.errors?.['required']">
+            Les mots de passe ne correspondent pas
+          </small>
+        </div>
+      </div>
+
+      <!-- Conditions générales -->
+      <div class="form-group-checkbox">
+        <label class="checkbox-label">
+          <input
+            type="checkbox"
+            formControlName="acceptTerms"
+          />
+          <span>
+            J'accepte les <a href="#" class="link">conditions générales</a> et la
+            <a href="#" class="link">politique de confidentialité</a>
+          </span>
+        </label>
+        <div *ngIf="acceptTerms?. invalid && acceptTerms?.touched" class="error-message">
+          <small>Vous devez accepter les conditions</small>
+        </div>
+      </div>
+
+      <!-- Bouton d'inscription -->
+      <button
+        type="submit"
+        class="btn-primary"
+        [disabled]="isLoading || registerForm.invalid"
+      >
+        <span *ngIf="! isLoading">S'inscrire</span>
+        <span *ngIf="isLoading" class="loader">
+          <svg class="spinner" viewBox="0 0 50 50">
+            <circle cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
+          </svg>
+          Inscription en cours...
+        </span>
+      </button>
+    </form>
+
+    <!-- Lien vers login -->
+    <div class="login-link">
+      <p>Vous avez déjà un compte ?
+        <a (click)="goToLogin()" class="link">Se connecter</a>
+      </p>
+    </div>
+
+    <!-- Footer -->
+    <div class="register-footer">
+      <p>&copy; 2026 Digital Logistics Platform</p>
+    </div>
+  </div>
+</div>

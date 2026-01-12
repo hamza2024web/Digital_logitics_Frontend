@@ -1,6 +1,9 @@
 export interface User {
+  firstName ?: string;
+  lastName ?: string;
   email : string;
   role : 'ADMIN' | 'WAREHOUSE_MANAGER' | 'CLIENT';
+  active ?: boolean;
 }
 
 export interface AuthResponse {
@@ -16,18 +19,19 @@ export interface LoginRequest {
 }
 
 export interface RegisterRequest {
-  firstName : string;
-  lastName : string;
-  email : string;
-  password : string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
 }
 
 export interface RegisterResponse {
-  firstName : string;
-  lastName : string;
-  email : string;
-  role : 'CLIENT';
-  active : boolean;
+  firstName: string;
+  lastName: string;
+  email: string;
+  role: 'ADMIN' | 'WAREHOUSE_MANAGER' | 'CLIENT';
+  active: boolean;
+  message?: string;
 }
 
 export interface RefreshTokenRequest {

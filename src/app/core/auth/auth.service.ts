@@ -1,6 +1,13 @@
 import {Injectable, signal} from '@angular/core';
 import {environment} from '../../../environments/environment';
-import {AuthResponse, LoginRequest, RefreshTokenRequest, User} from '../../api/models/user.model';
+import {
+  AuthResponse,
+  LoginRequest,
+  RefreshTokenRequest,
+  RegisterRequest,
+  RegisterResponse,
+  User
+} from '../../api/models/user.model';
 import {BehaviorSubject, catchError, Observable, switchMap, tap, throwError, timer} from 'rxjs';
 import {TokenService} from './token.service';
 import {Router} from '@angular/router';
@@ -52,6 +59,14 @@ export class AuthService {
       );
   }
 
+  register(credentials : RegisterRequest): Observable<RegisterResponse> {
+    return this.http.post<RegisterResponse>(`${this.API_URL}/register`, credentials)
+      .pipe(
+        tap(response => this.handleRegisterSuccess(response)),
+        catchError(this.handleRegisterError)
+      );
+  }
+
   private handleAuthSuccess(response : AuthResponse): void {
     this.tokenService.setAccessToken(response.token);
     this.tokenService.setRefreshToken(response.refreshToken);
@@ -66,6 +81,39 @@ export class AuthService {
     this.startRefreshTokenTimer();
 
     this.redirectAfterLogin(response.role);
+  }
+
+  private handleRegisterSuccess(response : RegisterResponse): void {
+    console.log('✅ Inscription réussie:',response);
+
+    setTimeout(() => {
+      this.redirectToLogin();
+    }, 1000);
+  }
+
+  private handleRegisterError(error : HttpErrorResponse) : Observable<never> {
+    let errorMessage = 'Une erreur est survenue';
+
+    if (error.error instanceof ErrorEvent) {
+      errorMessage = `Erreur : ${error.error.message}`;
+    } else {
+      switch (error.status) {
+        case 409 :
+          errorMessage = 'Email Exist déjà';
+          break;
+        case 400 :
+          errorMessage = 'Données Invalides';
+          break;
+        case 500 :
+          errorMessage = 'Erreur serveur interne';
+          break;
+        default:
+          errorMessage = error.error?.message || error.message;
+      }
+    }
+
+    console.error('Erreur Auth : ', errorMessage);
+    return throwError(() => new Error(errorMessage));
   }
 
   logout(): void {
@@ -174,6 +222,10 @@ export class AuthService {
       default:
         this.router.navigate(['/']);
     }
+  }
+
+  private redirectToLogin() : void {
+    this.router.navigate(['/login']);
   }
 
   private handleError(error: HttpErrorResponse): Observable<never> {

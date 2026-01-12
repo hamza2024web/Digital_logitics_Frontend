@@ -18,7 +18,7 @@ $white: #ffffff;
 
 @mixin hover-lift {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  &:hover: not(:disabled) {
+  &:hover:not(:disabled) {
   transform: translateY(-3px);
   box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
 }
@@ -277,7 +277,7 @@ $white: #ffffff;
         box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
       }
 
-      &:: placeholder {
+      &::placeholder {
         color: $gray-400;
       }
     }
@@ -396,7 +396,7 @@ $white: #ffffff;
       border-radius:  6px;
       transition: all 0.3s;
 
-      &:: after {
+      &::after {
         content:  '';
         position:  absolute;
         display: none;
@@ -410,7 +410,7 @@ $white: #ffffff;
       }
     }
 
-    input: checked ~ .checkmark {
+    input:checked ~.checkmark {
       background: $primary-gradient;
       border-color: #667eea;
 
@@ -420,14 +420,14 @@ $white: #ffffff;
     }
 
     . checkbox-text {
-      line-height: 1. 5;
+      line-height: 1.5;
 
       . link {
         color:  #667eea;
         font-weight: 600;
         text-decoration: none;
 
-        &: hover {
+        &:hover {
           text-decoration: underline;
         }
       }
@@ -505,7 +505,7 @@ $white: #ffffff;
     transition: transform 0.3s;
   }
 
-  &:hover: not(:disabled) svg {
+  &:hover:not(:disabled) svg {
   transform:  translateX(5px);
 }
 

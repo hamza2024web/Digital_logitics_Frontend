@@ -1,31 +1,48 @@
-<div class="home-container">
+<div class="home-page">
   <!-- Navigation -->
-  <nav class="navbar">
+  <nav class="navbar" [class.scrolled]="true">
     <div class="nav-container">
-      <div class="nav-brand">
-        <div class="brand-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-            <polyline points="3. 27 6.96 12 12. 01 20.73 6.96"></polyline>
-            <line x1="12" y1="22. 08" x2="12" y2="12"></line>
+      <!-- Logo -->
+      <a class="nav-logo" routerLink="/">
+        <div class="logo-mark">
+          <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="4" y="8" width="40" height="32" rx="4" fill="url(#logoGradient)"/>
+            <path d="M12 28L20 20L28 28L36 16" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="20" cy="20" r="3" fill="white"/>
+            <circle cx="36" cy="16" r="3" fill="#fbbf24"/>
+            <path d="M8 36H40" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+            <defs>
+              <linearGradient id="logoGradient" x1="4" y1="8" x2="44" y2="40" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#6366f1"/>
+                <stop offset="1" stop-color="#8b5cf6"/>
+              </linearGradient>
+            </defs>
           </svg>
         </div>
-        <span class="brand-name">Digital Logistics</span>
-      </div>
+        <span class="logo-text">LogiFlow</span>
+      </a>
 
-      <div class="nav-links" [class. active]="mobileMenuOpen">
+      <!-- Navigation Links -->
+      <div class="nav-menu" [class.active]="mobileMenuOpen">
         <a href="#features" class="nav-link">Fonctionnalités</a>
         <a href="#solutions" class="nav-link">Solutions</a>
         <a href="#pricing" class="nav-link">Tarifs</a>
-        <a href="#about" class="nav-link">À propos</a>
+        <a href="#contact" class="nav-link">Contact</a>
       </div>
 
+      <!-- CTA Buttons -->
       <div class="nav-actions">
-        <button class="btn-outline" (click)="goToLogin()">Connexion</button>
-        <button class="btn-primary-nav" (click)="goToRegister()">Commencer</button>
+        <button class="btn-ghost" (click)="goToLogin()">Se connecter</button>
+        <button class="btn-primary" (click)="goToRegister()">
+          <span>Essai gratuit</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </button>
       </div>
 
-      <button class="mobile-menu-btn" (click)="toggleMobileMenu()">
+      <!-- Mobile Menu Button -->
+      <button class="mobile-toggle" (click)="toggleMobileMenu()">
         <span></span>
         <span></span>
         <span></span>
@@ -34,138 +51,86 @@
   </nav>
 
   <!-- Hero Section -->
-  <section class="hero-section">
-    <div class="hero-bg">
-      <div class="hero-shape hero-shape-1"></div>
-      <div class="hero-shape hero-shape-2"></div>
-      <div class="hero-shape hero-shape-3"></div>
-      <div class="hero-grid"></div>
+  <section class="hero">
+    <div class="hero-background">
+      <div class="hero-gradient"></div>
+      <div class="hero-pattern"></div>
     </div>
 
     <div class="hero-container">
       <div class="hero-content">
         <div class="hero-badge">
-          <span class="badge-dot"></span>
-          <span>Nouvelle version 2.0 disponible</span>
+          <div class="badge-dot"></div>
+          <span>Nouvelle génération de logistique</span>
         </div>
 
         <h1 class="hero-title">
-          Gérez votre <span class="gradient-text">Supply Chain</span>
-          avec intelligence
+          Votre Supply Chain,
+          <span class="title-gradient">Simplifiée</span>
         </h1>
 
-        <p class="hero-subtitle">
-          Plateforme complète de gestion logistique :  stocks multi-entrepôts,
-          commandes clients, expéditions et tracking en temps réel.
-          Optimisez vos opérations dès aujourd'hui.
+        <p class="hero-description">
+          Gérez vos stocks, commandes et expéditions depuis une seule plateforme. 
+          Tracking en temps réel, multi-entrepôts, analytics avancés.
         </p>
 
-        <div class="hero-actions">
-          <button class="btn-hero-primary" (click)="goToRegister()">
-            <span>Démarrer gratuitement</span>
+        <div class="hero-cta">
+          <button class="btn-hero" (click)="goToRegister()">
+            <span>Démarrer maintenant</span>
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-              <polyline points="12 5 19 12 12 19"></polyline>
+              <path d="M5 12h14M12 5l7 7-7 7"/>
             </svg>
           </button>
-          <button class="btn-hero-secondary">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10"></circle>
-              <polygon points="10 8 16 12 10 16 10 8"></polygon>
+          <button class="btn-demo">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <polygon points="10 8 16 12 10 16 10 8" fill="currentColor"/>
             </svg>
             <span>Voir la démo</span>
           </button>
         </div>
 
-        <div class="hero-stats">
-          <div class="stat-item">
-            <span class="stat-number">500+</span>
-            <span class="stat-label">Entreprises</span>
-          </div>
-          <div class="stat-divider"></div>
-          <div class="stat-item">
-            <span class="stat-number">2M+</span>
-            <span class="stat-label">Commandes/mois</span>
-          </div>
-          <div class="stat-divider"></div>
-          <div class="stat-item">
-            <span class="stat-number">99. 9%</span>
-            <span class="stat-label">Disponibilité</span>
+        <div class="hero-trust">
+          <span>Adopté par +500 entreprises</span>
+          <div class="trust-logos">
+            <div class="trust-logo">DHL</div>
+            <div class="trust-logo">FedEx</div>
+            <div class="trust-logo">UPS</div>
+            <div class="trust-logo">Chronopost</div>
           </div>
         </div>
       </div>
 
       <div class="hero-visual">
-        <div class="dashboard-preview">
-          <div class="preview-header">
-            <div class="preview-dots">
-              <span></span>
-              <span></span>
-              <span></span>
-            </div>
-            <span class="preview-title">Dashboard Logistique</span>
-          </div>
-          <div class="preview-content">
-            <!-- Mini Dashboard Preview -->
-            <div class="preview-sidebar">
-              <div class="sidebar-item active"></div>
-              <div class="sidebar-item"></div>
-              <div class="sidebar-item"></div>
-              <div class="sidebar-item"></div>
-            </div>
-            <div class="preview-main">
-              <div class="preview-cards">
-                <div class="preview-card card-1">
-                  <div class="card-icon">📦</div>
-                  <div class="card-info">
-                    <span>Stock Total</span>
-                    <strong>12,847</strong>
-                  </div>
-                </div>
-                <div class="preview-card card-2">
-                  <div class="card-icon">🚚</div>
-                  <div class="card-info">
-                    <span>En Transit</span>
-                    <strong>342</strong>
-                  </div>
-                </div>
-                <div class="preview-card card-3">
-                  <div class="card-icon">✅</div>
-                  <div class="card-info">
-                    <span>Livrées</span>
-                    <strong>1,204</strong>
-                  </div>
-                </div>
-              </div>
-              <div class="preview-chart">
-                <div class="chart-bars">
-                  <div class="bar" style="height: 60%"></div>
-                  <div class="bar" style="height:  80%"></div>
-                  <div class="bar" style="height: 45%"></div>
-                  <div class="bar" style="height:  90%"></div>
-                  <div class="bar" style="height:  70%"></div>
-                  <div class="bar" style="height:  85%"></div>
-                  <div class="bar" style="height:  55%"></div>
-                </div>
-              </div>
+        <div class="visual-wrapper">
+          <img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" 
+               alt="Entrepôt logistique moderne" 
+               class="hero-image"/>
+          <div class="visual-overlay"></div>
+          
+          <!-- Floating Cards -->
+          <div class="floating-card card-1">
+            <div class="card-icon green">📦</div>
+            <div class="card-content">
+              <span class="card-label">Stock en temps réel</span>
+              <span class="card-value">12,847 articles</span>
             </div>
           </div>
-        </div>
 
-        <!-- Floating Elements -->
-        <div class="floating-card floating-1">
-          <div class="floating-icon">📍</div>
-          <div class="floating-info">
-            <span>Livraison en cours</span>
-            <small>Paris → Lyon</small>
+          <div class="floating-card card-2">
+            <div class="card-icon blue">🚚</div>
+            <div class="card-content">
+              <span class="card-label">Expéditions actives</span>
+              <span class="card-value">342 en transit</span>
+            </div>
           </div>
-        </div>
 
-        <div class="floating-card floating-2">
-          <div class="floating-icon success">✓</div>
-          <div class="floating-info">
-            <span>+127 commandes</span>
-            <small>Aujourd'hui</small>
+          <div class="floating-card card-3">
+            <div class="card-icon purple">📊</div>
+            <div class="card-content">
+              <span class="card-label">Taux de livraison</span>
+              <span class="card-value">98.7%</span>
+            </div>
           </div>
         </div>
       </div>
@@ -173,296 +138,109 @@
   </section>
 
   <!-- Features Section -->
-  <section class="features-section" id="features">
+  <section class="features" id="features">
     <div class="section-container">
       <div class="section-header">
-        <span class="section-badge">Fonctionnalités</span>
+        <span class="section-label">Fonctionnalités</span>
         <h2 class="section-title">Tout ce dont vous avez besoin</h2>
-        <p class="section-subtitle">
-          Une suite complète d'outils pour gérer efficacement votre chaîne logistique
-        </p>
+        <p class="section-subtitle">Une suite complète d'outils pour optimiser votre chaîne logistique</p>
       </div>
 
       <div class="features-grid">
-        <!-- Feature 1 -->
         <div class="feature-card">
-          <div class="feature-icon icon-blue">
+          <div class="feature-icon">
             <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+              <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+              <line x1="12" y1="22.08" x2="12" y2="12"/>
             </svg>
           </div>
           <h3>Gestion Multi-Entrepôts</h3>
-          <p>Gérez plusieurs entrepôts avec allocation intelligente des stocks et transferts automatisés.</p>
-          <a href="#" class="feature-link">
-            En savoir plus
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-              <polyline points="12 5 19 12 12 19"></polyline>
-            </svg>
-          </a>
+          <p>Centralisez la gestion de tous vos entrepôts avec une vue unifiée des stocks et mouvements.</p>
         </div>
 
-        <!-- Feature 2 -->
         <div class="feature-card">
-          <div class="feature-icon icon-green">
+          <div class="feature-icon purple">
             <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <rect x="1" y="3" width="15" height="13"></rect>
-              <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
-              <circle cx="5. 5" cy="18. 5" r="2.5"></circle>
-              <circle cx="18.5" cy="18.5" r="2.5"></circle>
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12 6 12 12 16 14"/>
             </svg>
           </div>
-          <h3>Expéditions & Tracking</h3>
-          <p>Suivez vos colis en temps réel avec intégration des principaux transporteurs.</p>
-          <a href="#" class="feature-link">
-            En savoir plus
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-              <polyline points="12 5 19 12 12 19"></polyline>
-            </svg>
-          </a>
+          <h3>Tracking Temps Réel</h3>
+          <p>Suivez chaque expédition en temps réel avec notifications automatiques pour vos clients.</p>
         </div>
 
-        <!-- Feature 3 -->
         <div class="feature-card">
-          <div class="feature-icon icon-purple">
+          <div class="feature-icon green">
             <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-              <polyline points="14 2 14 8 20 8"></polyline>
-              <line x1="16" y1="13" x2="8" y2="13"></line>
-              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/>
+              <line x1="16" y1="17" x2="8" y2="17"/>
             </svg>
           </div>
-          <h3>Commandes Clients</h3>
-          <p>Gestion complète du cycle de vie :  création, réservation, expédition et livraison.</p>
-          <a href="#" class="feature-link">
-            En savoir plus
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-              <polyline points="12 5 19 12 12 19"></polyline>
-            </svg>
-          </a>
+          <h3>Commandes Automatisées</h3>
+          <p>Workflow intelligent pour traiter vos commandes de la création jusqu'à la livraison.</p>
         </div>
 
-        <!-- Feature 4 -->
         <div class="feature-card">
-          <div class="feature-icon icon-orange">
+          <div class="feature-icon orange">
             <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="12" y1="20" x2="12" y2="10"></line>
-              <line x1="18" y1="20" x2="18" y2="4"></line>
-              <line x1="6" y1="20" x2="6" y2="16"></line>
+              <line x1="18" y1="20" x2="18" y2="10"/>
+              <line x1="12" y1="20" x2="12" y2="4"/>
+              <line x1="6" y1="20" x2="6" y2="14"/>
             </svg>
           </div>
-          <h3>Reporting Avancé</h3>
-          <p>Tableaux de bord personnalisables avec KPIs, alertes et analyses prédictives.</p>
-          <a href="#" class="feature-link">
-            En savoir plus
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-              <polyline points="12 5 19 12 12 19"></polyline>
-            </svg>
-          </a>
+          <h3>Analytics Avancés</h3>
+          <p>Tableaux de bord personnalisables avec KPIs et rapports pour piloter votre activité.</p>
         </div>
 
-        <!-- Feature 5 -->
         <div class="feature-card">
-          <div class="feature-icon icon-red">
+          <div class="feature-icon teal">
             <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
             </svg>
           </div>
-          <h3>Sécurité & Rôles</h3>
-          <p>Gestion fine des permissions avec rôles Admin, Warehouse Manager et Client.</p>
-          <a href="#" class="feature-link">
-            En savoir plus
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-              <polyline points="12 5 19 12 12 19"></polyline>
-            </svg>
-          </a>
+          <h3>Multi-Utilisateurs</h3>
+          <p>Gestion des rôles (Admin, Gestionnaire, Client) avec permissions personnalisables.</p>
         </div>
 
-        <!-- Feature 6 -->
         <div class="feature-card">
-          <div class="feature-icon icon-teal">
+          <div class="feature-icon pink">
             <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polyline points="23 4 23 10 17 10"></polyline>
-              <path d="M20. 49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
             </svg>
           </div>
-          <h3>Automatisation</h3>
-          <p>Règles métier automatiques :  cut-off, backorders, réservations temporaires (TTL).</p>
-          <a href="#" class="feature-link">
-            En savoir plus
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-              <polyline points="12 5 19 12 12 19"></polyline>
-            </svg>
-          </a>
+          <h3>Alertes Intelligentes</h3>
+          <p>Notifications proactives pour ruptures de stock, retards et événements critiques.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Solutions Section -->
-  <section class="solutions-section" id="solutions">
+  <!-- Stats Section -->
+  <section class="stats">
     <div class="section-container">
-      <div class="solutions-content">
-        <div class="solutions-text">
-          <span class="section-badge">Solutions par rôle</span>
-          <h2 class="section-title">Une interface adaptée à chaque utilisateur</h2>
-          <p class="section-subtitle">
-            Que vous soyez administrateur, gestionnaire d'entrepôt ou client,
-            notre plateforme s'adapte à vos besoins spécifiques.
-          </p>
-
-          <div class="role-tabs">
-            <button
-              class="role-tab"
-              [class.active]="activeRole === 'admin'"
-              (click)="setActiveRole('admin')"
-            >
-              <div class="tab-icon admin">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
-                  <path d="M2 17l10 5 10-5"></path>
-                  <path d="M2 12l10 5 10-5"></path>
-                </svg>
-              </div>
-              <span>Admin</span>
-            </button>
-            <button
-              class="role-tab"
-              [class.active]="activeRole === 'warehouse'"
-              (click)="setActiveRole('warehouse')"
-            >
-              <div class="tab-icon warehouse">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                  <polyline points="9 22 9 12 15 12 15 22"></polyline>
-                </svg>
-              </div>
-              <span>Warehouse</span>
-            </button>
-            <button
-              class="role-tab"
-              [class.active]="activeRole === 'client'"
-              (click)="setActiveRole('client')"
-            >
-              <div class="tab-icon client">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                  <circle cx="12" cy="7" r="4"></circle>
-                </svg>
-              </div>
-              <span>Client</span>
-            </button>
-          </div>
-
-          <!-- Role Features -->
-          <div class="role-features">
-            @if (activeRole === 'admin') {
-              <ul class="features-list">
-                <li><span class="check">✓</span> Gestion complète du catalogue produits</li>
-                <li><span class="check">✓</span> Administration des entrepôts</li>
-                <li><span class="check">✓</span> Purchase Orders & Fournisseurs</li>
-                <li><span class="check">✓</span> Reporting et statistiques globales</li>
-                <li><span class="check">✓</span> Gestion des utilisateurs et rôles</li>
-              </ul>
-            }
-            @if (activeRole === 'warehouse') {
-              <ul class="features-list">
-                <li><span class="check">✓</span> Inventaire temps réel multi-entrepôts</li>
-                <li><span class="check">✓</span> Mouvements de stock (IN/OUT/ADJ)</li>
-                <li><span class="check">✓</span> Réservations et allocations</li>
-                <li><span class="check">✓</span> Gestion des expéditions</li>
-                <li><span class="check">✓</span> Alertes ruptures et capacité</li>
-              </ul>
-            }
-            @if (activeRole === 'client') {
-              <ul class="features-list">
-                <li><span class="check">✓</span> Catalogue produits disponibles</li>
-                <li><span class="check">✓</span> Création et suivi des commandes</li>
-                <li><span class="check">✓</span> Tracking des expéditions</li>
-                <li><span class="check">✓</span> Historique complet</li>
-                <li><span class="check">✓</span> Notifications en temps réel</li>
-              </ul>
-            }
-          </div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <span class="stat-number">500+</span>
+          <span class="stat-label">Entreprises clientes</span>
         </div>
-
-        <div class="solutions-visual">
-          <div class="phone-mockup">
-            <div class="phone-notch"></div>
-            <div class="phone-screen">
-              @if (activeRole === 'admin') {
-                <div class="screen-content admin-screen">
-                  <div class="screen-header">
-                    <span>Dashboard Admin</span>
-                    <div class="screen-avatar"></div>
-                  </div>
-                  <div class="screen-stats">
-                    <div class="mini-stat">
-                      <span class="mini-value">2,847</span>
-                      <span class="mini-label">Produits</span>
-                    </div>
-                    <div class="mini-stat">
-                      <span class="mini-value">12</span>
-                      <span class="mini-label">Entrepôts</span>
-                    </div>
-                  </div>
-                  <div class="screen-list">
-                    <div class="list-item"></div>
-                    <div class="list-item"></div>
-                    <div class="list-item"></div>
-                  </div>
-                </div>
-              }
-              @if (activeRole === 'warehouse') {
-                <div class="screen-content warehouse-screen">
-                  <div class="screen-header">
-                    <span>Inventaire</span>
-                    <div class="screen-avatar green"></div>
-                  </div>
-                  <div class="inventory-grid">
-                    <div class="inv-item">
-                      <span class="inv-sku">SKU-001</span>
-                      <span class="inv-qty">847</span>
-                    </div>
-                    <div class="inv-item warning">
-                      <span class="inv-sku">SKU-002</span>
-                      <span class="inv-qty">12</span>
-                    </div>
-                    <div class="inv-item">
-                      <span class="inv-sku">SKU-003</span>
-                      <span class="inv-qty">234</span>
-                    </div>
-                  </div>
-                </div>
-              }
-              @if (activeRole === 'client') {
-                <div class="screen-content client-screen">
-                  <div class="screen-header">
-                    <span>Mes Commandes</span>
-                    <div class="screen-avatar blue"></div>
-                  </div>
-                  <div class="order-card">
-                    <div class="order-header">
-                      <span class="order-id">#CMD-2847</span>
-                      <span class="order-status delivered">Livrée</span>
-                    </div>
-                    <div class="order-progress">
-                      <div class="progress-step done"></div>
-                      <div class="progress-line done"></div>
-                      <div class="progress-step done"></div>
-                      <div class="progress-line done"></div>
-                      <div class="progress-step done"></div>
-                    </div>
-                  </div>
-                </div>
-              }
-            </div>
-          </div>
+        <div class="stat-card">
+          <span class="stat-number">2M+</span>
+          <span class="stat-label">Commandes traitées</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number">99.9%</span>
+          <span class="stat-label">Disponibilité</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number">24/7</span>
+          <span class="stat-label">Support dédié</span>
         </div>
       </div>
     </div>
@@ -470,107 +248,86 @@
 
   <!-- CTA Section -->
   <section class="cta-section">
-    <div class="cta-container">
-      <div class="cta-content">
-        <h2>Prêt à optimiser votre logistique ?</h2>
-        <p>Rejoignez plus de 500 entreprises qui font confiance à Digital Logistics</p>
-        <div class="cta-actions">
-          <button class="btn-cta-primary" (click)="goToRegister()">
-            Commencer gratuitement
-          </button>
-          <button class="btn-cta-secondary">
-            Demander une démo
-          </button>
+    <div class="section-container">
+      <div class="cta-card">
+        <div class="cta-content">
+          <h2>Prêt à transformer votre logistique ?</h2>
+          <p>Rejoignez les entreprises qui ont déjà optimisé leur supply chain avec LogiFlow.</p>
+          <div class="cta-buttons">
+            <button class="btn-cta-primary" (click)="goToRegister()">
+              Commencer gratuitement
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </button>
+            <button class="btn-cta-secondary" (click)="goToLogin()">Se connecter</button>
+          </div>
         </div>
-      </div>
-      <div class="cta-decoration">
-        <div class="cta-circle"></div>
-        <div class="cta-circle"></div>
-        <div class="cta-circle"></div>
+        <div class="cta-visual">
+          <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="100" cy="100" r="80" fill="rgba(255,255,255,0.1)"/>
+            <circle cx="100" cy="100" r="60" fill="rgba(255,255,255,0.1)"/>
+            <circle cx="100" cy="100" r="40" fill="rgba(255,255,255,0.15)"/>
+          </svg>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- Footer -->
-  <footer class="main-footer">
-    <div class="footer-container">
+  <footer class="footer">
+    <div class="section-container">
       <div class="footer-grid">
         <div class="footer-brand">
           <div class="footer-logo">
-            <div class="brand-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+            <div class="logo-mark small">
+              <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="4" y="8" width="40" height="32" rx="4" fill="url(#footerLogoGradient)"/>
+                <path d="M12 28L20 20L28 28L36 16" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                <defs>
+                  <linearGradient id="footerLogoGradient" x1="4" y1="8" x2="44" y2="40" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#6366f1"/>
+                    <stop offset="1" stop-color="#8b5cf6"/>
+                  </linearGradient>
+                </defs>
               </svg>
             </div>
-            <span>Digital Logistics</span>
+            <span>LogiFlow</span>
           </div>
-          <p>La plateforme de gestion logistique nouvelle génération pour les entreprises modernes. </p>
-          <div class="social-links">
-            <a href="#" class="social-link">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-. 026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>
-              </svg>
-            </a>
-            <a href="#" class="social-link">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12. 268c-.966 0-1.75-. 79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
-              </svg>
-            </a>
-            <a href="#" class="social-link">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-. 729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-              </svg>
-            </a>
-          </div>
+          <p>La plateforme logistique de nouvelle génération pour les entreprises modernes.</p>
         </div>
 
-        <div class="footer-links-group">
+        <div class="footer-links">
           <h4>Produit</h4>
-          <ul>
-            <li><a href="#">Fonctionnalités</a></li>
-            <li><a href="#">Tarification</a></li>
-            <li><a href="#">Intégrations</a></li>
-            <li><a href="#">Changelog</a></li>
-          </ul>
+          <a href="#">Fonctionnalités</a>
+          <a href="#">Tarifs</a>
+          <a href="#">Intégrations</a>
+          <a href="#">API</a>
         </div>
 
-        <div class="footer-links-group">
-          <h4>Ressources</h4>
-          <ul>
-            <li><a href="#">Documentation</a></li>
-            <li><a href="#">API Reference</a></li>
-            <li><a href="#">Guides</a></li>
-            <li><a href="#">Blog</a></li>
-          </ul>
-        </div>
-
-        <div class="footer-links-group">
+        <div class="footer-links">
           <h4>Entreprise</h4>
-          <ul>
-            <li><a href="#">À propos</a></li>
-            <li><a href="#">Carrières</a></li>
-            <li><a href="#">Contact</a></li>
-            <li><a href="#">Partenaires</a></li>
-          </ul>
+          <a href="#">À propos</a>
+          <a href="#">Blog</a>
+          <a href="#">Carrières</a>
+          <a href="#">Contact</a>
         </div>
 
-        <div class="footer-links-group">
-          <h4>Légal</h4>
-          <ul>
-            <li><a href="#">Confidentialité</a></li>
-            <li><a href="#">CGU</a></li>
-            <li><a href="#">Cookies</a></li>
-            <li><a href="#">RGPD</a></li>
-          </ul>
+        <div class="footer-links">
+          <h4>Support</h4>
+          <a href="#">Centre d'aide</a>
+          <a href="#">Documentation</a>
+          <a href="#">Status</a>
+          <a href="#">Communauté</a>
         </div>
       </div>
 
       <div class="footer-bottom">
-        <p>&copy; 2026 Digital Logistics Platform. Tous droits réservés.</p>
-        <div class="footer-bottom-links">
-          <a href="#">Status</a>
-          <a href="#">Sécurité</a>
-          <a href="#">Sitemap</a>
+        <p>&copy; 2026 LogiFlow. Tous droits réservés.</p>
+        <div class="footer-legal">
+          <a href="#">Confidentialité</a>
+          <a href="#">Conditions</a>
+          <a href="#">Cookies</a>
         </div>
       </div>
     </div>

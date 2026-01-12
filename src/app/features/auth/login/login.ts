@@ -2,12 +2,12 @@ import { Component } from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {CommonModule} from '@angular/common';
 import {AuthService} from '../../../core/auth/auth.service';
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-login',
   standalone : true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './login.html',
   styleUrl: './login.scss',
 })
@@ -16,6 +16,11 @@ export class LoginComponent {
   isLoading = false;
   errorMessage = '';
   returnUrl = '';
+  
+  // UI state
+  showPassword = false;
+  emailFocused = false;
+  passwordFocused = false;
 
   constructor(private fb : FormBuilder, private authService : AuthService, private router : Router, private route : ActivatedRoute)
   {}
@@ -23,7 +28,8 @@ export class LoginComponent {
   ngOnInit(): void {
     this.loginForm = this.fb.group({
       email : ['',[Validators.required, Validators.email]],
-      password : ['',[Validators.required, Validators.minLength(6)]]
+      password : ['',[Validators.required, Validators.minLength(6)]],
+      rememberMe: [false]
     });
 
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
@@ -66,29 +72,6 @@ export class LoginComponent {
         this.isLoading = false;
       }
     });
-  }
-
-  fillTestCredentials(role : 'admin' | 'warehouse' | 'client'): void {
-    switch (role) {
-      case 'admin':
-        this.loginForm.patchValue({
-          email: 'admin@logistics.com',
-          password: 'admin123'
-        });
-        break;
-      case 'warehouse':
-        this.loginForm.patchValue({
-          email: 'warehouse@logistics.com',
-          password: 'warehouse123'
-        });
-        break;
-      case 'client':
-        this.loginForm.patchValue({
-          email: 'client@logistics.com',
-          password: 'client123'
-        });
-        break;
-    }
   }
 
   goToRegister(): void{

@@ -1,5 +1,5 @@
-import {Component, OnInit} from '@angular/core';
-import {CommonModule} from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import {
   AbstractControl,
   FormBuilder,
@@ -8,24 +8,28 @@ import {
   ValidationErrors,
   Validators
 } from '@angular/forms';
-import {Router} from '@angular/router';
-import {AuthService} from '../../../core/auth/auth.service';
+import { Router, RouterLink } from '@angular/router';
+import { AuthService } from '../../../core/auth/auth.service';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './register.html',
   styleUrl: './register.scss',
 })
 export class RegisterComponent implements OnInit {
-  registerForm! : FormGroup;
+  registerForm!: FormGroup;
   isLoading = false;
   errorMessage = '';
   successMessage = '';
 
-  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router)
-  {}
+  // UI State for premium design
+  currentStep = 1;
+  passwordStrength = 0;
+  passwordStrengthText = '';
+
+  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) { }
 
   ngOnInit(): void {
     this.registerForm = this.fb.group({
@@ -38,6 +42,41 @@ export class RegisterComponent implements OnInit {
     }, {
       validators: this.passwordMatchValidator
     });
+
+    // Watch password changes for strength indicator
+    this.registerForm.get('password')?.valueChanges.subscribe(value => {
+      this.calculatePasswordStrength(value);
+    });
+  }
+
+  calculatePasswordStrength(password: string): void {
+    if (!password) {
+      this.passwordStrength = 0;
+      this.passwordStrengthText = '';
+      return;
+    }
+
+    let strength = 0;
+    if (password.length >= 6) strength++;
+    if (password.length >= 10) strength++;
+    if (/[A-Z]/.test(password)) strength++;
+    if (/[0-9]/.test(password)) strength++;
+    if (/[^A-Za-z0-9]/.test(password)) strength++;
+
+    this.passwordStrength = Math.min(strength, 4);
+
+    if (this.passwordStrength <= 1) this.passwordStrengthText = 'Faible';
+    else if (this.passwordStrength === 2) this.passwordStrengthText = 'Moyen';
+    else if (this.passwordStrength === 3) this.passwordStrengthText = 'Fort';
+    else this.passwordStrengthText = 'Très Fort';
+  }
+
+  nextStep(): void {
+    if (this.currentStep < 3) this.currentStep++;
+  }
+
+  prevStep(): void {
+    if (this.currentStep > 1) this.currentStep--;
   }
 
   passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
@@ -48,10 +87,10 @@ export class RegisterComponent implements OnInit {
       return null;
     }
 
-    return password.value === confirmPassword.value ? null : { passwordMismatch: true};
+    return password.value === confirmPassword.value ? null : { passwordMismatch: true };
   }
 
-  get firstName(){
+  get firstName() {
     return this.registerForm.get('firstName');
   }
 

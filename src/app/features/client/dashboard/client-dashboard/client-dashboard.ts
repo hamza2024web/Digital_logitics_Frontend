@@ -1,111 +1,104 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {AuthService} from '../../../../core/auth/auth.service';
+import { RouterLink } from '@angular/router';
+import { AuthService } from '../../../../core/auth/auth.service';
+
+interface Order {
+  id: string;
+  status: 'CREATED' | 'RESERVED' | 'SHIPPED' | 'DELIVERED' | 'CANCELED';
+  date: string;
+  total: number;
+  items: number;
+  warehouse: string;
+  trackingNumber?: string;
+}
+
+interface Notification {
+  id: number;
+  type: 'info' | 'warning' | 'success';
+  title: string;
+  message: string;
+  time: string;
+}
 
 @Component({
-  selector: 'app-admin-dashboard',
+  selector: 'app-client-dashboard',
   standalone: true,
-  imports: [CommonModule],
-  template: `
-    <div class="dashboard">
-      <div class="header">
-        <h1>🎯 Dashboard CLIENT</h1>
-        <button (click)="logout()" class="btn-logout">Déconnexion</button>
-      </div>
-      <div class="content">
-        <div class="welcome-card">
-          <h2>Bienvenue, {{ userEmail }}</h2>
-          <p>Rôle: <strong>{{ userRole }}</strong></p>
-          <p class="success">✅ Authentification réussie !</p>
-        </div>
-      </div>
-    </div>
-  `,
-  styles: [`
-    .dashboard {
-      min-height: 100vh;
-      background: #f7fafc;
-      padding: 20px;
-    }
-
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: white;
-      padding: 20px 30px;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      margin-bottom: 20px;
-    }
-
-    h1 {
-      margin: 0;
-      color:  #1a202c;
-      font-size: 24px;
-    }
-
-    .btn-logout {
-      padding: 10px 20px;
-      background: #f56565;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 600;
-      transition:  all 0.3s;
-
-      &:hover {
-        background: #e53e3e;
-      }
-    }
-
-    .content {
-      max-width: 800px;
-      margin: 0 auto;
-    }
-
-    .welcome-card {
-      background: white;
-      padding: 40px;
-      border-radius:  12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      text-align: center;
-    }
-
-    h2 {
-      color: #2d3748;
-      margin-bottom: 10px;
-    }
-
-    p {
-      color: #718096;
-      font-size: 16px;
-    }
-
-    strong {
-      color: #f56565;
-      font-size: 18px;
-    }
-
-    .success {
-      color: #48bb78;
-      font-weight: 600;
-      font-size: 18px;
-      margin-top: 20px;
-    }
-  `]
+  imports: [CommonModule, RouterLink],
+  templateUrl: './client-dashboard.html',
+  styleUrl: './client-dashboard.scss'
 })
-export class ClientDashboardComponent {
+export class ClientDashboardComponent implements OnInit {
+  private authService = inject(AuthService);
+
   userEmail = '';
   userRole = '';
+  userName = 'Client';
+  currentDate = new Date();
+  sidebarCollapsed = false;
 
-  constructor(private authService: AuthService) {
+  // KPI Data - will be populated from API
+  stats = {
+    ordersInProgress: 0,
+    ordersDelivered: 0,
+    ordersPending: 0,
+    totalSpent: 0
+  };
+
+  // Order lifecycle stages
+  orderStages = [
+    { status: 'CREATED', label: 'Créée', icon: '📝', count: 0 },
+    { status: 'RESERVED', label: 'Réservée', icon: '📦', count: 0 },
+    { status: 'SHIPPED', label: 'Expédiée', icon: '🚚', count: 0 },
+    { status: 'DELIVERED', label: 'Livrée', icon: '✅', count: 0 }
+  ];
+
+  // Data arrays - will be populated from API
+  recentOrders: Order[] = [];
+  activeShipments: { orderId: string; carrier: string; trackingNumber: string; status: string; eta: string; progress: number }[] = [];
+  notifications: Notification[] = [];
+
+  ngOnInit(): void {
     this.userEmail = this.authService.getUserEmail();
     this.userRole = this.authService.getUserRole();
+    this.userName = this.userEmail.split('@')[0] || 'Client';
+  }
+
+  toggleSidebar(): void {
+    this.sidebarCollapsed = !this.sidebarCollapsed;
   }
 
   logout(): void {
     this.authService.logout();
+  }
+
+  getStatusClass(status: string): string {
+    const classes: Record<string, string> = {
+      'CREATED': 'status-created',
+      'RESERVED': 'status-reserved',
+      'SHIPPED': 'status-shipped',
+      'DELIVERED': 'status-delivered',
+      'CANCELED': 'status-canceled',
+      'PLANNED': 'status-planned',
+      'IN_TRANSIT': 'status-transit'
+    };
+    return classes[status] || '';
+  }
+
+  getStatusLabel(status: string): string {
+    const labels: Record<string, string> = {
+      'CREATED': 'Créée',
+      'RESERVED': 'Réservée',
+      'SHIPPED': 'Expédiée',
+      'DELIVERED': 'Livrée',
+      'CANCELED': 'Annulée',
+      'PLANNED': 'Planifiée',
+      'IN_TRANSIT': 'En transit'
+    };
+    return labels[status] || status;
+  }
+
+  formatCurrency(amount: number): string {
+    return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(amount);
   }
 }

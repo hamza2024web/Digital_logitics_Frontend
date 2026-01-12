@@ -1,17 +1,21 @@
 import { Routes } from '@angular/router';
-import {authGuard} from './core/guards/auth.guard';
-import {roleGuard} from './core/guards/role.guard';
+import { authGuard } from './core/guards/auth.guard';
+import { roleGuard } from './core/guards/role.guard';
 
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: '/login',
+    redirectTo: '/home',
     pathMatch: 'full'
+  },
+  {
+    path: 'home',
+    loadComponent: () => import('./features/home/home').then(m => m.HomeComponent)
   },
   {
     path: 'login',
     loadComponent: () => import('./features/auth/login/login')
-        .then(m => m.LoginComponent)
+      .then(m => m.LoginComponent)
   },
   {
     path: 'register',
@@ -21,27 +25,27 @@ export const routes: Routes = [
   {
     path: 'client',
     canActivate: [authGuard, roleGuard],
-    data : {roles: ['CLIENT']},
+    data: { roles: ['CLIENT'] },
     children: [
       {
-        path : 'dashboard',
+        path: 'dashboard',
         loadComponent: () => import('./features/client/dashboard/client-dashboard/client-dashboard')
           .then(m => m.ClientDashboardComponent)
       },
-      {path: '', redirectTo: 'dashboard', pathMatch : 'full'}
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
   },
   {
     path: 'warehouse',
     canActivate: [authGuard, roleGuard],
     data: { roles: ['WAREHOUSE_MANAGER'] },
-    children:  [
+    children: [
       {
         path: 'dashboard',
         loadComponent: () => import('./features/warehouse/dashboard/warehouse-dashboard/warehouse-dashboard')
           .then(m => m.WarehouseDashboardComponent)
       },
-      { path: '', redirectTo: 'dashboard', pathMatch:  'full' }
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
   },
   {
@@ -51,7 +55,7 @@ export const routes: Routes = [
     children: [
       {
         path: 'dashboard',
-        loadComponent:  () => import('./features/admin/dashboard/admin-dashboard/admin-dashboard')
+        loadComponent: () => import('./features/admin/dashboard/admin-dashboard/admin-dashboard')
           .then(m => m.AdminDashboardComponent)
       },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
@@ -66,6 +70,6 @@ export const routes: Routes = [
 
   {
     path: '**',
-    redirectTo:  '/login'
+    redirectTo: '/login'
   }
 ];

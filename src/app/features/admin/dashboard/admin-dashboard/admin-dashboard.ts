@@ -1,110 +1,158 @@
-import { Component } from '@angular/core';
-import {AuthService} from '../../../../core/auth/auth.service';
+import { Component, OnInit, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
+import { AuthService } from '../../../../core/auth/auth.service';
+
+interface Product {
+  id: string;
+  sku: string;
+  name: string;
+  category: string;
+  price: number;
+  totalStock: number;
+  status: 'ACTIVE' | 'INACTIVE' | 'LOW_STOCK';
+}
+
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  role: 'ADMIN' | 'WAREHOUSE_MANAGER' | 'CLIENT';
+  status: 'ACTIVE' | 'INACTIVE';
+  joinedDate: string;
+}
+
+interface Warehouse {
+  id: number;
+  name: string;
+  city: string;
+  capacity: number;
+  utilization: number;
+  manager: string;
+}
+
+interface PurchaseOrder {
+  id: string;
+  supplier: string;
+  warehouse: string;
+  status: 'DRAFT' | 'SENT' | 'PARTIAL' | 'RECEIVED' | 'CANCELED';
+  total: number;
+  expectedDate: string;
+}
 
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [],
-  template: `
-    <div class="dashboard">
-      <div class="header">
-        <h1>🎯 Dashboard ADMIN</h1>
-        <button (click)="logout()" class="btn-logout">Déconnexion</button>
-      </div>
-      <div class="content">
-        <div class="welcome-card">
-          <h2>Bienvenue, {{ userEmail }}</h2>
-          <p>Rôle:  <strong>{{ userRole }}</strong></p>
-          <p class="success">✅ Authentification réussie !</p>
-        </div>
-      </div>
-    </div>
-  `,
-  styles: [`
-    .dashboard {
-      min-height: 100vh;
-      background: #f7fafc;
-      padding: 20px;
-    }
-
-    .header {
-      display: flex;
-      justify-content:  space-between;
-      align-items: center;
-      background: white;
-      padding: 20px 30px;
-      border-radius:  12px;
-      box-shadow:  0 2px 8px rgba(0,0,0,0.1);
-      margin-bottom: 20px;
-    }
-
-    h1 {
-      margin: 0;
-      color:  #1a202c;
-      font-size: 24px;
-    }
-
-    .btn-logout {
-      padding: 10px 20px;
-      background: #f56565;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 600;
-      transition:  all 0.3s;
-
-      &:hover {
-        background: #e53e3e;
-      }
-    }
-
-    .content {
-      max-width: 800px;
-      margin: 0 auto;
-    }
-
-    .welcome-card {
-      background: white;
-      padding: 40px;
-      border-radius:  12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      text-align: center;
-    }
-
-    h2 {
-      color: #2d3748;
-      margin-bottom: 10px;
-    }
-
-    p {
-      color: #718096;
-      font-size:  16px;
-    }
-
-    strong {
-      color: #f56565;
-      font-size: 18px;
-    }
-
-    .success {
-      color: #48bb78;
-      font-weight: 600;
-      font-size: 18px;
-      margin-top: 20px;
-    }
-  `]
+  imports: [CommonModule, RouterLink],
+  templateUrl: './admin-dashboard.html',
+  styleUrl: './admin-dashboard.scss'
 })
-export class AdminDashboardComponent {
+export class AdminDashboardComponent implements OnInit {
+  private authService = inject(AuthService);
+
   userEmail = '';
   userRole = '';
+  userName = 'Admin';
+  currentDate = new Date();
+  sidebarCollapsed = false;
+  activeTab = 'overview';
 
-  constructor(private authService: AuthService) {
+  // Platform KPIs - will be populated from API
+  stats = {
+    totalUsers: 0,
+    activeClients: 0,
+    totalProducts: 0,
+    activeWarehouses: 0,
+    monthlyRevenue: 0,
+    totalOrders: 0,
+    pendingOrders: 0,
+    lowStockAlerts: 0
+  };
+
+  // User distribution - will be populated from API
+  userDistribution: { role: string; count: number; percentage: number; color: string }[] = [];
+
+  // Data arrays - will be populated from API
+  recentProducts: Product[] = [];
+  recentUsers: User[] = [];
+  warehouses: Warehouse[] = [];
+  purchaseOrders: PurchaseOrder[] = [];
+  recentActivities: { user: string; action: string; time: string; type: string }[] = [];
+
+  ngOnInit(): void {
     this.userEmail = this.authService.getUserEmail();
     this.userRole = this.authService.getUserRole();
+    this.userName = this.userEmail.split('@')[0] || 'Admin';
+  }
+
+  toggleSidebar(): void {
+    this.sidebarCollapsed = !this.sidebarCollapsed;
+  }
+
+  setActiveTab(tab: string): void {
+    this.activeTab = tab;
   }
 
   logout(): void {
     this.authService.logout();
+  }
+
+  getStatusClass(status: string): string {
+    const classes: Record<string, string> = {
+      'ACTIVE': 'status-active',
+      'INACTIVE': 'status-inactive',
+      'LOW_STOCK': 'status-warning',
+      'DRAFT': 'status-draft',
+      'SENT': 'status-sent',
+      'PARTIAL': 'status-partial',
+      'RECEIVED': 'status-received',
+      'CANCELED': 'status-canceled'
+    };
+    return classes[status] || '';
+  }
+
+  getStatusLabel(status: string): string {
+    const labels: Record<string, string> = {
+      'ACTIVE': 'Actif',
+      'INACTIVE': 'Inactif',
+      'LOW_STOCK': 'Stock Faible',
+      'DRAFT': 'Brouillon',
+      'SENT': 'Envoyée',
+      'PARTIAL': 'Partielle',
+      'RECEIVED': 'Reçue',
+      'CANCELED': 'Annulée',
+      'ADMIN': 'Admin',
+      'WAREHOUSE_MANAGER': 'Gestionnaire',
+      'CLIENT': 'Client'
+    };
+    return labels[status] || status;
+  }
+
+  getRoleClass(role: string): string {
+    const classes: Record<string, string> = {
+      'ADMIN': 'role-admin',
+      'WAREHOUSE_MANAGER': 'role-manager',
+      'CLIENT': 'role-client'
+    };
+    return classes[role] || '';
+  }
+
+  formatCurrency(amount: number): string {
+    return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(amount);
+  }
+
+  formatNumber(num: number): string {
+    return new Intl.NumberFormat('fr-FR').format(num);
+  }
+
+  getActivityIcon(type: string): string {
+    const icons: Record<string, string> = {
+      'order': '🛒',
+      'stock': '📦',
+      'alert': '⚠️',
+      'user': '👤',
+      'shipment': '🚚'
+    };
+    return icons[type] || '📋';
   }
 }

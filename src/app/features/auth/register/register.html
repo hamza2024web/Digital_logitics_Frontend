@@ -1,0 +1,277 @@
+<div class="register-page">
+  <!-- Background -->
+  <div class="register-background">
+    <div class="bg-gradient"></div>
+    <div class="bg-pattern"></div>
+    <div class="bg-shapes">
+      <div class="shape shape-1"></div>
+      <div class="shape shape-2"></div>
+      <div class="shape shape-3"></div>
+    </div>
+  </div>
+
+  <!-- Register Card -->
+  <div class="register-card">
+    <!-- Logo & Header -->
+    <div class="register-header">
+      <a class="register-logo" routerLink="/">
+        <div class="logo-mark">
+          <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="4" y="8" width="40" height="32" rx="4" fill="url(#registerLogoGradient)"/>
+            <path d="M12 28L20 20L28 28L36 16" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="20" cy="20" r="3" fill="white"/>
+            <circle cx="36" cy="16" r="3" fill="#fbbf24"/>
+            <path d="M8 36H40" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+            <defs>
+              <linearGradient id="registerLogoGradient" x1="4" y1="8" x2="44" y2="40" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#6366f1"/>
+                <stop offset="1" stop-color="#8b5cf6"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <span class="logo-text">LogiFlow</span>
+      </a>
+      
+      <h1>Creer un compte</h1>
+      <p>Rejoignez LogiFlow et optimisez votre logistique</p>
+    </div>
+
+    <!-- Progress Steps -->
+    <div class="progress-steps">
+      <div class="step" [class.active]="currentStep >= 1" [class.completed]="currentStep > 1">
+        <div class="step-number">1</div>
+        <span>Identite</span>
+      </div>
+      <div class="step-line" [class.active]="currentStep > 1"></div>
+      <div class="step" [class.active]="currentStep >= 2" [class.completed]="currentStep > 2">
+        <div class="step-number">2</div>
+        <span>Securite</span>
+      </div>
+      <div class="step-line" [class.active]="currentStep > 2"></div>
+      <div class="step" [class.active]="currentStep >= 3">
+        <div class="step-number">3</div>
+        <span>Confirmation</span>
+      </div>
+    </div>
+
+    <!-- Success Message -->
+    @if (successMessage) {
+      <div class="alert alert-success">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+          <polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+        <span>{{ successMessage }}</span>
+      </div>
+    }
+
+    <!-- Error Message -->
+    @if (errorMessage) {
+      <div class="alert alert-error">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="8" x2="12" y2="12"/>
+          <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        <span>{{ errorMessage }}</span>
+      </div>
+    }
+
+    <!-- Form -->
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
+      <!-- Step 1: Identity -->
+      @if (currentStep === 1) {
+        <div class="form-step">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="firstName">Prenom</label>
+              <div class="input-wrapper" [class.error]="firstName?.invalid && firstName?.touched" [class.valid]="firstName?.valid && firstName?.touched">
+                <input type="text" id="firstName" formControlName="firstName" placeholder="Jean"/>
+                @if (firstName?.valid && firstName?.touched) {
+                  <div class="valid-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                      <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                  </div>
+                }
+              </div>
+              @if (firstName?.invalid && firstName?.touched) {
+                <div class="error-message">
+                  @if (firstName?.errors?.['required']) { <span>Le prenom est requis</span> }
+                  @if (firstName?.errors?.['minlength']) { <span>Minimum 2 caracteres</span> }
+                </div>
+              }
+            </div>
+
+            <div class="form-group">
+              <label for="lastName">Nom</label>
+              <div class="input-wrapper" [class.error]="lastName?.invalid && lastName?.touched" [class.valid]="lastName?.valid && lastName?.touched">
+                <input type="text" id="lastName" formControlName="lastName" placeholder="Dupont"/>
+                @if (lastName?.valid && lastName?.touched) {
+                  <div class="valid-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                      <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                  </div>
+                }
+              </div>
+              @if (lastName?.invalid && lastName?.touched) {
+                <div class="error-message">
+                  @if (lastName?.errors?.['required']) { <span>Le nom est requis</span> }
+                  @if (lastName?.errors?.['minlength']) { <span>Minimum 2 caracteres</span> }
+                </div>
+              }
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email professionnel</label>
+            <div class="input-wrapper" [class.error]="email?.invalid && email?.touched" [class.valid]="email?.valid && email?.touched">
+              <input type="email" id="email" formControlName="email" placeholder="jean.dupont@entreprise.com"/>
+              @if (email?.valid && email?.touched) {
+                <div class="valid-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                </div>
+              }
+            </div>
+            @if (email?.invalid && email?.touched) {
+              <div class="error-message">
+                @if (email?.errors?.['required']) { <span>L''email est requis</span> }
+                @if (email?.errors?.['email']) { <span>Format d''email invalide</span> }
+              </div>
+            }
+          </div>
+
+          <button type="button" class="btn-next" (click)="nextStep()" [disabled]="firstName?.invalid || lastName?.invalid || email?.invalid">
+            <span>Continuer</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </button>
+        </div>
+      }
+
+      <!-- Step 2: Security -->
+      @if (currentStep === 2) {
+        <div class="form-step">
+          <div class="form-group">
+            <label for="password">Mot de passe</label>
+            <div class="input-wrapper" [class.error]="password?.invalid && password?.touched">
+              <input type="password" id="password" formControlName="password" placeholder="Minimum 6 caracteres"/>
+            </div>
+            @if (password?.invalid && password?.touched) {
+              <div class="error-message">
+                @if (password?.errors?.['required']) { <span>Le mot de passe est requis</span> }
+                @if (password?.errors?.['minlength']) { <span>Minimum 6 caracteres</span> }
+              </div>
+            }
+
+            <!-- Password Strength -->
+            @if (password?.value) {
+              <div class="password-strength">
+                <div class="strength-bars">
+                  <div class="bar" [class.active]="passwordStrength >= 1" [class.weak]="passwordStrength === 1" [class.medium]="passwordStrength === 2" [class.strong]="passwordStrength >= 3"></div>
+                  <div class="bar" [class.active]="passwordStrength >= 2" [class.medium]="passwordStrength === 2" [class.strong]="passwordStrength >= 3"></div>
+                  <div class="bar" [class.active]="passwordStrength >= 3" [class.strong]="passwordStrength >= 3"></div>
+                  <div class="bar" [class.active]="passwordStrength >= 4" [class.strong]="passwordStrength >= 4"></div>
+                </div>
+                <span class="strength-text" [class.weak]="passwordStrength <= 1" [class.medium]="passwordStrength === 2" [class.strong]="passwordStrength >= 3">{{ passwordStrengthText }}</span>
+              </div>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="confirmPassword">Confirmer le mot de passe</label>
+            <div class="input-wrapper" [class.error]="(confirmPassword?.invalid || !passwordsMatch) && confirmPassword?.touched" [class.valid]="confirmPassword?.valid && passwordsMatch && confirmPassword?.touched">
+              <input type="password" id="confirmPassword" formControlName="confirmPassword" placeholder="Repetez le mot de passe"/>
+              @if (confirmPassword?.valid && passwordsMatch && confirmPassword?.touched) {
+                <div class="valid-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                </div>
+              }
+            </div>
+            @if (confirmPassword?.touched && !passwordsMatch) {
+              <div class="error-message"><span>Les mots de passe ne correspondent pas</span></div>
+            }
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn-back" (click)="prevStep()">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+              </svg>
+              <span>Retour</span>
+            </button>
+            <button type="button" class="btn-next" (click)="nextStep()" [disabled]="password?.invalid || confirmPassword?.invalid || !passwordsMatch">
+              <span>Continuer</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      }
+
+      <!-- Step 3: Confirmation -->
+      @if (currentStep === 3) {
+        <div class="form-step">
+          <div class="confirmation-summary">
+            <h3>Verifiez vos informations</h3>
+            <div class="summary-item">
+              <span class="summary-label">Nom complet</span>
+              <span class="summary-value">{{ firstName?.value }} {{ lastName?.value }}</span>
+            </div>
+            <div class="summary-item">
+              <span class="summary-label">Email</span>
+              <span class="summary-value">{{ email?.value }}</span>
+            </div>
+          </div>
+
+          <label class="checkbox-wrapper">
+            <input type="checkbox" formControlName="acceptTerms"/>
+            <span class="checkmark"></span>
+            <span class="label">J''accepte les <a href="#">conditions d''utilisation</a> et la <a href="#">politique de confidentialite</a></span>
+          </label>
+          @if (acceptTerms?.invalid && acceptTerms?.touched) {
+            <div class="error-message terms-error"><span>Vous devez accepter les conditions</span></div>
+          }
+
+          <div class="form-actions">
+            <button type="button" class="btn-back" (click)="prevStep()">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+              </svg>
+              <span>Retour</span>
+            </button>
+            <button type="submit" class="btn-submit" [disabled]="isLoading || registerForm.invalid">
+              @if (!isLoading) {
+                <span>Creer mon compte</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+              } @else {
+                <div class="spinner"></div>
+                <span>Creation...</span>
+              }
+            </button>
+          </div>
+        </div>
+      }
+    </form>
+
+    <!-- Login Link -->
+    <div class="login-link">
+      <p>Deja un compte ? <a (click)="goToLogin()">Se connecter</a></p>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="register-footer">
+    <p>&copy; 2026 LogiFlow. Tous droits reserves.</p>
+  </div>
+</div>

@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import {AuthService} from '../../../../core/auth/auth.service';
 
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <div class="dashboard">
       <div class="header">
@@ -15,7 +14,7 @@ import {AuthService} from '../../../../core/auth/auth.service';
       <div class="content">
         <div class="welcome-card">
           <h2>Bienvenue, {{ userEmail }}</h2>
-          <p>Rôle: <strong>{{ userRole }}</strong></p>
+          <p>Rôle:  <strong>{{ userRole }}</strong></p>
           <p class="success">✅ Authentification réussie !</p>
         </div>
       </div>
@@ -30,12 +29,12 @@ import {AuthService} from '../../../../core/auth/auth.service';
 
     .header {
       display: flex;
-      justify-content: space-between;
+      justify-content:  space-between;
       align-items: center;
       background: white;
       padding: 20px 30px;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      border-radius:  12px;
+      box-shadow:  0 2px 8px rgba(0,0,0,0.1);
       margin-bottom: 20px;
     }
 
@@ -80,7 +79,7 @@ import {AuthService} from '../../../../core/auth/auth.service';
 
     p {
       color: #718096;
-      font-size: 16px;
+      font-size:  16px;
     }
 
     strong {

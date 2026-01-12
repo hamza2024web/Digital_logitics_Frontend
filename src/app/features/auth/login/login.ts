@@ -90,4 +90,8 @@ export class LoginComponent {
         break;
     }
   }
+
+  goToRegister(): void{
+    this.router.navigate(['/register']);
+  }
 }

@@ -75,7 +75,7 @@ export class RegisterComponent implements OnInit {
     return this.registerForm.get('acceptTerms');
   }
 
-  get PasswordMatch(): boolean {
+  get passwordsMatch(): boolean {
     return !this.registerForm.errors?.['passwordMismatch'];
   }
 

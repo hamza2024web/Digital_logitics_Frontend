@@ -298,3 +298,25 @@
     grid-template-columns: 1fr;
   }
 }
+
+.register-link {
+  text-align: center;
+  padding:  20px 0;
+  border-top: 1px solid #e2e8f0;
+
+  p {
+    color:  #718096;
+    font-size: 14px;
+    margin: 0;
+  }
+
+  .link {
+    color: #667eea;
+    font-weight: 600;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

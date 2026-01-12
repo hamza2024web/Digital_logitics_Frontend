@@ -19,7 +19,7 @@ $white: #ffffff;
 
 @mixin hover-lift {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  &:hover: not(:disabled) {
+  &:hover:not(:disabled) {
   transform: translateY(-3px);
   box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
 }
@@ -206,7 +206,7 @@ $white: #ffffff;
         box-shadow:  0 0 0 4px rgba(239, 68, 68, 0.1);
       }
 
-      &:: placeholder {
+      &::placeholder {
         color: $gray-400;
       }
     }
@@ -223,7 +223,7 @@ $white: #ffffff;
       border-radius: 0 0 12px 12px;
     }
 
-    input: focus + .input-focus-line {
+    input:focus +.input-focus-line {
       width: calc(100% - 4px);
     }
   }
@@ -252,7 +252,7 @@ $white: #ffffff;
 
 @keyframes blink {
   0%, 100% { opacity: 1; }
-  50% { opacity: 0. 5; }
+  50% { opacity: 0.5; }
 }
 
 .form-options {
@@ -286,7 +286,7 @@ $white: #ffffff;
       border-radius:  6px;
       transition: all 0.3s;
 
-      &:: after {
+      &::after {
         content:  '';
         position:  absolute;
         display: none;
@@ -398,11 +398,11 @@ $white: #ffffff;
     transition: transform 0.3s;
   }
 
-  &:hover: not(:disabled) svg {
+  &:hover:not(:disabled) svg {
   transform:  translateX(5px);
 }
 
-  &:active: not(:disabled) {
+  &:active:not(:disabled) {
   transform: translateY(0);
 }
 
@@ -523,7 +523,7 @@ $white: #ffffff;
     }
   }
 
-  &:hover: not(:disabled) {
+  &:hover:not(:disabled) {
   transform: translateY(-3px);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
 
@@ -545,7 +545,7 @@ $white: #ffffff;
       background: #fff5f5;
     }
 
-    &:hover:not(: disabled) {
+    &:hover:not(:disabled) {
       background: #fff5f5;
       border-color: #e53e3e;
     }
@@ -573,7 +573,7 @@ $white: #ffffff;
       background: #ebf8ff;
     }
 
-    &:hover:not(: disabled) {
+    &:hover:not(:disabled) {
       background: #ebf8ff;
       border-color: #3182ce;
     }
@@ -622,7 +622,7 @@ $white: #ffffff;
       text-decoration: none;
       transition: color 0.3s;
 
-      &: hover {
+      &:hover {
         color: #667eea;
       }
     }

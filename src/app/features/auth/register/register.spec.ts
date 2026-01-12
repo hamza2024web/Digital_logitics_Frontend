@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Rigister } from './rigister';
+import { Rigister } from './register';
 
 describe('Rigister', () => {
   let component: Rigister;

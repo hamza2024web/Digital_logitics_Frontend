@@ -12,11 +12,11 @@ import {Router} from '@angular/router';
 import {AuthService} from '../../../core/auth/auth.service';
 
 @Component({
-  selector: 'app-rigister',
+  selector: 'app-register',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './rigister.html',
-  styleUrl: './rigister.scss',
+  templateUrl: './register.html',
+  styleUrl: './register.scss',
 })
 export class RegisterComponent implements OnInit {
   registerForm! : FormGroup;

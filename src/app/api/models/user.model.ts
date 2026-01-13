@@ -13,6 +13,22 @@ export interface AuthResponse {
   role : 'ADMIN' | 'WAREHOUSE_MANAGER' | 'CLIENT';
 }
 
+export interface CreateUserRequest {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  role: 'ADMIN' | 'WAREHOUSE_MANAGER' | 'CLIENT';
+}
+
+export interface UpdateUserRequest {
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  role?: 'ADMIN' | 'WAREHOUSE_MANAGER' | 'CLIENT';
+  active?: boolean;
+}
+
 export interface LoginRequest {
   email : string;
   password : string;

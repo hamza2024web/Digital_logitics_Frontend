@@ -28,7 +28,7 @@
     }
   }
 
-  . btn-primary {
+  .btn-primary {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -237,7 +237,7 @@
     font-size:  14px;
   }
 
-  . user-name {
+  .user-name {
     font-weight: 600;
     color: #2d3748;
   }
@@ -267,7 +267,7 @@
   }
 }
 
-. status-badge {
+.status-badge {
   display:  inline-block;
   padding:  6px 12px;
   border-radius: 20px;
@@ -308,7 +308,7 @@
       transform: scale(1.1);
     }
 
-    &. btn-danger {
+    &.btn-danger {
       &:hover {
         background: #fff5f5;
         color: #c53030;

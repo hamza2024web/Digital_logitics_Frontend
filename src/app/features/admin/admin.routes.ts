@@ -1,10 +1,11 @@
 import { Routes } from '@angular/router';
+import {AdminLayout} from './layout/admin-layout/admin-layout';
 
 export const ADMIN_ROUTES: Routes = [
   {
     path: '',
-    loadComponent: () => import('./layout/admin-layout')
-      .then(m => m.AdminLayoutComponent),
+    loadComponent: () => import('./layout/admin-layout/admin-layout')
+      .then(m => m.AdminLayout),
     children: [
       {
         path: 'dashboard',

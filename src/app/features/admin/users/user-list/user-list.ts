@@ -1,11 +1,12 @@
 import {Component, OnInit} from '@angular/core';
 import {User} from '../../../../api/models/user.model';
 import {UserApiService} from '../../../../api/services/user-api.service';
+import {CommonModule} from '@angular/common';
 
 @Component({
   selector: 'app-user-list',
   standalone : true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './user-list.html',
   styleUrl: './user-list.scss',
 })
@@ -78,7 +79,7 @@ export class UserList implements OnInit {
     });
   }
 
-  resetFilter(): void {
+  resetFilters(): void {
     this.searchTerm = '';
     this.filterRole = '';
     this.filterStatus = '';

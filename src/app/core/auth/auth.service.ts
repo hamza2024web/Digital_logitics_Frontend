@@ -7,7 +7,6 @@ import {
   RefreshTokenRequest,
   RegisterRequest,
   RegisterResponse,
-  User
 } from '../../api/models/user.model';
 import {BehaviorSubject, catchError, Observable, Subscription, switchMap, tap, throwError, timer} from 'rxjs';
 import {TokenService} from './token.service';

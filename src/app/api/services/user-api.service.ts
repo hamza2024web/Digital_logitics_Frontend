@@ -8,7 +8,7 @@ import {AdminUserCreateDTO, User} from '../models/user.model';
   providedIn: 'root'
 })
 export class UserApiService {
-  private readonly API_URL = `${environment.apiBaseUrl}/api/users`;
+  private readonly API_URL = `${environment.apiBaseUrl}/api/admin/users`;
 
   constructor(private http:HttpClient) {}
 

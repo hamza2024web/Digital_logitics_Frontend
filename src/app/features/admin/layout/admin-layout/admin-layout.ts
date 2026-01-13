@@ -24,7 +24,13 @@ export class AdminLayout {
 
   constructor(private authService: AuthService) {
     const user = this.authService.getCurrentUser();
-    this.userName = user ? `${user.firstName} ${user.lastName}` : 'ADMIN';
+
+    if (user) {
+      this.userName = user.firstName && user.lastName ? `${user.firstName} ${user.lastName}`
+        : user.email.split('@')[0];
+    } else {
+      this.userName = 'ADMIN';
+    }
 
     this.loadStats();
   }

@@ -7,6 +7,13 @@ export interface User {
   active: boolean;
 }
 
+export interface AuthenticatedUser {
+  email: string;
+  role : 'ADMIN' | 'WAREHOUSE_MANAGER' | 'CLIENT';
+  firstName? : string;
+  lastName?: string;
+}
+
 export interface AuthResponse {
   token : string;
   refreshToken : string;

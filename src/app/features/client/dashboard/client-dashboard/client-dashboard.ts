@@ -24,7 +24,7 @@ interface Notification {
 @Component({
   selector: 'app-client-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule],
   templateUrl: './client-dashboard.html',
   styleUrl: './client-dashboard.scss'
 })

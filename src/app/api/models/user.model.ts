@@ -1,9 +1,17 @@
 export interface User {
-  firstName ?: string;
-  lastName ?: string;
-  email : string;
+  id:  number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  role:  'ADMIN' | 'WAREHOUSE_MANAGER' | 'CLIENT';
+  active: boolean;
+}
+
+export interface AuthenticatedUser {
+  email: string;
   role : 'ADMIN' | 'WAREHOUSE_MANAGER' | 'CLIENT';
-  active ?: boolean;
+  firstName? : string;
+  lastName?: string;
 }
 
 export interface AuthResponse {
@@ -11,6 +19,14 @@ export interface AuthResponse {
   refreshToken : string;
   email : string;
   role : 'ADMIN' | 'WAREHOUSE_MANAGER' | 'CLIENT';
+}
+
+export interface AdminUserCreateDTO {
+  firstName:  string;
+  lastName: string;
+  email: string;
+  password: string;
+  role:  'ADMIN' | 'WAREHOUSE_MANAGER' | 'CLIENT';
 }
 
 export interface LoginRequest {

@@ -1,14 +1,14 @@
 import {Injectable, signal} from '@angular/core';
 import {environment} from '../../../environments/environment';
 import {
+  AuthenticatedUser,
   AuthResponse,
   LoginRequest,
   RefreshTokenRequest,
   RegisterRequest,
   RegisterResponse,
-  User
 } from '../../api/models/user.model';
-import {BehaviorSubject, catchError, Observable, switchMap, tap, throwError, timer} from 'rxjs';
+import {BehaviorSubject, catchError, Observable, Subscription, switchMap, tap, throwError, timer} from 'rxjs';
 import {TokenService} from './token.service';
 import {Router} from '@angular/router';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
@@ -19,12 +19,12 @@ import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 export class AuthService {
   private readonly API_URL = `${environment.apiBaseUrl}/api/auth`;
 
-  private currentUserSubject = new BehaviorSubject<User | null>(null);
+  private currentUserSubject = new BehaviorSubject<AuthenticatedUser | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
-  public currentUserSignal = signal<User |  null>(null);
+  public currentUserSignal = signal<AuthenticatedUser |  null>(null);
 
-  private refreshTokenTimer : any;
+  private refreshTokenTimer ?: Subscription ;
 
   constructor(
     private http: HttpClient,
@@ -40,7 +40,7 @@ export class AuthService {
     if (token && !this.tokenService.isTokenExpired(token)){
       const decoded = this.tokenService.decodeToken(token);
 
-      const user : User = {
+      const user : AuthenticatedUser = {
         email : decoded.sub,
         role : this.extractRoleFromToken(decoded)
       };
@@ -71,7 +71,7 @@ export class AuthService {
     this.tokenService.setAccessToken(response.token);
     this.tokenService.setRefreshToken(response.refreshToken);
 
-    const user : User = {
+    const user : AuthenticatedUser = {
       email : response.email,
       role : response.role
     };
@@ -186,11 +186,11 @@ export class AuthService {
     return this.currentUserSubject.value?.email ||'';
   }
 
-  getCurrentUser() : User | null {
+  getCurrentUser() : AuthenticatedUser | null {
     return this.currentUserSubject.value;
   }
 
-  private setCurrentUser(user:User | null): void {
+  private setCurrentUser(user:AuthenticatedUser | null): void {
     this.currentUserSubject.next(user);
     this.currentUserSignal.set(user);
   }

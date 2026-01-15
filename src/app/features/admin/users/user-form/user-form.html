@@ -106,8 +106,8 @@
           id="email"
           formControlName="email"
           placeholder="utilisateur@exemple.com"
-          [class. invalid]="email?.invalid && email?.touched"
-          [class. valid]="email?.valid && email?.touched"
+          [class.invalid]="email?.invalid && email?.touched"
+          [class.valid]="email?.valid && email?.touched"
         />
         @if (email?.invalid && email?.touched) {
           <div class="error-message">

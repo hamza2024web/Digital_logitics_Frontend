@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import {AdminLayout} from './layout/admin-layout/admin-layout';
+import {UserFormComponent} from './users/user-form/user-form';
 
 export const ADMIN_ROUTES: Routes = [
   {
@@ -20,7 +21,7 @@ export const ADMIN_ROUTES: Routes = [
       {
         path: 'users/create',
         loadComponent:  () => import('./users/user-form/user-form')
-          .then(m => m. UserForm)
+          .then(m => m. UserFormComponent)
       },
       {
         path: '',

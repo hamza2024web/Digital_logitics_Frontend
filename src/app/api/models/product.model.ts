@@ -14,3 +14,11 @@ export interface ProductCreateRequest {
   price:  number;
   active: boolean;
 }
+
+export interface ProductUpdateRequest {
+  sku?: string;
+  name?:  string;
+  image?: string;
+  price?: number;
+  active?: boolean;
+}

@@ -1,3 +1,4 @@
+// src/app/features/admin/products/products-list/products-list.component.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
@@ -74,7 +75,7 @@ export class ProductsListComponent implements OnInit {
     this.searchTerm = '';
     this.filterActive = '';
     this.filterPrice = null;
-    this.filteredProducts = this.products;
+    this.filteredProducts = this. products;
   }
 
   toggleProductStatus(product: Product): void {
@@ -86,6 +87,7 @@ export class ProductsListComponent implements OnInit {
 
     this.productApiService.toggleProductStatus(product. id, !product.active).subscribe({
       next: (updatedProduct) => {
+        // Mettre à jour dans la liste
         const index = this.products.findIndex(p => p.id === updatedProduct. id);
         if (index !== -1) {
           this.products[index] = updatedProduct;

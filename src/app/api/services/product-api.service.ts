@@ -1,6 +1,6 @@
 // src/app/api/services/product-api.service.ts
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Product, ProductCreateRequest } from '../models/product.model';
@@ -34,6 +34,7 @@ export class ProductApiService {
   }
 
   toggleProductStatus(id: number, active: boolean): Observable<Product> {
-    return this.http.patch<Product>(`${this.API_URL}/${id}/status`, { active });
+    const params = new HttpParams().set('active', active.toString());
+    return this.http.patch<Product>(`${this.API_URL}/${id}/status`,null,{ params })
   }
 }

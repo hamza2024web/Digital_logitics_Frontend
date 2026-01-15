@@ -1,11 +1,10 @@
 import { Routes } from '@angular/router';
-import {ProductForm} from './products/product-form/product-form';
 
 export const ADMIN_ROUTES:  Routes = [
   {
     path: '',
-    loadComponent: () => import('./layout/admin-layout')
-      .then(m => m.AdminLayoutComponent),
+    loadComponent: () => import('./layout/admin-layout/admin-layout')
+      .then(m => m.AdminLayout),
     children: [
       {
         path: 'dashboard',
@@ -30,7 +29,12 @@ export const ADMIN_ROUTES:  Routes = [
       {
         path: 'products/create',
         loadComponent: () => import('./products/product-form/product-form')
-          .then(m => m.ProductForm)
+          .then(m => m.ProductFormComponent)
+      },
+      {
+        path: 'products/edit/:id',
+        loadComponent: () => import('./products/product-form/product-form')
+          .then(m => m.ProductFormComponent)
       },
       {
         path:  '',

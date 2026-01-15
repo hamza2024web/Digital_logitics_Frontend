@@ -1,17 +1,16 @@
 export interface Product {
-  id : number,
-  sku : string,
-  name : string,
-  image : string,
-  price : number,
-  active : boolean
+  id: number;
+  sku: string;
+  name: string;
+  image?:  string;
+  price:  number;
+  active: boolean;
 }
 
 export interface ProductCreateRequest {
-  sku : string,
-  name : string,
-  image : string,
-  price : number,
-  active : boolean
+  sku: string;
+  name: string;
+  image?: string;
+  price:  number;
+  active: boolean;
 }
-

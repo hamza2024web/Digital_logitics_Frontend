@@ -1,0 +1,181 @@
+<div class="warehouse-form-container">
+
+  <!-- Header avec navigation -->
+  <div class="page-header">
+    <div class="header-left">
+      <button routerLink="/admin/warehouses" class="btn-back">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+        Retour
+      </button>
+      <div class="header-content">
+        <h1>
+          @if (isEditMode) {
+            ✏️ Modifier l'entrepôt
+          } @else {
+            ➕ Créer un entrepôt
+          }
+        </h1>
+        <p class="breadcrumb">
+          <a routerLink="/admin/dashboard">Tableau de bord</a>
+          <span class="separator">›</span>
+          <a routerLink="/admin/warehouses">Entrepôts</a>
+          <span class="separator">›</span>
+          <span>{{ isEditMode ? 'Modifier' : 'Nouveau' }}</span>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Message d'erreur global -->
+  @if (errorMessage) {
+    <div class="alert alert-error">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="8" x2="12" y2="12"></line>
+        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+      </svg>
+      <span>{{ errorMessage }}</span>
+    </div>
+  }
+
+  <!-- Chargement de l'entrepôt (mode édition) -->
+  @if (isLoading && isEditMode && ! warehouseForm) {
+    <div class="loading-card">
+      <div class="spinner"></div>
+      <p>Chargement de l'entrepôt...</p>
+    </div>
+  }
+
+  <!-- Formulaire -->
+  @if (! isLoading || warehouseForm) {
+    <div class="form-card">
+      <div class="card-header">
+        <div class="header-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+          </svg>
+        </div>
+        <div>
+          <h2>Informations de l'entrepôt</h2>
+          <p>Renseignez les détails de l'entrepôt</p>
+        </div>
+      </div>
+
+      <form [formGroup]="warehouseForm" (ngSubmit)="onSubmit()" class="warehouse-form">
+
+        <!-- Code de l'entrepôt -->
+        <div class="form-group">
+          <label for="code">
+            Code de l'entrepôt <span class="required">*</span>
+          </label>
+          <input
+            type="text"
+            id="code"
+            formControlName="code"
+            placeholder="ex: WH-001"
+            [class.invalid]="(code?.invalid && code?.touched) || hasFieldError('code')"
+            [class.valid]="code?.valid && code?.touched && !hasFieldError('code')"
+          />
+          @if (code?.invalid && code?.touched && !hasFieldError('code')) {
+            <div class="error-message">
+              @if (code?.errors?.['required']) {
+                <small>Le code est requis</small>
+              }
+              @if (code?.errors?.['minlength']) {
+                <small>Minimum 2 caractères</small>
+              }
+            </div>
+          }
+          @if (hasFieldError('code')) {
+            <div class="error-message backend-error">
+              <small>{{ getFieldError('code') }}</small>
+            </div>
+          }
+          <p class="field-hint">
+            Identifiant unique de l'entrepôt (ex: WH-PARIS, DEPOT-01)
+          </p>
+        </div>
+
+        <!-- Nom de l'entrepôt -->
+        <div class="form-group">
+          <label for="name">
+            Nom de l'entrepôt <span class="required">*</span>
+          </label>
+          <input
+            type="text"
+            id="name"
+            formControlName="name"
+            placeholder="ex: Entrepôt Principal Paris"
+            [class.invalid]="(name?.invalid && name?. touched) || hasFieldError('name')"
+            [class.valid]="name?.valid && name?. touched && !hasFieldError('name')"
+          />
+          @if (name?.invalid && name?. touched && !hasFieldError('name')) {
+            <div class="error-message">
+              @if (name?.errors?.['required']) {
+                <small>Le nom est requis</small>
+              }
+              @if (name?. errors?.['minlength']) {
+                <small>Minimum 3 caractères</small>
+              }
+            </div>
+          }
+          @if (hasFieldError('name')) {
+            <div class="error-message backend-error">
+              <small>{{ getFieldError('name') }}</small>
+            </div>
+          }
+          <p class="field-hint">
+            Nom descriptif de l'entrepôt (visible dans l'application)
+          </p>
+        </div>
+
+        <!-- Info card -->
+        <div class="info-card">
+          <h3>💡 Informations</h3>
+          <ul>
+            <li>Le code de l'entrepôt doit être unique</li>
+            <li>Utilisez des codes courts et descriptifs (ex: WH-PARIS)</li>
+            <li>Le nom peut contenir des espaces et caractères spéciaux</li>
+          </ul>
+        </div>
+
+        <!-- Boutons d'action -->
+        <div class="form-actions">
+          <button
+            type="button"
+            (click)="cancel()"
+            class="btn-cancel"
+            [disabled]="isLoading"
+          >
+            Annuler
+          </button>
+          <button
+            type="submit"
+            class="btn-submit"
+            [disabled]="isLoading || warehouseForm.invalid"
+          >
+            @if (isLoading) {
+              <span class="loader">
+                <svg class="spinner-small" viewBox="0 0 50 50">
+                  <circle cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
+                </svg>
+                {{ isEditMode ? 'Mise à jour...' : 'Création...' }}
+              </span>
+            } @else {
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                <polyline points="7 3 7 8 15 8"></polyline>
+              </svg>
+              {{ isEditMode ? 'Mettre à jour' : 'Créer l\'entrepôt' }}
+            }
+          </button>
+        </div>
+      </form>
+    </div>
+  }
+
+</div>

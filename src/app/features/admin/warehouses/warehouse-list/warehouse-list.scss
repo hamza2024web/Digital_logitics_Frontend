@@ -1,0 +1,118 @@
+.warehouse-list-container {
+  padding: 30px;
+  max-width:  1400px;
+  margin: 0 auto;
+}
+
+.warehouses-grid {
+  display:  grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.warehouse-card {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  padding: 30px;
+  transition: all 0.3s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+  }
+}
+
+.warehouse-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+
+  svg {
+    color: white;
+  }
+}
+
+.warehouse-info {
+  width: 100%;
+
+  .warehouse-header {
+    margin-bottom: 12px;
+
+    .warehouse-code {
+      display: inline-block;
+      padding: 6px 14px;
+      background: #ebf8ff;
+      color: #2c5282;
+      border-radius:  20px;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+  }
+
+  .warehouse-name {
+    font-size: 20px;
+    font-weight:  700;
+    color: #1a202c;
+    margin:  0 0 20px 0;
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .warehouse-actions {
+    display: flex;
+    gap:  10px;
+    justify-content: center;
+    padding-top: 16px;
+    border-top: 1px solid #e2e8f0;
+
+    .btn-icon {
+      flex: 1;
+      max-width: 100px;
+      height: 40px;
+      border-radius: 8px;
+      border: none;
+      background: #f7fafc;
+      color: #4a5568;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.3s;
+
+      &:hover {
+        transform: scale(1.05);
+      }
+
+      &.btn-edit {
+        &:hover {
+          background: #ebf8ff;
+          color: #2c5282;
+        }
+      }
+
+      &.btn-danger {
+        &:hover {
+          background:  #fff5f5;
+          color: #c53030;
+        }
+      }
+    }
+  }
+}
+

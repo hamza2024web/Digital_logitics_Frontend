@@ -1,0 +1,271 @@
+<div class="product-form-container">
+
+  <!-- Header avec navigation -->
+  <div class="page-header">
+    <div class="header-left">
+      <button routerLink="/admin/products" class="btn-back">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+        Retour
+      </button>
+      <div class="header-content">
+        <h1>
+          @if (isEditMode) {
+            ✏️ Modifier le produit
+          } @else {
+            ➕ Créer un produit
+          }
+        </h1>
+        <p class="breadcrumb">
+          <a routerLink="/admin/dashboard">Tableau de bord</a>
+          <span class="separator">›</span>
+          <a routerLink="/admin/products">Produits</a>
+          <span class="separator">›</span>
+          <span>{{ isEditMode ? 'Modifier' : 'Nouveau' }}</span>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Message d'erreur global -->
+  @if (errorMessage) {
+    <div class="alert alert-error">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="8" x2="12" y2="12"></line>
+        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+      </svg>
+      <span>{{ errorMessage }}</span>
+    </div>
+  }
+
+  <!-- Chargement du produit (mode édition) -->
+  @if (isLoading && isEditMode && ! productForm) {
+    <div class="loading-card">
+      <div class="spinner"></div>
+      <p>Chargement du produit... </p>
+    </div>
+  }
+
+  <!-- Formulaire -->
+  @if (! isLoading || productForm) {
+    <div class="form-card">
+      <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="product-form">
+
+        <div class="form-layout">
+          <!-- Colonne gauche :  Informations du produit -->
+          <div class="form-section">
+            <div class="section-header">
+              <h2>📝 Informations du produit</h2>
+              <p>Renseignez les détails du produit</p>
+            </div>
+
+            <!-- SKU -->
+            <div class="form-group">
+              <label for="sku">
+                SKU (Référence) <span class="required">*</span>
+              </label>
+              <input
+                type="text"
+                id="sku"
+                formControlName="sku"
+                placeholder="ex:  PROD-001"
+                [class.invalid]="(sku?. invalid && sku?.touched) || hasFieldError('sku')"
+                [class.valid]="sku?.valid && sku?.touched && !hasFieldError('sku')"
+              />
+              @if (sku?.invalid && sku?.touched && !hasFieldError('sku')) {
+                <div class="error-message">
+                  @if (sku?.errors?.['required']) {
+                    <small>Le SKU est requis</small>
+                  }
+                  @if (sku?.errors?. ['minlength']) {
+                    <small>Minimum 2 caractères</small>
+                  }
+                </div>
+              }
+              @if (hasFieldError('sku')) {
+                <div class="error-message backend-error">
+                  <small>{{ getFieldError('sku') }}</small>
+                </div>
+              }
+              <p class="field-hint">
+                Identifiant unique du produit (Stock Keeping Unit)
+              </p>
+            </div>
+
+            <!-- Nom du produit -->
+            <div class="form-group">
+              <label for="name">
+                Nom du produit <span class="required">*</span>
+              </label>
+              <input
+                type="text"
+                id="name"
+                formControlName="name"
+                placeholder="ex: Clavier Mécanique RGB"
+                [class.invalid]="(name?.invalid && name?. touched) || hasFieldError('name')"
+                [class.valid]="name?.valid && name?. touched && !hasFieldError('name')"
+              />
+              @if (name?.invalid && name?. touched && !hasFieldError('name')) {
+                <div class="error-message">
+                  @if (name?.errors?.['required']) {
+                    <small>Le nom est requis</small>
+                  }
+                  @if (name?.errors?.['minlength']) {
+                    <small>Minimum 3 caractères</small>
+                  }
+                </div>
+              }
+              @if (hasFieldError('name')) {
+                <div class="error-message backend-error">
+                  <small>{{ getFieldError('name') }}</small>
+                </div>
+              }
+            </div>
+
+            <!-- Prix -->
+            <div class="form-group">
+              <label for="price">
+                Prix (€) <span class="required">*</span>
+              </label>
+              <div class="input-group">
+                <span class="input-prefix">€</span>
+                <input
+                  type="number"
+                  id="price"
+                  formControlName="price"
+                  placeholder="0.00"
+                  step="0.01"
+                  min="0"
+                  [class.invalid]="(price?.invalid && price?.touched) || hasFieldError('price')"
+                  [class.valid]="price?. valid && price?.touched && !hasFieldError('price')"
+                />
+              </div>
+              @if (price?.invalid && price?.touched && ! hasFieldError('price')) {
+                <div class="error-message">
+                  @if (price?.errors?.['required']) {
+                    <small>Le prix est requis</small>
+                  }
+                  @if (price?.errors?.['min']) {
+                    <small>Le prix doit être positif</small>
+                  }
+                </div>
+              }
+              @if (hasFieldError('price')) {
+                <div class="error-message backend-error">
+                  <small>{{ getFieldError('price') }}</small>
+                </div>
+              }
+            </div>
+
+            <!-- Statut actif -->
+            <div class="form-group-checkbox">
+              <label class="checkbox-label">
+                <input
+                  type="checkbox"
+                  formControlName="active"
+                />
+                <span class="checkbox-text">
+                  <strong>Produit actif</strong>
+                  <small>Le produit sera visible et disponible à la vente</small>
+                </span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Colonne droite : Image et prévisualisation -->
+          <div class="form-section">
+            <div class="section-header">
+              <h2>🖼️ Image du produit</h2>
+              <p>URL de l'image du produit</p>
+            </div>
+
+            <!-- URL de l'image -->
+            <div class="form-group">
+              <label for="image">
+                URL de l'image
+              </label>
+              <input
+                type="url"
+                id="image"
+                formControlName="image"
+                placeholder="https://exemple.com/image.jpg"
+                (input)="onImageUrlChange($event)"
+              />
+              <p class="field-hint">
+                Formats supportés : JPG, PNG, GIF, WEBP, SVG
+              </p>
+            </div>
+
+            <!-- Prévisualisation de l'image -->
+            <div class="image-preview-container">
+              <div class="image-preview">
+                @if (imagePreview) {
+                  <img
+                    [src]="imagePreview"
+                    [alt]="name?. value || 'Prévisualisation'"
+                    (error)="onImageError()"
+                  />
+                } @else {
+                  <div class="no-preview">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                      <circle cx="9" cy="9" r="2"></circle>
+                      <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path>
+                    </svg>
+                    <span>Aucune image</span>
+                  </div>
+                }
+              </div>
+            </div>
+
+            <!-- Infos supplémentaires -->
+            <div class="info-card">
+              <h3>💡 Conseils</h3>
+              <ul>
+                <li>Utilisez des images de haute qualité (min.  800x800px)</li>
+                <li>Format recommandé : JPG ou PNG</li>
+                <li>Évitez les images trop volumineuses (&lt; 2MB)</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Boutons d'action -->
+        <div class="form-actions">
+          <button
+            type="button"
+            (click)="cancel()"
+            class="btn-cancel"
+            [disabled]="isLoading"
+          >
+            Annuler
+          </button>
+          <button
+            type="submit"
+            class="btn-submit"
+            [disabled]="isLoading || productForm.invalid"
+          >
+            @if (isLoading) {
+              <span class="loader">
+                <svg class="spinner-small" viewBox="0 0 50 50">
+                  <circle cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
+                </svg>
+                {{ isEditMode ? 'Mise à jour.. .' : 'Création...' }}
+              </span>
+            } @else {
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                <polyline points="7 3 7 8 15 8"></polyline>
+              </svg>
+              {{ isEditMode ? 'Mettre à jour' : 'Créer le produit' }}
+            }
+          </button>
+        </div>
+      </form>
+    </div>
+  }
+
+</div>

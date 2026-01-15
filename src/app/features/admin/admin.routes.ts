@@ -1,8 +1,6 @@
 import { Routes } from '@angular/router';
-import {AdminLayout} from './layout/admin-layout/admin-layout';
-import {UserFormComponent} from './users/user-form/user-form';
 
-export const ADMIN_ROUTES: Routes = [
+export const ADMIN_ROUTES:  Routes = [
   {
     path: '',
     loadComponent: () => import('./layout/admin-layout/admin-layout')
@@ -24,7 +22,22 @@ export const ADMIN_ROUTES: Routes = [
           .then(m => m. UserFormComponent)
       },
       {
-        path: '',
+        path:  'products',
+        loadComponent: () => import('./products/products-list/products-list')
+          .then(m => m.ProductsListComponent)
+      },
+      {
+        path: 'products/create',
+        loadComponent: () => import('./products/product-form/product-form')
+          .then(m => m.ProductFormComponent)
+      },
+      {
+        path: 'products/edit/:id',
+        loadComponent: () => import('./products/product-form/product-form')
+          .then(m => m.ProductFormComponent)
+      },
+      {
+        path:  '',
         redirectTo: 'dashboard',
         pathMatch: 'full'
       }

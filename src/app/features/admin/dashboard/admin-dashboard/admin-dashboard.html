@@ -1,43 +1,439 @@
-<!-- src/app/features/admin/dashboard/admin-dashboard.component.html -->
-<!-- Garder UNIQUEMENT le contenu, PAS la sidebar ni le header -->
+<!-- Admin Dashboard - Modern Design -->
+<div class="dashboard-container">
+  
+  <!-- Welcome Header -->
+  <header class="welcome-header">
+    <div class="welcome-content">
+      <div class="welcome-text">
+        <h1 class="animate-fade-in">
+          <span class="greeting">Bonjour,</span>
+          <span class="user-name-display">{{ userName }}</span> 👋
+        </h1>
+        <p class="welcome-subtitle animate-fade-in-delay">
+          Bienvenue sur votre tableau de bord administrateur. Voici un aperçu de votre activité.
+        </p>
+      </div>
+      <div class="welcome-date animate-fade-in-delay-2">
+        <div class="date-card">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+          <span>{{ currentDate | date:'EEEE, d MMMM yyyy':'':'fr' }}</span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Quick Actions -->
+    <div class="quick-actions animate-slide-up">
+      <button class="quick-action-btn primary" routerLink="/admin/products/create">
+        <div class="btn-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+        </div>
+        <span>Nouveau Produit</span>
+      </button>
+      <button class="quick-action-btn secondary" routerLink="/admin/users/create">
+        <div class="btn-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="8.5" cy="7" r="4"></circle>
+            <line x1="20" y1="8" x2="20" y2="14"></line>
+            <line x1="23" y1="11" x2="17" y2="11"></line>
+          </svg>
+        </div>
+        <span>Ajouter Utilisateur</span>
+      </button>
+      <button class="quick-action-btn tertiary" routerLink="/admin/warehouses/create">
+        <div class="btn-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+          </svg>
+        </div>
+        <span>Nouvel Entrepôt</span>
+      </button>
+    </div>
+  </header>
 
-<!-- Welcome Section -->
-<section class="welcome-section">
-  <div class="welcome-text">
-    <h2>Bienvenue, {{ userName }} 🛡️</h2>
-    <p>Gérez la plateforme logistique depuis votre espace d'administration. </p>
-  </div>
-  <div class="admin-actions">
-    <button class="action-btn primary" routerLink="/admin/products/create">
-      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <line x1="12" y1="5" x2="12" y2="19"></line>
-        <line x1="5" y1="12" x2="19" y2="12"></line>
-      </svg>
-      Nouveau Produit
-    </button>
-    <button class="action-btn secondary" routerLink="/admin/users/create">
-      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-        <circle cx="8. 5" cy="7" r="4"></circle>
-        <line x1="20" y1="8" x2="20" y2="14"></line>
-        <line x1="23" y1="11" x2="17" y2="11"></line>
-      </svg>
-      Ajouter Utilisateur
-    </button>
-  </div>
-</section>
+  <!-- Stats Cards -->
+  <section class="stats-section">
+    <div class="stats-grid">
+      <!-- Total Users -->
+      <div class="stat-card users animate-scale-in" style="--delay: 0.1s">
+        <div class="stat-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
+        </div>
+        <div class="stat-content">
+          <span class="stat-value counter">{{ stats.totalUsers }}</span>
+          <span class="stat-label">Utilisateurs</span>
+        </div>
+        <div class="stat-trend positive">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+            <polyline points="17 6 23 6 23 12"></polyline>
+          </svg>
+          <span>+12%</span>
+        </div>
+        <div class="stat-bg-pattern"></div>
+      </div>
 
-<!-- KPI Cards  -->
-<section class="kpi-section">
-  <!-- Garder vos 4 KPI cards -->
-</section>
+      <!-- Total Products -->
+      <div class="stat-card products animate-scale-in" style="--delay: 0.2s">
+        <div class="stat-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+            <line x1="12" y1="22.08" x2="12" y2="12"></line>
+          </svg>
+        </div>
+        <div class="stat-content">
+          <span class="stat-value counter">{{ stats.totalProducts }}</span>
+          <span class="stat-label">Produits</span>
+        </div>
+        <div class="stat-trend positive">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+            <polyline points="17 6 23 6 23 12"></polyline>
+          </svg>
+          <span>+8%</span>
+        </div>
+        <div class="stat-bg-pattern"></div>
+      </div>
 
-<!-- Warehouse Overview -->
-<section class="warehouses-section">
-  <!-- Garder votre section warehouses -->
-</section>
+      <!-- Warehouses -->
+      <div class="stat-card warehouses animate-scale-in" style="--delay: 0.3s">
+        <div class="stat-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+          </svg>
+        </div>
+        <div class="stat-content">
+          <span class="stat-value counter">{{ stats.totalWarehouses }}</span>
+          <span class="stat-label">Entrepôts</span>
+        </div>
+        <div class="stat-trend neutral">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          <span>Stable</span>
+        </div>
+        <div class="stat-bg-pattern"></div>
+      </div>
 
-<!-- Dashboard Grid (Products, Activity, Users, PO) -->
-<div class="dashboard-grid">
-  <!-- Garder vos 4 cards -->
+      <!-- Revenue -->
+      <div class="stat-card revenue animate-scale-in" style="--delay: 0.4s">
+        <div class="stat-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="1" x2="12" y2="23"></line>
+            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+          </svg>
+        </div>
+        <div class="stat-content">
+          <span class="stat-value">{{ formatCurrency(stats.monthlyRevenue) }}</span>
+          <span class="stat-label">Revenus du mois</span>
+        </div>
+        <div class="stat-trend positive">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+            <polyline points="17 6 23 6 23 12"></polyline>
+          </svg>
+          <span>+23%</span>
+        </div>
+        <div class="stat-bg-pattern"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Charts Section -->
+  <section class="charts-section">
+    <div class="charts-grid">
+      <!-- Sales Chart -->
+      <div class="chart-card main-chart animate-fade-in-up" style="--delay: 0.2s">
+        <div class="chart-header">
+          <div class="chart-title">
+            <h3>Aperçu des Ventes</h3>
+            <p>Performance des 7 derniers jours</p>
+          </div>
+          <div class="chart-actions">
+            <button class="chart-period-btn active">7J</button>
+            <button class="chart-period-btn">30J</button>
+            <button class="chart-period-btn">90J</button>
+          </div>
+        </div>
+        <div class="chart-body">
+          <div class="chart-placeholder">
+            <div class="bar-chart">
+              @for (day of salesData; track day.label) {
+                <div class="bar-wrapper">
+                  <div class="bar" [style.height.%]="day.percentage">
+                    <span class="bar-value">{{ day.value }}€</span>
+                  </div>
+                  <span class="bar-label">{{ day.label }}</span>
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+        <div class="chart-footer">
+          <div class="chart-legend">
+            <span class="legend-item">
+              <span class="legend-dot sales"></span>
+              Ventes
+            </span>
+            <span class="legend-item">
+              <span class="legend-dot orders"></span>
+              Commandes
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- User Distribution -->
+      <div class="chart-card distribution-chart animate-fade-in-up" style="--delay: 0.3s">
+        <div class="chart-header">
+          <div class="chart-title">
+            <h3>Répartition des Utilisateurs</h3>
+            <p>Par rôle</p>
+          </div>
+        </div>
+        <div class="chart-body">
+          <div class="donut-chart">
+            <div class="donut-ring">
+              <svg viewBox="0 0 36 36" class="circular-chart">
+                <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                @for (segment of userDistribution; track segment.role; let i = $index) {
+                  <path class="circle-segment" 
+                        [attr.stroke]="segment.color"
+                        [attr.stroke-dasharray]="segment.percentage + ', 100'"
+                        [attr.stroke-dashoffset]="getStrokeOffset(i)"
+                        d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                }
+              </svg>
+              <div class="donut-center">
+                <span class="donut-value">{{ stats.totalUsers }}</span>
+                <span class="donut-label">Total</span>
+              </div>
+            </div>
+            <div class="donut-legend">
+              @for (item of userDistribution; track item.role) {
+                <div class="legend-row">
+                  <span class="legend-color" [style.background]="item.color"></span>
+                  <span class="legend-label">{{ item.label }}</span>
+                  <span class="legend-value">{{ item.count }}</span>
+                  <span class="legend-percent">{{ item.percentage }}%</span>
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Activity & Recent Data Section -->
+  <section class="data-section">
+    <div class="data-grid">
+      <!-- Recent Activity -->
+      <div class="data-card activity-card animate-fade-in-up" style="--delay: 0.3s">
+        <div class="card-header">
+          <h3>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+            </svg>
+            Activité Récente
+          </h3>
+          <a routerLink="/admin/activity" class="view-all-link">Voir tout</a>
+        </div>
+        <div class="card-body">
+          <div class="activity-timeline">
+            @for (activity of recentActivities; track activity.id) {
+              <div class="activity-item" [class]="'activity-' + activity.type">
+                <div class="activity-icon">
+                  @switch (activity.type) {
+                    @case ('user') {
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                      </svg>
+                    }
+                    @case ('product') {
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                      </svg>
+                    }
+                    @case ('order') {
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="9" cy="21" r="1"></circle>
+                        <circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                      </svg>
+                    }
+                    @case ('warehouse') {
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                      </svg>
+                    }
+                    @default {
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                      </svg>
+                    }
+                  }
+                </div>
+                <div class="activity-content">
+                  <p class="activity-text">{{ activity.message }}</p>
+                  <span class="activity-time">{{ activity.time }}</span>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Products -->
+      <div class="data-card products-card animate-fade-in-up" style="--delay: 0.4s">
+        <div class="card-header">
+          <h3>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+            </svg>
+            Derniers Produits
+          </h3>
+          <a routerLink="/admin/products" class="view-all-link">Voir tout</a>
+        </div>
+        <div class="card-body">
+          <div class="products-mini-list">
+            @for (product of recentProducts; track product.id) {
+              <div class="product-mini-item">
+                <div class="product-mini-image">
+                  @if (product.image) {
+                    <img [src]="product.image" [alt]="product.name">
+                  } @else {
+                    <div class="no-image-placeholder">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                        <circle cx="9" cy="9" r="2"></circle>
+                        <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path>
+                      </svg>
+                    </div>
+                  }
+                </div>
+                <div class="product-mini-info">
+                  <span class="product-mini-name">{{ product.name }}</span>
+                  <span class="product-mini-sku">{{ product.sku }}</span>
+                </div>
+                <div class="product-mini-price">{{ formatCurrency(product.price) }}</div>
+                <span class="product-mini-status" [class.active]="product.active" [class.inactive]="!product.active">
+                  {{ product.active ? 'Actif' : 'Inactif' }}
+                </span>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Users -->
+      <div class="data-card users-card animate-fade-in-up" style="--delay: 0.5s">
+        <div class="card-header">
+          <h3>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+            Derniers Utilisateurs
+          </h3>
+          <a routerLink="/admin/users" class="view-all-link">Voir tout</a>
+        </div>
+        <div class="card-body">
+          <div class="users-mini-list">
+            @for (user of recentUsers; track user.id) {
+              <div class="user-mini-item">
+                <div class="user-mini-avatar" [class]="'role-' + user.role.toLowerCase()">
+                  {{ user.firstName.charAt(0) }}{{ user.lastName.charAt(0) }}
+                </div>
+                <div class="user-mini-info">
+                  <span class="user-mini-name">{{ user.firstName }} {{ user.lastName }}</span>
+                  <span class="user-mini-email">{{ user.email }}</span>
+                </div>
+                <span class="user-mini-role" [class]="'badge-' + user.role.toLowerCase()">
+                  {{ getRoleLabel(user.role) }}
+                </span>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Warehouses Overview -->
+  <section class="warehouses-section animate-fade-in-up" style="--delay: 0.5s">
+    <div class="section-header">
+      <h2>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+          <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        </svg>
+        Aperçu des Entrepôts
+      </h2>
+      <a routerLink="/admin/warehouses" class="view-all-link">
+        Gérer les entrepôts
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </a>
+    </div>
+    <div class="warehouses-grid">
+      @for (warehouse of warehouses; track warehouse.id) {
+        <div class="warehouse-card">
+          <div class="warehouse-header">
+            <div class="warehouse-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+              </svg>
+            </div>
+            <div class="warehouse-info">
+              <h4>{{ warehouse.name }}</h4>
+              <span class="warehouse-code">{{ warehouse.code }}</span>
+            </div>
+          </div>
+          <div class="warehouse-stats">
+            <div class="capacity-bar">
+              <div class="capacity-fill" [style.width.%]="warehouse.utilization" [class.warning]="warehouse.utilization > 80" [class.danger]="warehouse.utilization > 95"></div>
+            </div>
+            <div class="capacity-info">
+              <span>Capacité utilisée</span>
+              <span class="capacity-value" [class.warning]="warehouse.utilization > 80" [class.danger]="warehouse.utilization > 95">{{ warehouse.utilization }}%</span>
+            </div>
+          </div>
+          <div class="warehouse-meta">
+            <span class="warehouse-city">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                <circle cx="12" cy="10" r="3"></circle>
+              </svg>
+              {{ warehouse.city }}
+            </span>
+          </div>
+        </div>
+      }
+    </div>
+  </section>
 </div>

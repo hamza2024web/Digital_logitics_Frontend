@@ -51,14 +51,8 @@ export const ADMIN_ROUTES:  Routes = [
         loadComponent: () => import('./warehouses/warehouse-form/warehouse-form')
           .then(m => m.WarehouseFormComponent)
       },
-
       {
         path: '',
-        redirectTo: 'dashboard',
-        pathMatch: 'full'
-      }
-      {
-        path:  '',
         redirectTo: 'dashboard',
         pathMatch: 'full'
       }

@@ -4,38 +4,227 @@
   margin: 0 auto;
 }
 
+// Header
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+  gap: 20px;
+
+  .header-content {
+    h1 {
+      font-size: 32px;
+      font-weight: 700;
+      color: #1a202c;
+      margin: 0 0 8px 0;
+    }
+
+    .subtitle {
+      color: #718096;
+      font-size:  14px;
+      margin: 0;
+    }
+  }
+
+  .btn-primary {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+    }
+  }
+}
+
+// Filtres
+.filters-section {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  align-items: center;
+
+  .search-box {
+    flex: 1;
+    min-width: 250px;
+    position: relative;
+
+    svg {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform:  translateY(-50%);
+      color: #a0aec0;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px 12px 12px 40px;
+      border: 2px solid #e2e8f0;
+      border-radius:  8px;
+      font-size: 14px;
+      transition: all 0.3s;
+
+      &:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      }
+    }
+  }
+
+  .filter-group {
+    display: flex;
+    gap: 10px;
+
+    .btn-secondary {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 12px 20px;
+      background: white;
+      color: #667eea;
+      border: 2px solid #667eea;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+
+      &:hover {
+        background: #667eea;
+        color: white;
+      }
+    }
+  }
+}
+
+// États
+.loading-state,
+.error-state,
+.empty-state {
+  background: white;
+  padding: 60px 40px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+
+  svg {
+    color: #a0aec0;
+    margin-bottom: 20px;
+  }
+
+  h3 {
+    font-size: 20px;
+    color: #2d3748;
+    margin-bottom: 10px;
+  }
+
+  p {
+    color: #718096;
+    font-size:  16px;
+    margin-bottom:  20px;
+  }
+
+  .spinner {
+    width: 48px;
+    height: 48px;
+    border: 4px solid #e2e8f0;
+    border-top-color: #667eea;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+    }
+  }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+// Grille des entrepôts
 .warehouses-grid {
   display:  grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 24px;
 }
 
+// Card entrepôt
 .warehouse-card {
   background: white;
   border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-shadow:  0 4px 12px rgba(0, 0, 0, 0.08);
   padding: 30px;
   transition: all 0.3s;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left:  0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  }
 
   &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+    transform: translateY(-6px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
   }
 }
 
 .warehouse-icon {
   width: 80px;
   height: 80px;
-  border-radius: 50%;
+  border-radius:  50%;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 20px;
+  box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
 
   svg {
     color: white;
@@ -53,9 +242,9 @@
       padding: 6px 14px;
       background: #ebf8ff;
       color: #2c5282;
-      border-radius:  20px;
+      border-radius: 20px;
       font-size: 14px;
-      font-weight: 700;
+      font-weight:  700;
       letter-spacing: 0.5px;
     }
   }
@@ -64,23 +253,24 @@
     font-size: 20px;
     font-weight:  700;
     color: #1a202c;
-    margin:  0 0 20px 0;
+    margin: 0 0 20px 0;
     min-height: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
+    line-height: 1.4;
   }
 
   .warehouse-actions {
     display: flex;
-    gap:  10px;
-    justify-content: center;
+    gap: 10px;
+    justify-content:  center;
     padding-top: 16px;
-    border-top: 1px solid #e2e8f0;
+    border-top:  1px solid #e2e8f0;
 
     .btn-icon {
       flex: 1;
-      max-width: 100px;
+      max-width: 120px;
       height: 40px;
       border-radius: 8px;
       border: none;
@@ -108,7 +298,7 @@
 
       &.btn-danger {
         &:hover {
-          background:  #fff5f5;
+          background: #fff5f5;
           color: #c53030;
         }
       }
@@ -116,3 +306,39 @@
   }
 }
 
+// Responsive
+@media (max-width: 768px) {
+  .warehouse-list-container {
+    padding: 20px;
+  }
+
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+
+    .btn-primary {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+  .filters-section {
+    flex-direction: column;
+
+    .search-box,
+    .filter-group {
+      width: 100%;
+    }
+
+    .filter-group {
+      . btn-secondary {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  }
+
+  .warehouses-grid {
+    grid-template-columns: 1fr;
+  }
+}

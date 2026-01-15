@@ -1,11 +1,14 @@
 import {Component, OnInit} from '@angular/core';
 import {Warehouse} from '../../../../api/models/warehouse.model';
 import {WarehouseApiService} from '../../../../api/models/warehouse-api.service';
+import {RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-warehouse-list',
   standalone: true,
-  imports: [],
+  imports: [
+    RouterLink
+  ],
   templateUrl: './warehouse-list.html',
   styleUrl: './warehouse-list.scss',
 })

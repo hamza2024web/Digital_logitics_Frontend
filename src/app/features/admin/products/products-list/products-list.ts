@@ -8,8 +8,8 @@ import { Product } from '../../../../api/models/product.model';
   selector: 'app-products-list',
   standalone: true,
   imports: [CommonModule, RouterLink],
-  templateUrl: './products-list. component.html',
-  styleUrls: ['./products-list. component.scss']
+  templateUrl: './products-list.html',
+  styleUrls: ['./products-list.scss']
 })
 export class ProductsListComponent implements OnInit {
   products: Product[] = [];
@@ -74,7 +74,7 @@ export class ProductsListComponent implements OnInit {
     this.searchTerm = '';
     this.filterActive = '';
     this.filterPrice = null;
-    this.filteredProducts = this. products;
+    this.filteredProducts = this.products;
   }
 
   toggleProductStatus(product: Product): void {

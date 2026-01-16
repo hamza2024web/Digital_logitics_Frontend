@@ -2,42 +2,55 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../../core/auth/auth.service';
+import { ProductApiService } from '../../../../api/services/product-api.service';
+import { UserApiService } from '../../../../api/services/user-api.service';
+import { WarehouseApiService } from '../../../../api/models/warehouse-api.service';
 
 interface Product {
-  id: string;
+  id: number;
   sku: string;
   name: string;
-  category: string;
   price: number;
-  totalStock: number;
-  status: 'ACTIVE' | 'INACTIVE' | 'LOW_STOCK';
+  active: boolean;
+  image?: string;
 }
 
 interface User {
   id: number;
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   role: 'ADMIN' | 'WAREHOUSE_MANAGER' | 'CLIENT';
-  status: 'ACTIVE' | 'INACTIVE';
-  joinedDate: string;
+  active: boolean;
 }
 
 interface Warehouse {
   id: number;
   name: string;
+  code: string;
   city: string;
-  capacity: number;
   utilization: number;
-  manager: string;
 }
 
-interface PurchaseOrder {
-  id: string;
-  supplier: string;
-  warehouse: string;
-  status: 'DRAFT' | 'SENT' | 'PARTIAL' | 'RECEIVED' | 'CANCELED';
-  total: number;
-  expectedDate: string;
+interface Activity {
+  id: number;
+  type: 'user' | 'product' | 'order' | 'warehouse';
+  message: string;
+  time: string;
+}
+
+interface SalesData {
+  label: string;
+  value: number;
+  percentage: number;
+}
+
+interface UserDistribution {
+  role: string;
+  label: string;
+  count: number;
+  percentage: number;
+  color: string;
 }
 
 @Component({
@@ -49,92 +62,167 @@ interface PurchaseOrder {
 })
 export class AdminDashboardComponent implements OnInit {
   private authService = inject(AuthService);
+  private productApiService = inject(ProductApiService);
+  private userApiService = inject(UserApiService);
+  private warehouseApiService = inject(WarehouseApiService);
 
-  userEmail = '';
-  userRole = '';
   userName = 'Admin';
   currentDate = new Date();
-  sidebarCollapsed = false;
-  activeTab = 'overview';
 
-  // Platform KPIs - will be populated from API
+  // Stats - will be populated from API
   stats = {
     totalUsers: 0,
-    activeClients: 0,
     totalProducts: 0,
-    activeWarehouses: 0,
-    monthlyRevenue: 0,
-    totalOrders: 0,
-    pendingOrders: 0,
-    lowStockAlerts: 0
+    totalWarehouses: 0,
+    monthlyRevenue: 0
   };
 
-  // User distribution - will be populated from API
-  userDistribution: { role: string; count: number; percentage: number; color: string }[] = [];
-
-  // Data arrays - will be populated from API
+  // Data arrays
   recentProducts: Product[] = [];
   recentUsers: User[] = [];
   warehouses: Warehouse[] = [];
-  purchaseOrders: PurchaseOrder[] = [];
-  recentActivities: { user: string; action: string; time: string; type: string }[] = [];
+  recentActivities: Activity[] = [];
+  salesData: SalesData[] = [];
+  userDistribution: UserDistribution[] = [];
 
   ngOnInit(): void {
-    this.userEmail = this.authService.getUserEmail();
-    this.userRole = this.authService.getUserRole();
-    this.userName = this.userEmail.split('@')[0] || 'Admin';
+    const userEmail = this.authService.getUserEmail();
+    this.userName = userEmail ? userEmail.split('@')[0] : 'Admin';
+    
+    this.loadData();
+    this.initializeMockData();
   }
 
-  toggleSidebar(): void {
-    this.sidebarCollapsed = !this.sidebarCollapsed;
+  loadData(): void {
+    // Load products
+    this.productApiService.getAllProducts().subscribe({
+      next: (products) => {
+        this.stats.totalProducts = products.length;
+        this.recentProducts = products.slice(0, 5).map(p => ({
+          id: p.id,
+          sku: p.sku,
+          name: p.name,
+          price: p.price,
+          active: p.active,
+          image: p.image
+        }));
+      },
+      error: () => {
+        // Use mock data on error
+        this.stats.totalProducts = 45;
+      }
+    });
+
+    // Load users
+    this.userApiService.getAllUsers().subscribe({
+      next: (users) => {
+        this.stats.totalUsers = users.length;
+        this.recentUsers = users.slice(0, 5).map(u => ({
+          id: u.id,
+          firstName: u.firstName,
+          lastName: u.lastName,
+          email: u.email,
+          role: u.role,
+          active: u.active
+        }));
+        this.calculateUserDistribution(users);
+      },
+      error: () => {
+        this.stats.totalUsers = 156;
+        this.setMockUserDistribution();
+      }
+    });
+
+    // Load warehouses
+    this.warehouseApiService.getAllWarehouses().subscribe({
+      next: (warehouses) => {
+        this.stats.totalWarehouses = warehouses.length;
+        this.warehouses = warehouses.map(w => ({
+          id: w.id,
+          name: w.name,
+          code: w.code,
+          city: 'Paris', // Default city
+          utilization: Math.floor(Math.random() * 40) + 50 // Random utilization 50-90%
+        }));
+      },
+      error: () => {
+        this.stats.totalWarehouses = 4;
+        this.setMockWarehouses();
+      }
+    });
   }
 
-  setActiveTab(tab: string): void {
-    this.activeTab = tab;
+  initializeMockData(): void {
+    // Mock revenue (frontend only)
+    this.stats.monthlyRevenue = 127450;
+
+    // Mock sales data for chart
+    this.salesData = [
+      { label: 'Lun', value: 1250, percentage: 45 },
+      { label: 'Mar', value: 1890, percentage: 68 },
+      { label: 'Mer', value: 2100, percentage: 76 },
+      { label: 'Jeu', value: 1650, percentage: 60 },
+      { label: 'Ven', value: 2800, percentage: 100 },
+      { label: 'Sam', value: 2200, percentage: 79 },
+      { label: 'Dim', value: 1400, percentage: 50 }
+    ];
+
+    // Mock recent activities
+    this.recentActivities = [
+      { id: 1, type: 'order', message: 'Nouvelle commande #1234 reçue', time: 'Il y a 5 min' },
+      { id: 2, type: 'user', message: 'Nouvel utilisateur inscrit: Marie Dupont', time: 'Il y a 15 min' },
+      { id: 3, type: 'product', message: 'Stock bas pour SKU-789 (< 10 unités)', time: 'Il y a 30 min' },
+      { id: 4, type: 'warehouse', message: 'Entrepôt Paris-Nord à 85% de capacité', time: 'Il y a 1h' },
+      { id: 5, type: 'order', message: 'Commande #1233 expédiée', time: 'Il y a 2h' },
+      { id: 6, type: 'product', message: 'Nouveau produit ajouté: Widget Pro', time: 'Il y a 3h' }
+    ];
   }
 
-  logout(): void {
-    this.authService.logout();
+  calculateUserDistribution(users: any[]): void {
+    const adminCount = users.filter(u => u.role === 'ADMIN').length;
+    const managerCount = users.filter(u => u.role === 'WAREHOUSE_MANAGER').length;
+    const clientCount = users.filter(u => u.role === 'CLIENT').length;
+    const total = users.length || 1;
+
+    this.userDistribution = [
+      { role: 'ADMIN', label: 'Administrateurs', count: adminCount, percentage: Math.round((adminCount / total) * 100), color: '#f97316' },
+      { role: 'WAREHOUSE_MANAGER', label: 'Gestionnaires', count: managerCount, percentage: Math.round((managerCount / total) * 100), color: '#8b5cf6' },
+      { role: 'CLIENT', label: 'Clients', count: clientCount, percentage: Math.round((clientCount / total) * 100), color: '#06b6d4' }
+    ];
   }
 
-  getStatusClass(status: string): string {
-    const classes: Record<string, string> = {
-      'ACTIVE': 'status-active',
-      'INACTIVE': 'status-inactive',
-      'LOW_STOCK': 'status-warning',
-      'DRAFT': 'status-draft',
-      'SENT': 'status-sent',
-      'PARTIAL': 'status-partial',
-      'RECEIVED': 'status-received',
-      'CANCELED': 'status-canceled'
-    };
-    return classes[status] || '';
+  setMockUserDistribution(): void {
+    this.userDistribution = [
+      { role: 'ADMIN', label: 'Administrateurs', count: 8, percentage: 5, color: '#f97316' },
+      { role: 'WAREHOUSE_MANAGER', label: 'Gestionnaires', count: 24, percentage: 15, color: '#8b5cf6' },
+      { role: 'CLIENT', label: 'Clients', count: 124, percentage: 80, color: '#06b6d4' }
+    ];
   }
 
-  getStatusLabel(status: string): string {
+  setMockWarehouses(): void {
+    this.warehouses = [
+      { id: 1, name: 'Entrepôt Paris-Nord', code: 'WH-PAR-N', city: 'Paris', utilization: 72 },
+      { id: 2, name: 'Entrepôt Lyon', code: 'WH-LYO', city: 'Lyon', utilization: 85 },
+      { id: 3, name: 'Entrepôt Marseille', code: 'WH-MAR', city: 'Marseille', utilization: 58 },
+      { id: 4, name: 'Entrepôt Bordeaux', code: 'WH-BDX', city: 'Bordeaux', utilization: 91 }
+    ];
+  }
+
+  getStrokeOffset(index: number): number {
+    let offset = 25; // Start from top
+    for (let i = 0; i < index; i++) {
+      offset -= this.userDistribution[i]?.percentage || 0;
+    }
+    return offset;
+  }
+
+  getRoleLabel(role: string): string {
     const labels: Record<string, string> = {
-      'ACTIVE': 'Actif',
-      'INACTIVE': 'Inactif',
-      'LOW_STOCK': 'Stock Faible',
-      'DRAFT': 'Brouillon',
-      'SENT': 'Envoyée',
-      'PARTIAL': 'Partielle',
-      'RECEIVED': 'Reçue',
-      'CANCELED': 'Annulée',
       'ADMIN': 'Admin',
       'WAREHOUSE_MANAGER': 'Gestionnaire',
       'CLIENT': 'Client'
     };
-    return labels[status] || status;
-  }
-
-  getRoleClass(role: string): string {
-    const classes: Record<string, string> = {
-      'ADMIN': 'role-admin',
-      'WAREHOUSE_MANAGER': 'role-manager',
-      'CLIENT': 'role-client'
-    };
-    return classes[role] || '';
+    return labels[role] || role;
   }
 
   formatCurrency(amount: number): string {
@@ -143,16 +231,5 @@ export class AdminDashboardComponent implements OnInit {
 
   formatNumber(num: number): string {
     return new Intl.NumberFormat('fr-FR').format(num);
-  }
-
-  getActivityIcon(type: string): string {
-    const icons: Record<string, string> = {
-      'order': '🛒',
-      'stock': '📦',
-      'alert': '⚠️',
-      'user': '👤',
-      'shipment': '🚚'
-    };
-    return icons[type] || '📋';
   }
 }

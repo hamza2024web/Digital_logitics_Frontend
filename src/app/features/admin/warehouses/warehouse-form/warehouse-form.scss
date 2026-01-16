@@ -1,4 +1,4 @@
-// User Form - Modern Dark Theme Design
+// Warehouse Form - Modern Dark Theme Design
 @import '../../../../../styles/variables';
 
 // =====================
@@ -38,9 +38,9 @@
 // =====================
 // CONTAINER
 // =====================
-.user-form-container {
+.warehouse-form-container {
   padding: 2rem;
-  max-width: 900px;
+  max-width: 800px;
   margin: 0 auto;
   animation: fadeInUp 0.5s ease;
 }
@@ -201,22 +201,18 @@
     align-items: center;
     gap: 1rem;
 
-    .avatar-placeholder {
-      width: 56px;
-      height: 56px;
+    .icon {
+      width: 48px;
+      height: 48px;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
-      border-radius: 50%;
-      color: white;
-      font-size: 1.25rem;
-      font-weight: 700;
+      background: linear-gradient(135deg, rgba(249, 115, 22, 0.2) 0%, rgba(234, 88, 12, 0.1) 100%);
+      border-radius: 12px;
+      color: #f97316;
     }
 
     .text {
-      flex: 1;
-
       h2 {
         font-size: 1.35rem;
         font-weight: 700;
@@ -229,33 +225,6 @@
         font-size: 0.9rem;
         margin: 0;
       }
-    }
-  }
-}
-
-// =====================
-// FORM SECTIONS
-// =====================
-.form-section {
-  margin-bottom: 2rem;
-
-  &:last-of-type {
-    margin-bottom: 0;
-  }
-
-  .section-title {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    font-size: 1rem;
-    font-weight: 600;
-    color: white;
-    margin-bottom: 1.25rem;
-    padding-bottom: 0.75rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-
-    svg {
-      color: #f97316;
     }
   }
 }
@@ -332,7 +301,7 @@
   }
 
   textarea {
-    min-height: 100px;
+    min-height: 120px;
     resize: vertical;
   }
 
@@ -366,168 +335,6 @@
     margin-top: 0.5rem;
     font-size: 0.8rem;
     color: rgba(255, 255, 255, 0.4);
-  }
-}
-
-// =====================
-// PASSWORD FIELD
-// =====================
-.password-field {
-  position: relative;
-
-  input {
-    padding-right: 3rem;
-  }
-
-  .toggle-password {
-    position: absolute;
-    right: 1rem;
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    color: rgba(255, 255, 255, 0.4);
-    cursor: pointer;
-    padding: 0.25rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: color 0.3s;
-
-    &:hover {
-      color: #f97316;
-    }
-  }
-}
-
-// =====================
-// CHECKBOX & TOGGLE
-// =====================
-.checkbox-group {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-top: 0.5rem;
-
-  input[type="checkbox"] {
-    appearance: none;
-    width: 20px;
-    height: 20px;
-    padding: 0;
-    border-radius: 6px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 2px solid rgba(255, 255, 255, 0.2);
-    cursor: pointer;
-    transition: all 0.3s;
-    position: relative;
-
-    &:checked {
-      background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
-      border-color: #f97316;
-
-      &::after {
-        content: '';
-        position: absolute;
-        left: 5px;
-        top: 2px;
-        width: 6px;
-        height: 10px;
-        border: solid white;
-        border-width: 0 2px 2px 0;
-        transform: rotate(45deg);
-      }
-    }
-
-    &:focus {
-      box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.3);
-    }
-  }
-
-  label {
-    font-size: 0.9rem;
-    color: rgba(255, 255, 255, 0.8);
-    cursor: pointer;
-    margin-bottom: 0;
-  }
-}
-
-// =====================
-// ROLE SELECTOR
-// =====================
-.role-selector {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
-
-  .role-option {
-    position: relative;
-
-    input[type="radio"] {
-      position: absolute;
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
-
-    label {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.75rem;
-      padding: 1.25rem 1rem;
-      background: rgba(255, 255, 255, 0.05);
-      border: 2px solid rgba(255, 255, 255, 0.1);
-      border-radius: 12px;
-      cursor: pointer;
-      transition: all 0.3s;
-      text-align: center;
-
-      .icon {
-        width: 40px;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 10px;
-        color: rgba(255, 255, 255, 0.6);
-        transition: all 0.3s;
-      }
-
-      .role-name {
-        font-size: 0.9rem;
-        font-weight: 600;
-        color: rgba(255, 255, 255, 0.8);
-      }
-
-      .role-description {
-        font-size: 0.75rem;
-        color: rgba(255, 255, 255, 0.4);
-      }
-
-      &:hover {
-        border-color: rgba(249, 115, 22, 0.3);
-        background: rgba(255, 255, 255, 0.08);
-      }
-    }
-
-    input:checked + label {
-      border-color: #f97316;
-      background: rgba(249, 115, 22, 0.1);
-
-      .icon {
-        background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
-        color: white;
-      }
-
-      .role-name {
-        color: #f97316;
-      }
-    }
-
-    input:focus + label {
-      box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.2);
-    }
   }
 }
 
@@ -603,7 +410,7 @@
 // RESPONSIVE
 // =====================
 @media (max-width: 768px) {
-  .user-form-container {
+  .warehouse-form-container {
     padding: 1.5rem;
   }
 
@@ -623,10 +430,6 @@
   }
 
   .form-row {
-    grid-template-columns: 1fr;
-  }
-
-  .role-selector {
     grid-template-columns: 1fr;
   }
 

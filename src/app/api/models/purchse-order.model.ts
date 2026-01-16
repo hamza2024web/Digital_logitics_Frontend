@@ -5,7 +5,7 @@ export enum PurchaseOrderStatus {
   CANCELLED = 'CANCELLED'
 }
 
-export interface PurchseOrder {
+export interface PurchaseOrder {
   id: number;
   supplierId: number;
   supplierName: string;

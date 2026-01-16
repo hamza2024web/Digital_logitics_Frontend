@@ -226,7 +226,9 @@
     margin-bottom: 20px;
 
     label {
-      display: block;
+      display: flex;
+      align-items: center;
+      gap: 8px;
       font-size: 0.875rem;
       font-weight: 600;
       color: rgba(255, 255, 255, 0.8);
@@ -235,44 +237,34 @@
       span {
         color: $primary;
       }
+
+      svg {
+        color: rgba(255, 255, 255, 0.6);
+      }
     }
 
     .input-wrapper {
       position: relative;
 
-      .input-icon {
-        position: absolute;
-        left: 16px;
-        top: 50%;
-        transform: translateY(-50%);
-        color: rgba(255, 255, 255, 0.4);
-        pointer-events: none;
-        transition: color 0.3s;
-      }
-
       input {
         width: 100%;
-        padding: 14px 16px 14px 48px;
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 255, 255, 0.15);
+        padding: 16px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 12px;
         font-size: 0.95rem;
         color: white;
         transition: all 0.3s;
 
         &::placeholder {
-          color: rgba(255, 255, 255, 0.35);
+          color: rgba(255, 255, 255, 0.3);
         }
 
         &:focus {
           outline: none;
+          background: rgba(255, 255, 255, 0.05);
           border-color: $primary;
-          background: rgba(255, 255, 255, 0.08);
-          box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.15);
-
-          &+.input-icon {
-            color: $primary;
-          }
+          box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.1);
         }
 
         &.ng-invalid.ng-touched {
@@ -367,7 +359,7 @@
       }
     }
 
-    .forgot-password {
+    .forgot-link {
       font-size: 0.875rem;
       color: $primary;
       text-decoration: none;
@@ -378,6 +370,65 @@
         color: $accent;
         text-decoration: underline;
       }
+    }
+  }
+
+  // checkbox custom styles
+  .checkbox-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    position: relative;
+    user-select: none;
+
+    input {
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+      height: 0;
+      width: 0;
+
+      &:checked ~ .checkmark {
+        background: linear-gradient(135deg, $primary 0%, $primary-dark 100%);
+        border-color: $primary;
+        
+        &:after {
+          display: block;
+        }
+      }
+    }
+
+    .checkmark {
+      position: relative;
+      height: 18px;
+      width: 18px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
+      transition: all 0.2s;
+
+      &:after {
+        content: "";
+        position: absolute;
+        display: none;
+        left: 6px;
+        top: 2px;
+        width: 4px;
+        height: 8px;
+        border: solid white;
+        border-width: 0 2px 2px 0;
+        transform: rotate(45deg);
+      }
+    }
+
+    .label {
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.7);
+    }
+    
+    &:hover .checkmark {
+      border-color: rgba(255, 255, 255, 0.4);
     }
   }
 
@@ -423,9 +474,47 @@
   }
 }
 
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
+// Divider
+.divider {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+  margin-top: 24px;
+
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  span {
+    padding: 0 16px;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.4);
+    text-transform: lowercase;
+  }
+}
+
+// Register Link
+.register-link {
+  text-align: center;
+  margin-top: 24px;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.6);
+
+  a {
+    color: $primary;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s;
+    cursor: pointer;
+
+    &:hover {
+      color: $accent;
+      text-decoration: underline;
+    }
   }
 }
 
@@ -433,63 +522,32 @@
 .login-footer {
   margin-top: 32px;
   text-align: center;
-
-  .divider {
-    display: flex;
-    align-items: center;
-    margin-bottom: 24px;
-
-    &::before,
-    &::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: rgba(255, 255, 255, 0.1);
-    }
-
-    span {
-      padding: 0 16px;
-      font-size: 0.85rem;
-      color: rgba(255, 255, 255, 0.4);
-    }
-  }
-
-  .register-link {
-    font-size: 0.95rem;
-    color: rgba(255, 255, 255, 0.6);
-
-    a {
-      color: $primary;
-      text-decoration: none;
-      font-weight: 600;
-      transition: color 0.2s;
-
-      &:hover {
-        color: $accent;
-        text-decoration: underline;
-      }
-    }
+  
+  p {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.3);
+    margin: 0;
   }
 }
 
 // Social Buttons (Optional)
 .social-login {
   display: flex;
-  gap: 12px;
+  justify-content: center;
   margin-bottom: 24px;
 
   .btn-social {
-    flex: 1;
+    width: 100%;
     padding: 12px;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
+    border-radius: 12px;
     color: white;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    font-size: 0.9rem;
+    gap: 12px;
+    font-size: 0.95rem;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.3s;

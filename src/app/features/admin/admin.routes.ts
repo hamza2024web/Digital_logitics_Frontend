@@ -51,6 +51,20 @@ export const ADMIN_ROUTES:  Routes = [
         loadComponent: () => import('./warehouses/warehouse-form/warehouse-form')
           .then(m => m.WarehouseFormComponent)
       },
+      {        path: 'suppliers',
+        loadComponent: () => import('./suppliers/supplier-list/supplier-list')
+          .then(m => m.SupplierList)
+      },
+      {
+        path: 'suppliers/create',
+        loadComponent: () => import('./suppliers/supplier-form/supplier-form')
+          .then(m => m.SupplierForm)
+      },
+      {
+        path: 'suppliers/edit/:id',
+        loadComponent: () => import('./suppliers/supplier-form/supplier-form')
+          .then(m => m.SupplierForm)
+      },
       {
         path: 'suppliers',
         loadComponent : () => import('./suppliers/supplier-list/supplier-list')

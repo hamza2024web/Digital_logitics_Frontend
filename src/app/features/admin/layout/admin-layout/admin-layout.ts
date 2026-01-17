@@ -4,7 +4,7 @@ import {CommonModule} from '@angular/common';
 import {AuthService} from '../../../../core/auth/auth.service';
 import {ProductApiService} from '../../../../api/services/product-api.service';
 import {UserApiService} from '../../../../api/services/user-api.service';
-import {WarehouseApiService} from '../../../../api/models/warehouse-api.service';
+import {WarehouseApiService} from '../../../../api/services/warehouse-api.service';
 
 @Component({
   selector: 'app-admin-layout',

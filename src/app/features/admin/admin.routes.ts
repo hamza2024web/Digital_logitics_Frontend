@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import {PurchaseOrderList} from './purchase-orders/purchase-order-list/purchase-order-list';
 
 export const ADMIN_ROUTES:  Routes = [
   {
@@ -79,6 +80,21 @@ export const ADMIN_ROUTES:  Routes = [
         path: 'suppliers/edit/:id',
         loadComponent: () => import('./suppliers/supplier-form/supplier-form')
           .then(m => m.SupplierForm)
+      },
+      {
+        path: 'purchase-orders',
+        loadComponent: () => import('./purchase-orders/purchase-order-list/purchase-order-list')
+          .then(m => m.PurchaseOrderList)
+      },
+      {
+        path: 'purchase-orders/create',
+        loadComponent: () => import('./purchase-orders/purchase-order-form/purchase-order-form')
+          .then(m => m.PurchaseOrderForm)
+      },
+      {
+        path: 'purchase-orders/:id',
+        loadComponent: () => import('./purchase-orders/purchase-order-detail/purchase-order-detail')
+          .then(m => m.PurchaseOrderDetail)
       },
       {
         path: '',

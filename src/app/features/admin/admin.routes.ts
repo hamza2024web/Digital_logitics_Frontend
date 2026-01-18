@@ -97,6 +97,16 @@ export const ADMIN_ROUTES:  Routes = [
           .then(m => m.PurchaseOrderDetail)
       },
       {
+        path: 'sales-orders',
+        loadComponent: () => import('./sales-orders/sales-order-list/sales-order-list')
+          .then(m => m.SalesOrderList)
+      },
+      {
+        path: 'sales-orders/:id',
+        loadComponent: () => import('./sales-orders/sales-order-detail/sales-order-detail')
+          .then(m => m.SalesOrderDetail)
+      },
+      {
         path: '',
         redirectTo: 'dashboard',
         pathMatch: 'full'

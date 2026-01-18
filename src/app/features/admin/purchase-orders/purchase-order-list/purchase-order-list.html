@@ -1,1 +1,71 @@
-<p>purchase-order-list works!</p>
+<div class="page-container">
+    <div class="page-header">
+        <div class="header-content">
+            <h1>Purchase Orders</h1>
+            <p>Manage your supplier orders and track deliveries</p>
+        </div>
+        <button class="btn-primary" (click)="createOrder()">
+            <i class="fas fa-plus"></i> New Purchase Order
+        </button>
+    </div>
+
+    <div class="content-card">
+        <div class="table-actions">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search orders..." #searchInput (input)="filterOrders(searchInput.value)">
+            </div>
+            <div class="filter-group">
+                <button class="filter-btn active">All</button>
+                <button class="filter-btn">Pending</button>
+                <button class="filter-btn">Approved</button>
+                <button class="filter-btn">Received</button>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Supplier</th>
+                        <th>Date</th>
+                        <th>Total Amount</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (order of filteredOrders; track order.id) {
+                    <tr>
+                        <td><span class="id-badge">#{{ order.orderNumber }}</span></td>
+                        <td>
+                            <div class="supplier-info">
+                                <div class="avatar">{{ order.supplierName.charAt(0) }}</div>
+                                <span>{{ order.supplierName }}</span>
+                            </div>
+                        </td>
+                        <td>{{ order.orderDate | date:'mediumDate' }}</td>
+                        <td class="amount">{{ order.totalAmount | currency }}</td>
+                        <td>
+                            <span class="status-badge" [ngClass]="order.status.toLowerCase()">
+                                {{ order.status }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-icon" (click)="viewOrder(order.id)" title="View Details">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn-icon delete" (click)="deleteOrder(order.id)" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

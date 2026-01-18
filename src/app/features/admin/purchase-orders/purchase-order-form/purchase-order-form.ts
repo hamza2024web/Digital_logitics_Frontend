@@ -5,7 +5,7 @@ import {Supplier} from '../../../../api/models/supplier.model';
 import {Product} from '../../../../api/models/product.model';
 import {Router} from '@angular/router';
 import {ProductApiService} from '../../../../api/services/product-api.service';
-import {WarehouseApiService} from '../../../../api/models/warehouse-api.service';
+import {WarehouseApiService} from '../../../../api/services/warehouse-api.service';
 import {SupplierApiService} from '../../../../api/services/supplier-api.service';
 import {PurchaseOrderApiService} from '../../../../api/services/purchase-order-api.model';
 import {PurchaseOrderCreateRequest} from '../../../../api/models/purchse-order.model';

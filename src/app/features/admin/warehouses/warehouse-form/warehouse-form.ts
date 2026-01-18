@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { Warehouse, WarehouseCreateRequest } from '../../../../api/models/warehouse.model';
-import {WarehouseApiService} from '../../../../api/models/warehouse-api.service';
+import {WarehouseApiService} from '../../../../api/services/warehouse-api.service';
 
 @Component({
   selector: 'app-warehouse-form',

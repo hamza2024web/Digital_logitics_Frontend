@@ -1,1 +1,110 @@
-<p>purchase-order-detail works!</p>
+<div class="page-container" *ngIf="purchaseOrder">
+    <!-- Header -->
+    <div class="page-header">
+        <div class="header-left">
+            <button class="back-btn" (click)="goBack()">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <div class="header-text">
+                <div class="title-row">
+                    <h1>Order #{{ purchaseOrder.orderNumber }}</h1>
+                    <span class="status-badge" [ngClass]="purchaseOrder.status.toLowerCase()">
+                        {{ purchaseOrder.status }}
+                    </span>
+                </div>
+                <p class="subtitle">Created on {{ purchaseOrder.orderDate | date:'fullDate' }}</p>
+            </div>
+        </div>
+        <div class="header-actions">
+            <button class="btn-secondary">
+                <i class="fas fa-print"></i> Print
+            </button>
+            <button class="btn-secondary">
+                <i class="fas fa-download"></i> PDF
+            </button>
+            <button class="btn-primary" *ngIf="purchaseOrder.status === 'Pending'">
+                Approve Order
+            </button>
+        </div>
+    </div>
+
+    <div class="details-grid">
+        <!-- Main Info -->
+        <div class="info-card">
+            <h3>Supplier Details</h3>
+            <div class="info-row">
+                <div class="info-group">
+                    <label>Supplier Name</label>
+                    <p>{{ purchaseOrder.supplierName }}</p>
+                </div>
+                <div class="info-group">
+                    <label>Warehouse</label>
+                    <p>{{ purchaseOrder.warehouseName }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Order Timelines/Status -->
+        <div class="info-card status-card">
+            <h3>Order Progress</h3>
+            <div class="progress-track">
+                <div class="step completed">
+                    <div class="circle"><i class="fas fa-check"></i></div>
+                    <span>Created</span>
+                </div>
+                <!-- Logic for steps based on status -->
+                <div class="step" [class.completed]="purchaseOrder.status !== 'Pending'">
+                    <div class="circle">2</div>
+                    <span>Approved</span>
+                </div>
+                <div class="step" [class.completed]="purchaseOrder.status === 'Received'">
+                    <div class="circle">3</div>
+                    <span>Received</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Items -->
+    <div class="items-card">
+        <h3>Order Items</h3>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>SKU</th>
+                        <th class="text-right">Quantity</th>
+                        <th class="text-right">Unit Price</th>
+                        <th class="text-right">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (item of purchaseOrder.items; track item.productId) {
+                    <tr>
+                        <td>{{ item.productName }}</td>
+                        <td class="sku">#{{ item.productId }}</td> <!-- Assuming ID as SKU for now -->
+                        <td class="text-right">{{ item.quantity }}</td>
+                        <td class="text-right">{{ item.unitPrice | currency }}</td>
+                        <td class="text-right font-bold">{{ item.totalPrice | currency }}</td>
+                    </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="4" class="text-right label">Subtotal</td>
+                        <td class="text-right value">{{ purchaseOrder.totalAmount | currency }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="4" class="text-right label">Tax (0%)</td>
+                        <td class="text-right value">$0.00</td>
+                    </tr>
+                    <tr class="total-row">
+                        <td colspan="4" class="text-right label">Total Amount</td>
+                        <td class="text-right value">{{ purchaseOrder.totalAmount | currency }}</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>

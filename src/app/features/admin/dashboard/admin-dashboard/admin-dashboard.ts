@@ -4,7 +4,7 @@ import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../../core/auth/auth.service';
 import { ProductApiService } from '../../../../api/services/product-api.service';
 import { UserApiService } from '../../../../api/services/user-api.service';
-import { WarehouseApiService } from '../../../../api/models/warehouse-api.service';
+import { WarehouseApiService } from '../../../../api/services/warehouse-api.service';
 
 interface Product {
   id: number;
@@ -88,7 +88,7 @@ export class AdminDashboardComponent implements OnInit {
   ngOnInit(): void {
     const userEmail = this.authService.getUserEmail();
     this.userName = userEmail ? userEmail.split('@')[0] : 'Admin';
-    
+
     this.loadData();
     this.initializeMockData();
   }

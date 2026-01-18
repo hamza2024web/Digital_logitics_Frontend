@@ -1,10 +1,13 @@
 import {Component, OnInit} from '@angular/core';
 import {Inventory} from '../../../api/models/inventory.model';
 import {InventoryApiService} from '../../../api/services/inventory-api.service';
+import {ReactiveFormsModule} from '@angular/forms';
+import {RouterLink} from '@angular/router';
+import {CommonModule} from '@angular/common';
 
 @Component({
   selector: 'app-inventory-list',
-  imports: [],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './inventory-list.html',
   styleUrl: './inventory-list.scss',
 })

@@ -1,19 +1,23 @@
 <div class="dashboard-layout" [class.sidebar-collapsed]="sidebarCollapsed">
 
-  <!-- Sidebar -->
-  <aside class="sidebar">
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar" role="navigation" aria-label="Menu principal de l'administration">
     <div class="sidebar-header">
       <div class="logo">
-        <div class="logo-icon">
+        <div class="logo-icon" aria-hidden="true">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
             <path d="M2 17l10 5 10-5"></path>
             <path d="M2 12l10 5 10-5"></path>
           </svg>
         </div>
-        <span class="logo-text">Admin Panel</span>
+        <span class="logo-text">LogiFlow</span>
       </div>
-      <button class="sidebar-toggle" (click)="toggleSidebar()">
+      <button 
+        class="sidebar-toggle" 
+        (click)="toggleSidebar()" 
+        [attr.aria-label]="sidebarCollapsed ? 'Ouvrir le menu' : 'Fermer le menu'"
+        aria-controls="sidebar-nav">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <polyline points="15 18 9 12 15 6"></polyline>
         </svg>
@@ -21,19 +25,19 @@
     </div>
 
     <div class="sidebar-user">
-      <div class="user-avatar admin">{{ userName.charAt(0).toUpperCase() }}</div>
+      <div class="user-avatar admin" aria-hidden="true">{{ userName.charAt(0).toUpperCase() }}</div>
       <div class="user-info">
         <span class="user-name">{{ userName }}</span>
         <span class="user-role">Administrateur</span>
       </div>
     </div>
 
-    <nav class="sidebar-nav">
-      <div class="nav-section">
-        <span class="nav-section-title">Gestion</span>
+    <nav class="sidebar-nav" id="sidebar-nav">
+      <div class="nav-section" role="group" aria-labelledby="nav-section-gestion">
+        <span class="nav-section-title" id="nav-section-gestion">Gestion</span>
 
-        <a routerLink="/admin/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-item">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <a routerLink="/admin/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-item" aria-label="Vue d'ensemble du tableau de bord">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
             <rect x="3" y="3" width="7" height="7"></rect>
             <rect x="14" y="3" width="7" height="7"></rect>
             <rect x="14" y="14" width="7" height="7"></rect>
@@ -42,8 +46,8 @@
           <span>Vue d'ensemble</span>
         </a>
 
-        <a routerLink="/admin/users" routerLinkActive="active" class="nav-item">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <a routerLink="/admin/users" routerLinkActive="active" class="nav-item" aria-label="Gestion des utilisateurs">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
             <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
             <circle cx="9" cy="7" r="4"></circle>
             <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
@@ -51,33 +55,33 @@
           </svg>
           <span>Utilisateurs</span>
           @if (stats.totalUsers > 0) {
-            <span class="nav-badge">{{ formatNumber(stats.totalUsers) }}</span>
+            <span class="nav-badge" aria-label="{{ stats.totalUsers }} utilisateurs">{{ formatNumber(stats.totalUsers) }}</span>
           }
         </a>
 
-        <a routerLink="/admin/products" routerLinkActive="active" class="nav-item">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <a routerLink="/admin/products" routerLinkActive="active" class="nav-item" aria-label="Gestion des produits">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
             <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
           </svg>
           <span>Produits</span>
           @if (stats.totalProducts > 0) {
-            <span class="nav-badge">{{ formatNumber(stats.totalProducts) }}</span>
+            <span class="nav-badge" aria-label="{{ stats.totalProducts }} produits">{{ formatNumber(stats.totalProducts) }}</span>
           }
         </a>
 
-        <a routerLink="/admin/warehouses" routerLinkActive="active" class="nav-item">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <a routerLink="/admin/warehouses" routerLinkActive="active" class="nav-item" aria-label="Gestion des entrepôts">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
             <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
             <polyline points="9 22 9 12 15 12 15 22"></polyline>
           </svg>
           <span>Entrepôts</span>
           @if (stats.activeWarehouses > 0) {
-            <span class="nav-badge">{{ stats.activeWarehouses }}</span>
+            <span class="nav-badge" aria-label="{{ stats.activeWarehouses }} entrepôts actifs">{{ stats.activeWarehouses }}</span>
           }
         </a>
 
-        <a routerLink="/admin/suppliers" routerLinkActive="active" class="nav-item">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <a routerLink="/admin/suppliers" routerLinkActive="active" class="nav-item" aria-label="Gestion des fournisseurs">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
             <rect x="1" y="3" width="15" height="13"></rect>
             <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
             <circle cx="5.5" cy="18.5" r="2.5"></circle>
@@ -87,18 +91,18 @@
         </a>
       </div>
 
-      <div class="nav-section">
-        <span class="nav-section-title">Commandes</span>
-        <a routerLink="/admin/sales-orders" routerLinkActive="active" class="nav-item">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <div class="nav-section" role="group" aria-labelledby="nav-section-commandes">
+        <span class="nav-section-title" id="nav-section-commandes">Commandes</span>
+        <a routerLink="/admin/sales-orders" routerLinkActive="active" class="nav-item" aria-label="Commandes de vente">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
             <circle cx="9" cy="21" r="1"></circle>
             <circle cx="20" cy="21" r="1"></circle>
             <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
           </svg>
           <span>Ventes (SO)</span>
         </a>
-        <a routerLink="/admin/purchase-orders" routerLinkActive="active" class="nav-item">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <a routerLink="/admin/purchase-orders" routerLinkActive="active" class="nav-item" aria-label="Commandes d'achat">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
             <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
             <line x1="3" y1="6" x2="21" y2="6"></line>
             <path d="M16 10a4 4 0 0 1-8 0"></path>
@@ -107,12 +111,12 @@
         </a>
       </div>
 
-      <div class="nav-section">
-        <span class="nav-section-title">Système</span>
-        <a routerLink="/admin/settings" routerLinkActive="active" class="nav-item">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <div class="nav-section" role="group" aria-labelledby="nav-section-systeme">
+        <span class="nav-section-title" id="nav-section-systeme">Système</span>
+        <a routerLink="/admin/settings" routerLinkActive="active" class="nav-item" aria-label="Paramètres du système">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
             <circle cx="12" cy="12" r="3"></circle>
-            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-. 06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-. 33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
           </svg>
           <span>Paramètres</span>
         </a>
@@ -120,8 +124,8 @@
     </nav>
 
     <div class="sidebar-footer">
-      <button class="btn-logout" (click)="logout()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <button class="btn-logout" (click)="logout()" aria-label="Se déconnecter">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
           <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
           <polyline points="16 17 21 12 16 7"></polyline>
           <line x1="21" y1="12" x2="9" y2="12"></line>

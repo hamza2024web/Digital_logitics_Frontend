@@ -1,0 +1,418 @@
+// src/app/features/warehouse-manager/layout/warehouse-manager-layout.component.scss
+
+. dashboard-layout {
+  display: flex;
+  height:  100vh;
+  overflow:  hidden;
+  background:  #f8fafc;
+}
+
+// ==================== SIDEBAR ====================
+.sidebar {
+  width: 280px;
+  background: white;
+  border-right: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 100;
+
+  . sidebar-header {
+    display:  flex;
+    align-items:  center;
+    justify-content: space-between;
+    padding: 24px 20px;
+    border-bottom:  1px solid #e2e8f0;
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      .logo-icon {
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        svg {
+          color: white;
+        }
+      }
+
+      .logo-text {
+        font-size: 20px;
+        font-weight: 700;
+        color: #1a202c;
+        transition: opacity 0.3s;
+      }
+    }
+
+    . sidebar-toggle {
+      width: 32px;
+      height: 32px;
+      border: none;
+      background: #f7fafc;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s;
+
+      &:hover {
+        background: #edf2f7;
+      }
+
+      svg {
+        color: #718096;
+        transition: transform 0.3s;
+      }
+    }
+  }
+
+  .sidebar-nav {
+    flex:  1;
+    overflow-y: auto;
+    padding: 20px 0;
+
+    .nav-section {
+      margin-bottom: 24px;
+
+      .nav-section-title {
+        display: block;
+        padding: 0 20px 8px;
+        font-size: 11px;
+        font-weight:  600;
+        color: #a0aec0;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 20px;
+        color: #4a5568;
+        text-decoration: none;
+        transition: all 0.2s;
+        position: relative;
+        font-size: 14px;
+        font-weight: 500;
+
+        svg {
+          flex-shrink: 0;
+        }
+
+        span:not(.badge) {
+          flex:  1;
+        }
+
+        . badge {
+          min-width: 20px;
+          height: 20px;
+          background: #f56565;
+          color: white;
+          border-radius: 10px;
+          font-size: 11px;
+          font-weight: 600;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 0 6px;
+        }
+
+        &:hover {
+          background: #f7fafc;
+          color: #667eea;
+        }
+
+        &.active {
+          background: linear-gradient(to right, rgba(102, 126, 234, 0.1), transparent);
+          color: #667eea;
+          border-right: 3px solid #667eea;
+        }
+
+        &.warning {
+          &:hover {
+            color: #f56565;
+          }
+        }
+      }
+    }
+  }
+
+  . sidebar-footer {
+    padding:  20px;
+    border-top:  1px solid #e2e8f0;
+
+    .user-card {
+      display: flex;
+      align-items: center;
+      gap:  12px;
+      padding:  12px;
+      background: #f7fafc;
+      border-radius: 10px;
+      margin-bottom:  12px;
+
+      .user-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 600;
+        font-size:  16px;
+      }
+
+      . user-info {
+        flex:  1;
+        display: flex;
+        flex-direction: column;
+
+        .user-name {
+          font-size: 14px;
+          font-weight:  600;
+          color: #2d3748;
+        }
+
+        .user-role {
+          font-size: 12px;
+          color: #718096;
+        }
+      }
+    }
+
+    .btn-logout {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px;
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      color: #718096;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition:  all 0.3s;
+
+      &:hover {
+        background: #fff5f5;
+        border-color: #feb2b2;
+        color: #c53030;
+      }
+    }
+  }
+}
+
+// ==================== SIDEBAR COLLAPSED ====================
+.dashboard-layout.sidebar-collapsed {
+  . sidebar {
+    width: 80px;
+
+    .logo-text,
+    .nav-section-title,
+    .nav-item span:not(.badge),
+  .user-info,
+  .btn-logout span {
+    opacity: 0;
+    width: 0;
+    overflow: hidden;
+  }
+
+    .sidebar-toggle svg {
+      transform: rotate(180deg);
+    }
+
+    .user-card {
+      justify-content: center;
+    }
+  }
+}
+
+// ==================== MAIN CONTENT ====================
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.dashboard-header {
+  background: white;
+  border-bottom: 1px solid #e2e8f0;
+  padding: 20px 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+
+  . header-left {
+    display:  flex;
+    align-items:  center;
+    gap: 20px;
+
+    .mobile-menu-btn {
+      display: none;
+      width: 40px;
+      height: 40px;
+      border: none;
+      background: #f7fafc;
+      border-radius: 8px;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+
+      &:hover {
+        background: #edf2f7;
+      }
+    }
+
+    .page-title {
+      h1 {
+        font-size: 24px;
+        font-weight: 700;
+        color: #1a202c;
+        margin: 0 0 4px 0;
+      }
+
+      .page-subtitle {
+        font-size: 14px;
+        color: #718096;
+        margin: 0;
+      }
+    }
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    .warehouse-selector {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      background: #f7fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #2d3748;
+      cursor: pointer;
+      transition: all 0.3s;
+
+      &:hover {
+        background: #edf2f7;
+      }
+
+      svg:first-child {
+        color: #667eea;
+      }
+
+      svg:last-child {
+        color: #a0aec0;
+      }
+    }
+
+    .btn-icon {
+      position: relative;
+      width: 40px;
+      height: 40px;
+      border: none;
+      background: #f7fafc;
+      border-radius:  8px;
+      display:  flex;
+      align-items:  center;
+      justify-content:  center;
+      cursor: pointer;
+      transition: all 0.3s;
+
+      &:hover {
+        background: #edf2f7;
+      }
+
+      svg {
+        color: #4a5568;
+      }
+
+      . notification-dot {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        width: 8px;
+        height: 8px;
+        background: #f56565;
+        border-radius: 50%;
+        border: 2px solid white;
+      }
+    }
+  }
+}
+
+. dashboard-content {
+  flex:  1;
+  overflow-y: auto;
+  padding: 30px;
+}
+
+// ==================== RESPONSIVE ====================
+@media (max-width: 1024px) {
+  .sidebar {
+    position: fixed;
+    left: 0;
+    top:  0;
+    bottom: 0;
+    transform: translateX(-100%);
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+  }
+
+  .dashboard-layout. sidebar-collapsed . sidebar {
+    transform: translateX(0);
+  }
+
+  .dashboard-header {
+    . header-left {
+      . mobile-menu-btn {
+        display: flex;
+      }
+    }
+
+    .header-right {
+      . warehouse-selector span {
+        display: none;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-header {
+    padding: 16px 20px;
+
+    .header-left . page-title h1 {
+      font-size: 20px;
+    }
+
+    .header-right . warehouse-selector {
+      display: none;
+    }
+  }
+
+  .dashboard-content {
+    padding: 20px;
+  }
+}

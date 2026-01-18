@@ -1,1 +1,97 @@
-<p>sales-order-detail works!</p>
+<div class="page-container" *ngIf="salesOrder">
+    <!-- Top Nav -->
+    <div class="top-nav">
+        <a class="back-link" (click)="goBack()">
+            <i class="fas fa-arrow-left"></i> Back to Orders
+        </a>
+        <div class="order-id">
+            SO-{{ salesOrder.orderNumber }}
+        </div>
+    </div>
+
+    <div class="content-grid">
+        <!-- Main Content -->
+        <div class="main-column">
+            <!-- Order Status Banner -->
+            <div class="status-banner" [ngClass]="salesOrder.status.toLowerCase()">
+                <div class="status-icon">
+                    <i class="fas" [class.fa-box]="salesOrder.status === 'New'"
+                       [class.fa-truck]="salesOrder.status === 'Shipped'"
+                       [class.fa-check]="salesOrder.status === 'Delivered'"></i>
+                </div>
+                <div class="status-text">
+                    <h2>Order is {{ salesOrder.status }}</h2>
+                    <p>Last updated: {{ salesOrder.orderDate | date:'medium' }}</p>
+                </div>
+                <div class="action-wrapper">
+                    <button class="btn-primary" *ngIf="salesOrder.status === 'New'" (click)="createShipment()">
+                        Create Shipment
+                    </button>
+                    <button class="btn-primary" *ngIf="salesOrder.status === 'Shipped'">
+                        Track Shipment
+                    </button>
+                </div>
+            </div>
+
+            <!-- Items Table -->
+            <div class="card items-section">
+                <h3>Order Items</h3>
+                <div class="items-table">
+                    @for (item of salesOrder.items; track item.productId) {
+                    <div class="item-row">
+                        <div class="item-main">
+                            <h4>{{ item.name }}</h4>
+                            <span class="sku">SKU: {{ item.productId }}</span>
+                        </div>
+                        <div class="item-qty">
+                            x{{ item.quantity }}
+                        </div>
+                        <div class="item-price">
+                            {{ item.unitPrice | currency }}
+                        </div>
+                        <div class="item-total">
+                            {{ item.totalPrice | currency }}
+                        </div>
+                    </div>
+                    }
+                    <div class="summary-row">
+                        <div class="summary-label">Total Amount</div>
+                        <div class="summary-value">{{ salesOrder.totalAmount | currency }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar Info -->
+        <div class="side-column">
+            <!-- Customer Card -->
+            <div class="card customer-card">
+                <h3>Customer</h3>
+                <div class="customer-profile">
+                    <div class="avatar-lg">{{ salesOrder.customerName.charAt(0) }}</div>
+                    <div>
+                        <h4>{{ salesOrder.customerName }}</h4>
+                        <p class="email">customer&#64;email.com</p>
+                    </div>
+                </div>
+                <div class="contact-actions">
+                    <button class="btn-outline"><i class="fas fa-envelope"></i> Email</button>
+                    <button class="btn-outline"><i class="fas fa-phone"></i> Call</button>
+                </div>
+            </div>
+
+            <!-- Shipping Address -->
+            <div class="card">
+                <h3>Shipping Details</h3>
+                <div class="address-box">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <p>
+                        123 Logistics Way<br>
+                        Warehouse District<br>
+                        New York, NY 10001
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

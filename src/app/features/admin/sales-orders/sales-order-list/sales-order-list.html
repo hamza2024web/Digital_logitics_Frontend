@@ -1,1 +1,72 @@
-<p>sales-order-list works!</p>
+<div class="page-container">
+    <div class="page-header">
+        <div class="header-content">
+            <h1>Sales Orders</h1>
+            <p>Track customer orders and shipments</p>
+        </div>
+        <div class="header-actions">
+           <!-- Potential future filters or exports -->
+        </div>
+    </div>
+
+    <div class="content-card">
+        <div class="toolbar">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search by customer or order #..." #search (input)="filterOrders(search.value)">
+            </div>
+            
+            <div class="view-toggles">
+                <button class="toggle-btn active"><i class="fas fa-list"></i></button>
+                <button class="toggle-btn"><i class="fas fa-columns"></i></button>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Order #</th>
+                        <th>Customer</th>
+                        <th>Order Date</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th>Payment</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (order of filteredOrders; track order.id) {
+                    <tr>
+                        <td class="id-col">#{{ order.orderNumber }}</td>
+                        <td>
+                            <div class="customer-cell">
+                                <div class="avatar">{{ order.customerName.charAt(0) }}</div>
+                                <span>{{ order.customerName }}</span>
+                            </div>
+                        </td>
+                        <td>{{ order.orderDate | date:'mediumDate' }}</td>
+                        <td class="amount">{{ order.totalAmount | currency }}</td>
+                        <td>
+                            <span class="status-pill" [ngClass]="order.status.toLowerCase()">
+                                <span class="dot"></span>
+                                {{ order.status }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="payment-badge" [class.paid]="true">
+                                <i class="fas fa-check-circle"></i> Paid
+                            </span>
+                        </td>
+                        <td>
+                            <button class="btn-icon" (click)="viewOrder(order.id)">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

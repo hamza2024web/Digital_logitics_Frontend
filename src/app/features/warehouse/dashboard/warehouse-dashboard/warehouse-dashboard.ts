@@ -2,7 +2,8 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../../core/auth/auth.service';
-import { Inventory } from '../../../../api/models/inventory.model';
+import { Inventory, MovementType } from '../../../../api/models/inventory.model';
+import { InventoryMovement } from '../../../../api/models/inventory-movement.model';
 import { PurchaseOrder, PurchaseOrderStatus } from '../../../../api/models/purchse-order.model';
 import { InventoryApiService } from '../../../../api/services/inventory-api.service';
 import { PurchaseOrderApiService } from '../../../../api/services/purchase-order-api.model';
@@ -17,9 +18,11 @@ import { PurchaseOrderApiService } from '../../../../api/services/purchase-order
 export class WarehouseDashboardComponent implements OnInit {
   inventories: Inventory[] = [];
   pendingPurchaseOrders: PurchaseOrder[] = [];
+  recentActivity: InventoryMovement[] = [];
 
   isLoadingInventories = false;
   isLoadingOrders = false;
+  isLoadingActivity = false;
 
   sidebarCollapsed = false;
   userName = 'John Doe';
@@ -55,6 +58,7 @@ export class WarehouseDashboardComponent implements OnInit {
   loadDashboardData(): void {
     this.loadInventories();
     this.loadPendingOrders();
+    this.loadRecentActivity();
   }
 
   loadInventories(): void {
@@ -87,6 +91,23 @@ export class WarehouseDashboardComponent implements OnInit {
       error: (error) => {
         console.error('Erreur chargement commandes:', error);
         this.isLoadingOrders = false;
+      }
+    });
+  }
+
+  loadRecentActivity(): void {
+    this.isLoadingActivity = true;
+    this.inventoryApiService.getInventoryMovements().subscribe({
+      next: (movements) => {
+        // Sort by date desc just in case
+        this.recentActivity = movements.sort((a, b) =>
+          new Date(b.occurredAt).getTime() - new Date(a.occurredAt).getTime()
+        ).slice(0, 10); // Keep last 10
+        this.isLoadingActivity = false;
+      },
+      error: (error) => {
+        console.error('Erreur chargement activité:', error);
+        this.isLoadingActivity = false;
       }
     });
   }
@@ -144,7 +165,26 @@ export class WarehouseDashboardComponent implements OnInit {
     return 'Normal';
   }
 
+  getMovementLabel(type: MovementType): string {
+    switch (type) {
+      case MovementType.INBOUND: return 'Entrée';
+      case MovementType.OUTBOUND: return 'Sortie';
+      case MovementType.ADJUSTMENT: return 'Ajustement';
+      default: return type;
+    }
+  }
+
+  getMovementClass(type: MovementType): string {
+    switch (type) {
+      case MovementType.INBOUND: return 'movement-in';
+      case MovementType.OUTBOUND: return 'movement-out';
+      case MovementType.ADJUSTMENT: return 'movement-adj';
+      default: return '';
+    }
+  }
+
   refresh(): void {
     this.loadDashboardData();
   }
 }
+

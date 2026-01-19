@@ -3,7 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Inventory, MovementRequest, AdjustmentRequest } from '../models/inventory.model';
-import {PurchaseOrder} from '../models/purchse-order.model';
+import { InventoryMovement } from '../models/inventory-movement.model';
+import { PurchaseOrder } from '../models/purchse-order.model';
 
 @Injectable({
   providedIn: 'root'
@@ -11,17 +12,17 @@ import {PurchaseOrder} from '../models/purchse-order.model';
 export class InventoryApiService {
   private readonly API_URL = `${environment.apiBaseUrl}/api/warehouse-manager/inventory`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   recordInbound(purchaseOrderId: number): Observable<PurchaseOrder> {
     return this.http.post<PurchaseOrder>(`${this.API_URL}/${purchaseOrderId}/inbound`, null);
   }
 
   recordOutbound(movement: MovementRequest): Observable<Inventory> {
-    return this. http.post<Inventory>(`${this.API_URL}/outbound`, movement);
+    return this.http.post<Inventory>(`${this.API_URL}/outbound`, movement);
   }
 
-  recordAdjustment(adjustment:  AdjustmentRequest): Observable<Inventory> {
+  recordAdjustment(adjustment: AdjustmentRequest): Observable<Inventory> {
     return this.http.post<Inventory>(`${this.API_URL}/adjustment`, adjustment);
   }
 
@@ -30,6 +31,11 @@ export class InventoryApiService {
   }
 
   getInventoriesByWarehouse(warehouseId: number): Observable<Inventory[]> {
-    return this. http.get<Inventory[]>(`${environment.apiBaseUrl}/api/warehouse-manager/inventories/warehouse/${warehouseId}`);
+    return this.http.get<Inventory[]>(`${environment.apiBaseUrl}/api/warehouse-manager/inventories/warehouse/${warehouseId}`);
+  }
+
+  getInventoryMovements(): Observable<InventoryMovement[]> {
+    return this.http.get<InventoryMovement[]>(`${environment.apiBaseUrl}/api/warehouse-manager/inventories/audit`);
   }
 }
+

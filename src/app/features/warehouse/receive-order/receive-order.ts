@@ -34,7 +34,7 @@ export class ReceiveOrder implements OnInit {
 
     this.purchaseOrderApiService.getAllPurchaseOrders().subscribe({
       next: (orders) => {
-        this.pendingOrders = orders.filter(order => order.status === PurchaseOrderStatus.SENT);
+        this.pendingOrders = orders.filter(order => order.status === PurchaseOrderStatus.RECEIVED);
         this.isLoading = false;
       },
       error: (error) => {

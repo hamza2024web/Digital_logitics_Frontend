@@ -79,7 +79,7 @@ export class WarehouseDashboardComponent implements OnInit {
     this.purchaseOrderApiService.getAllPurchaseOrders().subscribe({
       next: (orders) => {
         this.pendingPurchaseOrders = orders.filter(
-          order => order.status === PurchaseOrderStatus.SENT
+          order => order.status === PurchaseOrderStatus.RECEIVED
         );
         this.stats.pendingOrders = this.pendingPurchaseOrders.length;
         this.isLoadingOrders = false;

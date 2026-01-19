@@ -1,23 +1,31 @@
-// src/app/api/services/sales-order-api.service.ts
+// src/app/api/services/client-order-api.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import {SalesOrder} from '../models/sales-order.model';
+import { SalesOrder, SalesOrderCreateRequest } from '../models/sales-order.model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class SalesOrderApiService {
-  private readonly API_URL = `${environment.apiBaseUrl}/api/admin/sales-orders`;
+export class ClientOrderApiService {
+  private readonly API_URL = `${environment.apiBaseUrl}/api/client/orders`;
 
   constructor(private http: HttpClient) {}
 
-  getAllSalesOrders(): Observable<SalesOrder[]> {
+  createOrder(order: SalesOrderCreateRequest): Observable<SalesOrder> {
+    return this.http.post<SalesOrder>(this.API_URL, order);
+  }
+
+  reserveOrderStock(orderId: number): Observable<SalesOrder> {
+    return this. http.patch<SalesOrder>(`${this.API_URL}/${orderId}/reserve`, null);
+  }
+
+  getMyOrders(): Observable<SalesOrder[]> {
     return this.http.get<SalesOrder[]>(this.API_URL);
   }
 
-  getSalesOrderById(id: number): Observable<SalesOrder> {
-    return this.http.get<SalesOrder>(`${this.API_URL}/${id}`);
+  getOrderById(orderId: number): Observable<SalesOrder> {
+    return this.http.get<SalesOrder>(`${this.API_URL}/${orderId}`);
   }
 }

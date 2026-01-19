@@ -26,10 +26,10 @@ export class InventoryApiService {
   }
 
   getAllInventories(): Observable<Inventory[]> {
-    return this.http.get<Inventory[]>(`${environment.apiBaseUrl}/api/admin/inventories`);
+    return this.http.get<Inventory[]>(`${environment.apiBaseUrl}/api/warehouse-manager/inventories`);
   }
 
   getInventoriesByWarehouse(warehouseId: number): Observable<Inventory[]> {
-    return this. http.get<Inventory[]>(`${environment.apiBaseUrl}/api/admin/inventories/warehouse/${warehouseId}`);
+    return this. http.get<Inventory[]>(`${environment.apiBaseUrl}/api/warehouse-manager/inventories/warehouse/${warehouseId}`);
   }
 }

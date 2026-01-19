@@ -1,1 +1,301 @@
-<p>inventory-list works!</p>
+<!-- Inventory List - Warehouse Stock Management -->
+<div class="inventory-page">
+    <!-- Page Header -->
+    <header class="page-header">
+        <div class="header-content">
+            <div class="header-text">
+                <h1 class="page-title">Inventaire</h1>
+                <p class="page-subtitle">{{ filteredInventories.length }} produits trouvés</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn-secondary" (click)="resetFilters()" [disabled]="!searchTerm && !filterStockLevel">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                    <span class="btn-text">Réinitialiser</span>
+                </button>
+                <a routerLink="/warehouse-manager/adjustment" class="btn-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                    </svg>
+                    <span class="btn-text">Ajuster le stock</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Filter Bar -->
+    <section class="filter-bar">
+        <!-- Search Input -->
+        <div class="search-wrapper">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" placeholder="Rechercher par SKU ou entrepôt..." [value]="searchTerm"
+                (input)="onSearch($event)" aria-label="Rechercher des produits">
+            <button class="scan-btn" aria-label="Scanner un code-barres" title="Scanner">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="7" y1="8" x2="7" y2="16"></line>
+                    <line x1="10" y1="8" x2="10" y2="16"></line>
+                    <line x1="13" y1="8" x2="13" y2="16"></line>
+                    <line x1="17" y1="8" x2="17" y2="16"></line>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Filter Buttons -->
+        <div class="filter-group">
+            <label class="filter-label">Niveau de stock:</label>
+            <div class="filter-buttons">
+                <button class="filter-btn" [class.active]="filterStockLevel === ''"
+                    (click)="filterStockLevel = ''; applyFilters()">
+                    Tous
+                </button>
+                <button class="filter-btn success" [class.active]="filterStockLevel === 'ok'"
+                    (click)="filterStockLevel = 'ok'; applyFilters()">
+                    <span class="filter-dot"></span>
+                    Normal
+                </button>
+                <button class="filter-btn warning" [class.active]="filterStockLevel === 'low'"
+                    (click)="filterStockLevel = 'low'; applyFilters()">
+                    <span class="filter-dot"></span>
+                    Bas
+                </button>
+                <button class="filter-btn danger" [class.active]="filterStockLevel === 'critical'"
+                    (click)="filterStockLevel = 'critical'; applyFilters()">
+                    <span class="filter-dot"></span>
+                    Critique
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Content -->
+    <section class="inventory-content">
+        @if (isLoading) {
+        <!-- Loading State -->
+        <div class="loading-state">
+            <div class="loading-spinner"></div>
+            <p>Chargement de l'inventaire...</p>
+        </div>
+        } @else if (errorMessage) {
+        <!-- Error State -->
+        <div class="error-state">
+            <div class="error-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+            </div>
+            <h3>Erreur de chargement</h3>
+            <p>{{ errorMessage }}</p>
+            <button class="btn-retry" (click)="loadInventories()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="23 4 23 10 17 10"></polyline>
+                    <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+                </svg>
+                Réessayer
+            </button>
+        </div>
+        } @else if (filteredInventories.length === 0) {
+        <!-- Empty State -->
+        <div class="empty-state">
+            <div class="empty-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path
+                        d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z">
+                    </path>
+                    <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                    <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                </svg>
+            </div>
+            @if (searchTerm || filterStockLevel) {
+            <h3>Aucun résultat</h3>
+            <p>Aucun produit ne correspond à vos critères de recherche.</p>
+            <button class="btn-secondary" (click)="resetFilters()">
+                Effacer les filtres
+            </button>
+            } @else {
+            <h3>Inventaire vide</h3>
+            <p>Commencez par réceptionner des commandes pour alimenter l'inventaire.</p>
+            <a routerLink="/warehouse-manager/receive-orders" class="btn-primary">
+                Réceptionner une commande
+            </a>
+            }
+        </div>
+        } @else {
+        <!-- Desktop: Data Table -->
+        <div class="table-container">
+            <table class="inventory-table">
+                <thead>
+                    <tr>
+                        <th class="col-sku">
+                            <span>SKU Produit</span>
+                        </th>
+                        <th class="col-warehouse">
+                            <span>Entrepôt</span>
+                        </th>
+                        <th class="col-onhand">
+                            <span>En stock</span>
+                        </th>
+                        <th class="col-reserved">
+                            <span>Réservé</span>
+                        </th>
+                        <th class="col-available">
+                            <span>Disponible</span>
+                        </th>
+                        <th class="col-status">
+                            <span>Statut</span>
+                        </th>
+                        <th class="col-actions">
+                            <span>Actions</span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (inv of filteredInventories; track inv.id) {
+                    <tr [class.low-stock]="getAvailableQty(inv) < 10" [class.critical-stock]="getAvailableQty(inv) < 5">
+                        <td class="col-sku">
+                            <span class="sku-code">{{ inv.productSku }}</span>
+                        </td>
+                        <td class="col-warehouse">
+                            <div class="warehouse-info">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                    <circle cx="12" cy="10" r="3"></circle>
+                                </svg>
+                                <span>{{ inv.warehouseCode }}</span>
+                            </div>
+                        </td>
+                        <td class="col-onhand">
+                            <span class="qty-value">{{ inv.qtyOnHand }}</span>
+                        </td>
+                        <td class="col-reserved">
+                            <span class="qty-reserved">{{ inv.qtyReserved }}</span>
+                            @if (inv.qtyReserved > 0) {
+                            <div class="reserved-bar">
+                                <div class="reserved-fill" [style.width.%]="getReservedPercentage(inv)"></div>
+                            </div>
+                            }
+                        </td>
+                        <td class="col-available">
+                            <span class="qty-available" [class.low]="getAvailableQty(inv) < 10"
+                                [class.critical]="getAvailableQty(inv) < 5">
+                                {{ getAvailableQty(inv) }}
+                            </span>
+                        </td>
+                        <td class="col-status">
+                            <span class="status-badge" [class]="getStockBadgeClass(inv)">
+                                {{ getStockLabel(inv) }}
+                            </span>
+                        </td>
+                        <td class="col-actions">
+                            <div class="action-buttons">
+                                <a routerLink="/warehouse-manager/adjustment" class="action-btn"
+                                    title="Ajuster le stock">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                    </svg>
+                                </a>
+                                <button class="action-btn" title="Imprimer étiquette">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                                        <path
+                                            d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2">
+                                        </path>
+                                        <rect x="6" y="14" width="12" height="8"></rect>
+                                    </svg>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Mobile: Card View -->
+        <div class="card-view">
+            @for (inv of filteredInventories; track inv.id) {
+            <div class="inventory-card" [class.alert]="getAvailableQty(inv) < 5">
+                <div class="card-header">
+                    <span class="card-sku">{{ inv.productSku }}</span>
+                    <span class="status-badge" [class]="getStockBadgeClass(inv)">
+                        {{ getStockLabel(inv) }}
+                    </span>
+                </div>
+                <div class="card-body">
+                    <div class="card-warehouse">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                            <circle cx="12" cy="10" r="3"></circle>
+                        </svg>
+                        {{ inv.warehouseCode }}
+                    </div>
+                    <div class="card-quantities">
+                        <div class="qty-item">
+                            <span class="qty-label">En stock</span>
+                            <span class="qty-value">{{ inv.qtyOnHand }}</span>
+                        </div>
+                        <div class="qty-item">
+                            <span class="qty-label">Réservé</span>
+                            <span class="qty-value reserved">{{ inv.qtyReserved }}</span>
+                        </div>
+                        <div class="qty-item highlight">
+                            <span class="qty-label">Disponible</span>
+                            <span class="qty-value available" [class.low]="getAvailableQty(inv) < 10">
+                                {{ getAvailableQty(inv) }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a routerLink="/warehouse-manager/adjustment" class="card-action">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg>
+                        Ajuster
+                    </a>
+                    <button class="card-action">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                            <rect x="6" y="14" width="12" height="8"></rect>
+                        </svg>
+                        Imprimer
+                    </button>
+                </div>
+            </div>
+            }
+        </div>
+
+        <!-- Results Count -->
+        <div class="results-info">
+            <span>Affichage de {{ filteredInventories.length }} produits sur {{ inventories.length }}</span>
+        </div>
+        }
+    </section>
+</div>

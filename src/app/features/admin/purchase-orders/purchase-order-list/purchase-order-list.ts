@@ -50,9 +50,8 @@ export class PurchaseOrderList implements OnInit {
     this.applyFilters();
   }
 
-  onFilterStatus(event: Event): void {
-    const select = event.target as HTMLSelectElement;
-    this.filterStatus = select.value;
+  setFilter(status: string): void {
+    this.filterStatus = status;
     this.applyFilters();
   }
 

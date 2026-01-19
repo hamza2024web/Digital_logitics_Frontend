@@ -3,12 +3,11 @@ import { PurchaseOrder, PurchaseOrderStatus } from '../../../api/models/purchse-
 import { PurchaseOrderApiService } from '../../../api/services/purchase-order-api.model';
 import { InventoryApiService } from '../../../api/services/inventory-api.service';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-receive-order',
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './receive-order.html',
   styleUrl: './receive-order.scss',
 })
@@ -63,6 +62,10 @@ export class ReceiveOrder implements OnInit {
 
   calculateTotal(order: PurchaseOrder): number {
     return order.lines.reduce((sum, line) => sum + (line.price * line.quantityOrdered), 0);
+  }
+
+  getTotalQuantity(order: PurchaseOrder): number {
+    return order.lines.reduce((sum, line) => sum + line.quantityOrdered, 0);
   }
 
   formatPrice(price: number): string {

@@ -1,0 +1,602 @@
+// ============================================
+// Receive Order - Order Receiving Workflow
+// Premium Orange Theme
+// ============================================
+
+// === Design Tokens ===
+$wh-primary: #f97316;
+$wh-primary-hover: #ea580c;
+$wh-primary-light: rgba(249, 115, 22, 0.12);
+$wh-primary-glow: rgba(249, 115, 22, 0.25);
+
+$wh-success: #10b981;
+$wh-success-light: rgba(16, 185, 129, 0.12);
+$wh-warning: #f59e0b;
+$wh-warning-light: rgba(245, 158, 11, 0.12);
+$wh-danger: #ef4444;
+$wh-danger-light: rgba(239, 68, 68, 0.12);
+$wh-info: #3b82f6;
+$wh-info-light: rgba(59, 130, 246, 0.12);
+
+$wh-dark: #0f172a;
+$wh-gray-50: #f8fafc;
+$wh-gray-100: #f1f5f9;
+$wh-gray-200: #e2e8f0;
+$wh-gray-300: #cbd5e1;
+$wh-gray-400: #94a3b8;
+$wh-gray-500: #64748b;
+$wh-gray-600: #475569;
+
+$transition-fast: 0.2s ease;
+$transition-normal: 0.3s ease;
+
+// === Mixins ===
+@mixin flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@mixin touch-target($size: 48px) {
+    min-width: $size;
+    min-height: $size;
+}
+
+// === Page Structure ===
+.receive-page {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+// === Page Header ===
+.page-header {
+    margin-bottom: 20px;
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.header-text {
+    .page-title {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: $wh-dark;
+        margin: 0;
+    }
+
+    .page-subtitle {
+        color: $wh-gray-500;
+        font-size: 0.9rem;
+        margin: 4px 0 0;
+    }
+}
+
+.header-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-refresh {
+    @include flex-center;
+    @include touch-target(44px);
+    width: 44px;
+    height: 44px;
+    background: white;
+    border: 1px solid $wh-gray-200;
+    border-radius: 10px;
+    color: $wh-gray-500;
+    cursor: pointer;
+    transition: all $transition-fast;
+
+    &:hover {
+        background: $wh-primary-light;
+        border-color: $wh-primary;
+        color: $wh-primary;
+    }
+
+    &:active svg {
+        transform: rotate(180deg);
+    }
+
+    svg {
+        transition: transform 0.5s ease;
+    }
+}
+
+// === Info Banner ===
+.info-banner {
+    display: flex;
+    gap: 16px;
+    padding: 18px 20px;
+    background: $wh-info-light;
+    border: 1px solid rgba($wh-info, 0.2);
+    border-radius: 14px;
+    margin-bottom: 24px;
+
+    @media (max-width: 640px) {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+.info-icon {
+    width: 44px;
+    height: 44px;
+    background: white;
+    border-radius: 10px;
+    @include flex-center;
+    color: $wh-info;
+    flex-shrink: 0;
+}
+
+.info-content {
+    h3 {
+        font-size: 1rem;
+        font-weight: 600;
+        color: $wh-dark;
+        margin: 0 0 4px;
+    }
+
+    p {
+        font-size: 0.85rem;
+        color: $wh-gray-600;
+        margin: 0;
+        line-height: 1.5;
+    }
+}
+
+// === Content Area ===
+.receive-content {
+    min-height: 400px;
+}
+
+// === Loading State ===
+.loading-state {
+    @include flex-center;
+    flex-direction: column;
+    gap: 16px;
+    padding: 80px 20px;
+    color: $wh-gray-500;
+
+    .loading-spinner {
+        width: 40px;
+        height: 40px;
+        border: 3px solid $wh-gray-200;
+        border-top-color: $wh-primary;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+
+    p {
+        margin: 0;
+        font-size: 0.95rem;
+    }
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+// === Error State ===
+.error-state {
+    @include flex-center;
+    flex-direction: column;
+    padding: 60px 20px;
+    text-align: center;
+
+    .error-icon {
+        width: 80px;
+        height: 80px;
+        background: $wh-danger-light;
+        border-radius: 20px;
+        @include flex-center;
+        color: $wh-danger;
+        margin-bottom: 20px;
+    }
+
+    h3 {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: $wh-dark;
+        margin: 0 0 8px;
+    }
+
+    p {
+        color: $wh-gray-500;
+        margin: 0 0 20px;
+        max-width: 300px;
+    }
+
+    .btn-retry {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 20px;
+        background: $wh-danger;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all $transition-fast;
+
+        &:hover {
+            background: darken($wh-danger, 10%);
+        }
+    }
+}
+
+// === Empty State ===
+.empty-state {
+    @include flex-center;
+    flex-direction: column;
+    padding: 80px 20px;
+    text-align: center;
+
+    .empty-icon {
+        width: 100px;
+        height: 100px;
+        background: $wh-gray-100;
+        border-radius: 24px;
+        @include flex-center;
+        color: $wh-gray-400;
+        margin-bottom: 24px;
+
+        &.success {
+            background: $wh-success-light;
+            color: $wh-success;
+        }
+    }
+
+    h3 {
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: $wh-dark;
+        margin: 0 0 8px;
+    }
+
+    p {
+        color: $wh-gray-500;
+        margin: 0 0 24px;
+        max-width: 320px;
+    }
+
+    .btn-secondary {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 20px;
+        background: white;
+        color: $wh-gray-600;
+        border: 1px solid $wh-gray-200;
+        border-radius: 10px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all $transition-fast;
+
+        &:hover {
+            background: $wh-gray-50;
+            border-color: $wh-gray-300;
+        }
+    }
+}
+
+// === Orders Grid ===
+.orders-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    gap: 20px;
+
+    @media (max-width: 640px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+// === Order Card ===
+.order-card {
+    background: white;
+    border: 1px solid $wh-gray-200;
+    border-radius: 16px;
+    overflow: hidden;
+    transition: all $transition-normal;
+
+    &:hover {
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        transform: translateY(-2px);
+    }
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    background: $wh-gray-50;
+    border-bottom: 1px solid $wh-gray-100;
+}
+
+.order-id-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.order-id {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: $wh-dark;
+}
+
+.order-status {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    background: $wh-warning-light;
+    color: $wh-warning;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+
+    .status-dot {
+        width: 6px;
+        height: 6px;
+        background: $wh-warning;
+        border-radius: 50%;
+        animation: pulse-dot 2s infinite;
+    }
+}
+
+@keyframes pulse-dot {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}
+
+.order-date {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    color: $wh-gray-500;
+
+    svg {
+        color: $wh-gray-400;
+    }
+}
+
+.card-body {
+    padding: 20px;
+}
+
+// Supplier Info
+.supplier-info {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid $wh-gray-100;
+    margin-bottom: 16px;
+}
+
+.supplier-icon {
+    width: 48px;
+    height: 48px;
+    background: $wh-primary-light;
+    border-radius: 12px;
+    @include flex-center;
+    color: $wh-primary;
+}
+
+.supplier-details {
+    display: flex;
+    flex-direction: column;
+
+    .supplier-label {
+        font-size: 0.75rem;
+        color: $wh-gray-400;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .supplier-name {
+        font-size: 1rem;
+        font-weight: 600;
+        color: $wh-dark;
+    }
+}
+
+// Destination Info
+.destination-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: $wh-gray-600;
+    margin-bottom: 16px;
+
+    svg {
+        color: $wh-primary;
+    }
+
+    strong {
+        font-weight: 600;
+        color: $wh-dark;
+    }
+}
+
+// Order Summary
+.order-summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.summary-item {
+    text-align: center;
+    padding: 12px;
+    background: $wh-gray-50;
+    border-radius: 10px;
+
+    &.highlight {
+        background: $wh-primary-light;
+
+        .summary-value {
+            color: $wh-primary;
+        }
+    }
+
+    .summary-label {
+        display: block;
+        font-size: 0.7rem;
+        color: $wh-gray-500;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 4px;
+    }
+
+    .summary-value {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: $wh-dark;
+    }
+}
+
+// Lines Preview
+.lines-preview {
+    background: $wh-gray-50;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.lines-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    background: $wh-gray-100;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: $wh-gray-600;
+
+    .lines-count {
+        color: $wh-gray-400;
+        font-weight: 500;
+    }
+}
+
+.lines-list {
+    padding: 8px 14px;
+}
+
+.line-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 0;
+    font-size: 0.85rem;
+    border-bottom: 1px solid $wh-gray-100;
+
+    &:last-child {
+        border-bottom: none;
+    }
+}
+
+.line-sku {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    color: $wh-dark;
+    font-weight: 500;
+}
+
+.line-qty {
+    color: $wh-gray-500;
+    font-weight: 500;
+}
+
+.line-price {
+    font-weight: 600;
+    color: $wh-gray-600;
+}
+
+.lines-more {
+    padding: 8px 0;
+    font-size: 0.8rem;
+    color: $wh-primary;
+    font-weight: 500;
+}
+
+// Card Footer
+.card-footer {
+    padding: 16px 20px;
+    border-top: 1px solid $wh-gray-100;
+}
+
+.btn-receive {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 14px 20px;
+    background: linear-gradient(135deg, $wh-primary, $wh-primary-hover);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all $transition-fast;
+    @include touch-target;
+    box-shadow: 0 4px 12px $wh-primary-glow;
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px $wh-primary-glow;
+    }
+
+    &:active {
+        transform: translateY(0);
+    }
+}
+
+// === Results Info ===
+.results-info {
+    text-align: center;
+    padding: 24px;
+    font-size: 0.85rem;
+    color: $wh-gray-400;
+}
+
+// === Print Styles ===
+@media print {
+
+    .info-banner,
+    .header-actions,
+    .btn-receive {
+        display: none !important;
+    }
+
+    .order-card {
+        break-inside: avoid;
+        box-shadow: none;
+        border: 1px solid #ddd;
+    }
+}

@@ -11,22 +11,18 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-stock-adjustment',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './stock-adjustment.html',
   styleUrl: './stock-adjustment.scss',
 })
 export class StockAdjustment implements OnInit {
   adjustmentForm!: FormGroup;
   isLoading = false;
+  isSubmitting = false;
   errorMessage = '';
 
   products: Product[] = [];
   warehouses: Warehouse[] = [];
-
-  adjustmentTypes = [
-    { value: 'add', label: 'Ajouter du stock', icon: '➕' },
-    { value: 'remove', label: 'Retirer du stock', icon: '➖' }
-  ];
 
   constructor(
     private fb: FormBuilder,
@@ -44,11 +40,12 @@ export class StockAdjustment implements OnInit {
 
   private initForm(): void {
     this.adjustmentForm = this.fb.group({
-      productId: [null, [Validators.required]],
-      warehouseId: [null, [Validators.required]],
-      adjustmentType: ['add', [Validators.required]],
-      quantity: [0, [Validators.required, Validators.min(1)]],
-      reason: ['', [Validators.required, Validators.minLength(5)]]
+      productId: ['', [Validators.required]],
+      warehouseId: ['', [Validators.required]],
+      type: ['IN', [Validators.required]],
+      quantity: [1, [Validators.required, Validators.min(1)]],
+      reason: ['', [Validators.required]],
+      notes: ['']
     });
   }
 
@@ -74,39 +71,51 @@ export class StockAdjustment implements OnInit {
     });
   }
 
-  get productId() {
-    return this.adjustmentForm.get('productId');
+  getQuantity(): number {
+    return this.adjustmentForm.get('quantity')?.value || 0;
   }
 
-  get warehouseId() {
-    return this.adjustmentForm.get('warehouseId');
+  incrementQuantity(): void {
+    const current = this.getQuantity();
+    this.adjustmentForm.patchValue({ quantity: current + 1 });
   }
 
-  get adjustmentType() {
-    return this.adjustmentForm.get('adjustmentType');
+  decrementQuantity(): void {
+    const current = this.getQuantity();
+    if (current > 1) {
+      this.adjustmentForm.patchValue({ quantity: current - 1 });
+    }
   }
 
-  get quantity() {
-    return this.adjustmentForm.get('quantity');
+  resetForm(): void {
+    if (this.adjustmentForm.dirty) {
+      if (!confirm('Voulez-vous vraiment réinitialiser le formulaire ?')) {
+        return;
+      }
+    }
+    this.adjustmentForm.reset({
+      productId: '',
+      warehouseId: '',
+      type: 'IN',
+      quantity: 1,
+      reason: '',
+      notes: ''
+    });
   }
 
-  get reason() {
-    return this.adjustmentForm.get('reason');
-  }
-
-  onSubmit(): void {
+  submitAdjustment(): void {
     if (this.adjustmentForm.invalid) {
       this.adjustmentForm.markAllAsTouched();
       return;
     }
 
-    this.isLoading = true;
+    this.isSubmitting = true;
     this.errorMessage = '';
 
     const formValue = this.adjustmentForm.value;
 
-    // Calculer la quantité (négative si retrait)
-    const finalQuantity = formValue.adjustmentType === 'add'
+    // Calculer la quantité (négative si sortie)
+    const finalQuantity = formValue.type === 'IN'
       ? formValue.quantity
       : -formValue.quantity;
 
@@ -114,17 +123,17 @@ export class StockAdjustment implements OnInit {
       productId: formValue.productId,
       warehouseId: formValue.warehouseId,
       quantity: finalQuantity,
-      reason: formValue.reason
+      reason: `${formValue.reason}${formValue.notes ? ': ' + formValue.notes : ''}`
     };
 
     this.inventoryApiService.recordAdjustment(adjustmentData).subscribe({
       next: (inventory) => {
-        alert(`Ajustement enregistré avec succès !  \nNouveau stock: ${inventory.qtyOnHand} unités`);
-        this.router.navigate(['/warehouse-manager/inventory']);
+        alert(`Ajustement enregistré avec succès !\nNouveau stock: ${inventory.qtyOnHand} unités`);
+        this.router.navigate(['/warehouse/dashboard/inventory']);
       },
       error: (error) => {
         this.errorMessage = error.message || 'Erreur lors de l\'ajustement';
-        this.isLoading = false;
+        this.isSubmitting = false;
       }
     });
   }
@@ -135,6 +144,6 @@ export class StockAdjustment implements OnInit {
         return;
       }
     }
-    this.router.navigate(['/warehouse-manager/inventory']);
+    this.router.navigate(['/warehouse/dashboard/inventory']);
   }
 }

@@ -1,32 +1,34 @@
-import {Component, OnInit} from '@angular/core';
-import {Router, RouterOutlet} from '@angular/router';
-import {AuthService} from '../../../../core/auth/auth.service';
+import { Component, OnInit } from '@angular/core';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { AuthService } from '../../../../core/auth/auth.service';
 
 @Component({
   selector: 'app-warehouse-manager-layout',
   imports: [
-    RouterOutlet
+    RouterOutlet,
+    RouterLink,
+    RouterLinkActive
   ],
   templateUrl: './warehouse-manager-layout.html',
   styleUrl: './warehouse-manager-layout.scss',
 })
 export class WarehouseManagerLayout implements OnInit {
   sidebarCollapsed = false;
-  userName =  '';
+  userName = '';
   currentDate = new Date();
 
   stats = {
     lowStockAlerts: 0,
     totalItems: 0,
     inboundToday: 0,
-    outboundToday:  0,
+    outboundToday: 0,
     capacityUsed: 0
   };
 
   constructor(
     private authService: AuthService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadUserInfo();

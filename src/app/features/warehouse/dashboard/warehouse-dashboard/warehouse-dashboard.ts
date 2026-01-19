@@ -1,5 +1,5 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../../core/auth/auth.service';
 import { Inventory } from '../../../../api/models/inventory.model';
@@ -10,7 +10,7 @@ import { PurchaseOrderApiService } from '../../../../api/services/purchase-order
 @Component({
   selector: 'app-warehouse-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, DatePipe],
   templateUrl: './warehouse-dashboard.html',
   styleUrl: './warehouse-dashboard.scss'
 })
@@ -92,7 +92,7 @@ export class WarehouseDashboardComponent implements OnInit {
   }
 
   calculateStats(): void {
-    this.stats.totalItems = this.inventories.length; // Renamed from totalProducts
+    this.stats.totalItems = this.inventories.length;
     this.stats.totalStock = this.inventories.reduce((sum, inv) => sum + inv.qtyOnHand, 0);
     this.stats.totalReserved = this.inventories.reduce((sum, inv) => sum + inv.qtyReserved, 0);
 

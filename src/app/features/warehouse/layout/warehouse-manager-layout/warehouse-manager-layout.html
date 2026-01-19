@@ -1,124 +1,132 @@
-<!-- src/app/features/warehouse-manager/layout/warehouse-manager-layout.component.html -->
-<div class="dashboard-layout" [class.sidebar-collapsed]="sidebarCollapsed">
+<!-- Warehouse Manager Layout - Premium Orange Theme -->
+<div class="wh-layout" [class.sidebar-collapsed]="sidebarCollapsed" [class.mobile-menu-open]="sidebarCollapsed">
+
+  <!-- Mobile Overlay -->
+  <div class="mobile-overlay" (click)="toggleSidebar()"></div>
+
   <!-- Sidebar -->
-  <aside class="sidebar">
+  <aside class="wh-sidebar" role="navigation" aria-label="Menu principal entrepôt">
+    <!-- Sidebar Header -->
     <div class="sidebar-header">
-      <div class="logo">
+      <a routerLink="/warehouse-manager/dashboard" class="logo-link">
         <div class="logo-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none"
-               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+          <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path
+              d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z">
+            </path>
             <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
             <line x1="12" y1="22.08" x2="12" y2="12"></line>
           </svg>
         </div>
-        <span class="logo-text">LogistiX</span>
-      </div>
-      <button class="sidebar-toggle" (click)="toggleSidebar()">
+        <span class="logo-text">LogiFlow</span>
+      </a>
+      <button class="sidebar-toggle" (click)="toggleSidebar()" aria-label="Réduire le menu">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="15 18 9 12 15 6"></polyline>
         </svg>
       </button>
     </div>
 
+    <!-- Navigation -->
     <nav class="sidebar-nav">
+      <!-- Stock Management Section -->
       <div class="nav-section">
         <span class="nav-section-title">Gestion Stock</span>
 
-        <a routerLink="/warehouse-manager/dashboard" routerLinkActive="active" class="nav-item">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="3" y="3" width="7" height="7"></rect>
-            <rect x="14" y="3" width="7" height="7"></rect>
-            <rect x="14" y="14" width="7" height="7"></rect>
-            <rect x="3" y="14" width="7" height="7"></rect>
-          </svg>
-          <span>Vue d'ensemble</span>
+        <a routerLink="/warehouse/dashboard/dashboard" routerLinkActive="active" class="nav-item"
+          [routerLinkActiveOptions]="{exact: true}">
+          <div class="nav-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="7" height="7"></rect>
+              <rect x="14" y="3" width="7" height="7"></rect>
+              <rect x="14" y="14" width="7" height="7"></rect>
+              <rect x="3" y="14" width="7" height="7"></rect>
+            </svg>
+          </div>
+          <span class="nav-label">Vue d'ensemble</span>
         </a>
 
-        <a routerLink="/warehouse-manager/inventory" routerLinkActive="active" class="nav-item">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-          </svg>
-          <span>Inventaire</span>
-        </a>
-
-        <a routerLink="/warehouse-manager/movements" routerLinkActive="active" class="nav-item">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="17 1 21 5 17 9"></polyline>
-            <path d="M3 11V9a4 4 0 0 1 4-4h14"></path>
-            <polyline points="7 23 3 19 7 15"></polyline>
-            <path d="M21 13v2a4 4 0 0 1-4 4H3"></path>
-          </svg>
-          <span>Mouvements</span>
+        <a routerLink="/warehouse/dashboard/inventory" routerLinkActive="active" class="nav-item">
+          <div class="nav-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path
+                d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z">
+              </path>
+            </svg>
+          </div>
+          <span class="nav-label">Inventaire</span>
         </a>
       </div>
 
+      <!-- Operations Section -->
       <div class="nav-section">
         <span class="nav-section-title">Opérations</span>
 
-        <a routerLink="/warehouse-manager/receive-orders" routerLinkActive="active" class="nav-item">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="12" y1="5" x2="12" y2="19"></line>
-            <polyline points="19 12 12 19 5 12"></polyline>
-          </svg>
-          <span>Réceptions</span>
+        <a routerLink="/warehouse/dashboard/receive-orders" routerLinkActive="active" class="nav-item">
+          <div class="nav-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <polyline points="19 12 12 19 5 12"></polyline>
+            </svg>
+          </div>
+          <span class="nav-label">Réceptions</span>
         </a>
 
-        <a routerLink="/warehouse-manager/shipments" routerLinkActive="active" class="nav-item">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="1" y="3" width="15" height="13"></rect>
-            <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
-            <circle cx="5.5" cy="18.5" r="2.5"></circle>
-            <circle cx="18.5" cy="18.5" r="2.5"></circle>
-          </svg>
-          <span>Expéditions</span>
+        <a routerLink="/warehouse/dashboard/adjustment" routerLinkActive="active" class="nav-item">
+          <div class="nav-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+            </svg>
+          </div>
+          <span class="nav-label">Ajustements</span>
         </a>
 
-        <a routerLink="/warehouse-manager/adjustment" routerLinkActive="active" class="nav-item">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-            <polyline points="14 2 14 8 20 8"></polyline>
-            <line x1="16" y1="13" x2="8" y2="13"></line>
-            <line x1="16" y1="17" x2="8" y2="17"></line>
-          </svg>
-          <span>Ajustements</span>
+        @if (stats.lowStockAlerts > 0) {
+        <a routerLink="/warehouse/dashboard/alerts" routerLinkActive="active" class="nav-item has-alert">
+          <div class="nav-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+              <line x1="12" y1="9" x2="12" y2="13"></line>
+              <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+          </div>
+          <span class="nav-label">Alertes Stock</span>
+          <span class="nav-badge">{{ stats.lowStockAlerts }}</span>
         </a>
-
-        <a routerLink="/warehouse-manager/alerts" routerLinkActive="active" class="nav-item warning">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M10. 29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-            <line x1="12" y1="9" x2="12" y2="13"></line>
-            <line x1="12" y1="17" x2="12. 01" y2="17"></line>
-          </svg>
-          <span>Alertes</span>
-          @if (stats.lowStockAlerts > 0) {
-            <span class="badge">{{ stats.lowStockAlerts }}</span>
-          }
-        </a>
+        }
       </div>
     </nav>
 
+    <!-- Sidebar Footer -->
     <div class="sidebar-footer">
       <div class="user-card">
         <div class="user-avatar">
-          <span>{{ userName. charAt(0).toUpperCase() }}</span>
+          <span>{{ userName.charAt(0).toUpperCase() }}</span>
         </div>
         <div class="user-info">
           <span class="user-name">{{ userName }}</span>
-          <span class="user-role">Gestionnaire Entrepôt</span>
+          <span class="user-role">
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path
+                d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z">
+              </path>
+            </svg>
+            Gestionnaire Entrepôt
+          </span>
         </div>
       </div>
       <button class="btn-logout" (click)="logout()">
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
-             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
           <polyline points="16 17 21 12 16 7"></polyline>
           <line x1="21" y1="12" x2="9" y2="12"></line>
@@ -128,53 +136,124 @@
     </div>
   </aside>
 
-  <!-- Main Content -->
-  <main class="main-content">
+  <!-- Main Content Area -->
+  <main class="wh-main">
     <!-- Header -->
-    <header class="dashboard-header">
+    <header class="wh-header">
       <div class="header-left">
-        <button class="mobile-menu-btn" (click)="toggleSidebar()">
+        <button class="mobile-menu-btn" (click)="toggleSidebar()" aria-label="Ouvrir le menu">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <line x1="3" y1="12" x2="21" y2="12"></line>
             <line x1="3" y1="6" x2="21" y2="6"></line>
             <line x1="3" y1="18" x2="21" y2="18"></line>
           </svg>
         </button>
-        <div class="page-title">
-          <h1>Tableau de bord Entrepôt</h1>
-          <p class="page-subtitle">{{ currentDate }}</p>
+
+        <!-- Search Bar -->
+        <div class="header-search">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="text" placeholder="Rechercher produit, SKU, commande..." aria-label="Recherche globale">
+          <button class="scan-btn" aria-label="Scanner code-barres" title="Scanner">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="7" y1="8" x2="7" y2="16"></line>
+              <line x1="10" y1="8" x2="10" y2="16"></line>
+              <line x1="13" y1="8" x2="13" y2="16"></line>
+              <line x1="17" y1="8" x2="17" y2="16"></line>
+            </svg>
+          </button>
         </div>
       </div>
+
       <div class="header-right">
+        <!-- Warehouse Selector -->
         <div class="warehouse-selector">
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
-               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
             <circle cx="12" cy="10" r="3"></circle>
           </svg>
-          <span>Entrepôt Principal</span>
+          <span class="warehouse-name">Entrepôt Principal</span>
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="chevron">
             <polyline points="6 9 12 15 18 9"></polyline>
           </svg>
         </div>
-        <button class="btn-icon" title="Notifications">
+
+        <!-- Notifications -->
+        <button class="header-btn" aria-label="Notifications">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
             <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
           </svg>
           @if (stats.lowStockAlerts > 0) {
-            <span class="notification-dot"></span>
+          <span class="notification-badge">{{ stats.lowStockAlerts }}</span>
           }
         </button>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+          <a routerLink="/warehouse/dashboard/receive-orders" class="quick-action-btn" title="Nouvelle réception">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <polyline points="19 12 12 19 5 12"></polyline>
+            </svg>
+          </a>
+        </div>
       </div>
     </header>
 
-    <!-- Router Outlet - Le contenu change ici -->
-    <div class="dashboard-content">
+    <!-- Page Content (Router Outlet) -->
+    <div class="wh-content">
       <router-outlet></router-outlet>
     </div>
   </main>
+
+  <!-- Mobile Bottom Navigation -->
+  <nav class="mobile-bottom-nav" aria-label="Navigation mobile">
+    <a routerLink="/warehouse/dashboard/dashboard" routerLinkActive="active" class="bottom-nav-item"
+      [routerLinkActiveOptions]="{exact: true}">
+      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="7" height="7"></rect>
+        <rect x="14" y="3" width="7" height="7"></rect>
+        <rect x="14" y="14" width="7" height="7"></rect>
+        <rect x="3" y="14" width="7" height="7"></rect>
+      </svg>
+      <span>Accueil</span>
+    </a>
+    <a routerLink="/warehouse/dashboard/inventory" routerLinkActive="active" class="bottom-nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path
+          d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z">
+        </path>
+      </svg>
+      <span>Stock</span>
+    </a>
+    <a routerLink="/warehouse/dashboard/receive-orders" routerLinkActive="active" class="bottom-nav-item primary">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="12" y1="5" x2="12" y2="19"></line>
+        <polyline points="19 12 12 19 5 12"></polyline>
+      </svg>
+      <span>Réception</span>
+    </a>
+    <a routerLink="/warehouse/dashboard/adjustment" routerLinkActive="active" class="bottom-nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+      </svg>
+      <span>Ajuster</span>
+    </a>
+  </nav>
 </div>

@@ -53,8 +53,8 @@ export class PurchaseOrderDetail implements OnInit {
   sendOrder(): void {
     if (!this.purchaseOrder) return;
 
-    if (this.purchaseOrder.status !== PurchaseOrderStatus.DRAFT) {
-      alert('Seuls les bons de commande en brouillon peuvent être envoyés');
+    if (this.purchaseOrder.status !== PurchaseOrderStatus.PENDING) {
+      alert('Seuls les bons de commande en attente (PENDING) peuvent être envoyés');
       return;
     }
 
@@ -210,7 +210,7 @@ export class PurchaseOrderDetail implements OnInit {
   }
 
   canSend(): boolean {
-    return this.purchaseOrder?.status === PurchaseOrderStatus.DRAFT;
+    return this.purchaseOrder?.status === PurchaseOrderStatus.PENDING;
   }
 
   canCancel(): boolean {

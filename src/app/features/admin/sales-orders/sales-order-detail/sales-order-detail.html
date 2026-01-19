@@ -5,7 +5,7 @@
             <i class="fas fa-arrow-left"></i> Back to Orders
         </a>
         <div class="order-id">
-            SO-{{ salesOrder.orderNumber }}
+            SO-{{ salesOrder.id }}
         </div>
     </div>
 
@@ -13,50 +13,72 @@
         <!-- Main Content -->
         <div class="main-column">
             <!-- Order Status Banner -->
-            <div class="status-banner" [ngClass]="salesOrder.status.toLowerCase()">
+            <div class="status-banner" [ngClass]="getOrderStatusBadgeClass(salesOrder.status)">
                 <div class="status-icon">
-                    <i class="fas" [class.fa-box]="salesOrder.status === 'New'"
-                       [class.fa-truck]="salesOrder.status === 'Shipped'"
-                       [class.fa-check]="salesOrder.status === 'Delivered'"></i>
+                    <i class="fas" [class.fa-box]="salesOrder.status === SalesOrderStatus.PENDING"
+                        [class.fa-truck]="salesOrder.status === SalesOrderStatus.SHIPPED"
+                        [class.fa-check]="salesOrder.status === SalesOrderStatus.DELIVERED"
+                        [class.fa-times]="salesOrder.status === SalesOrderStatus.CANCELLED"></i>
                 </div>
                 <div class="status-text">
-                    <h2>Order is {{ salesOrder.status }}</h2>
-                    <p>Last updated: {{ salesOrder.orderDate | date:'medium' }}</p>
+                    <h2>Order is {{ getOrderStatusLabel(salesOrder.status) }}</h2>
+                    <p>Last updated: {{ salesOrder.createdAt | date:'medium' }}</p>
                 </div>
                 <div class="action-wrapper">
-                    <button class="btn-primary" *ngIf="salesOrder.status === 'New'" (click)="createShipment()">
+                    <button class="btn-primary" *ngIf="canCreateShipment()" (click)="toggleShipmentForm()">
                         Create Shipment
                     </button>
-                    <button class="btn-primary" *ngIf="salesOrder.status === 'Shipped'">
-                        Track Shipment
+                    <button class="btn-primary" *ngIf="canShip()" (click)="shipOrder()">
+                        Mark as Shipped
+                    </button>
+                    <button class="btn-primary" *ngIf="canDeliver()" (click)="deliverOrder()">
+                        Mark as Delivered
                     </button>
                 </div>
+            </div>
+
+            <!-- Shipment Form -->
+            <div class="card shipment-form" *ngIf="showShipmentForm">
+                <h3>New Shipment</h3>
+                <form [formGroup]="shipmentForm" (ngSubmit)="createShipment()">
+                    <div class="form-group">
+                        <label>Tracking Number</label>
+                        <input type="text" formControlName="trackingNumber" placeholder="Enter tracking number">
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" (click)="toggleShipmentForm()">Cancel</button>
+                        <button type="submit" class="btn-primary"
+                            [disabled]="shipmentForm.invalid || isCreatingShipment">
+                            {{ isCreatingShipment ? 'Creating...' : 'Create Shipment' }}
+                        </button>
+                    </div>
+                </form>
             </div>
 
             <!-- Items Table -->
             <div class="card items-section">
                 <h3>Order Items</h3>
                 <div class="items-table">
-                    @for (item of salesOrder.items; track item.productId) {
+                    @for (line of salesOrder.lines; track line.id) {
                     <div class="item-row">
                         <div class="item-main">
-                            <h4>{{ item.name }}</h4>
-                            <span class="sku">SKU: {{ item.productId }}</span>
+                            <h4>{{ line.productSku }}</h4>
+                            <span class="sku">SKU: {{ line.productSku }}</span>
                         </div>
                         <div class="item-qty">
-                            x{{ item.quantity }}
+                            x{{ line.quantity }}
                         </div>
                         <div class="item-price">
-                            {{ item.unitPrice | currency }}
+                            {{ line.price | currency }}
                         </div>
                         <div class="item-total">
-                            {{ item.totalPrice | currency }}
+                            {{ line.price * line.quantity | currency }}
                         </div>
                     </div>
                     }
                     <div class="summary-row">
                         <div class="summary-label">Total Amount</div>
-                        <div class="summary-value">{{ salesOrder.totalAmount | currency }}</div>
+                        <div class="summary-value">{{ getOrderTotal() | currency }}</div>
                     </div>
                 </div>
             </div>
@@ -68,10 +90,10 @@
             <div class="card customer-card">
                 <h3>Customer</h3>
                 <div class="customer-profile">
-                    <div class="avatar-lg">{{ salesOrder.customerName.charAt(0) }}</div>
+                    <div class="avatar-lg">{{ salesOrder.clientUsername.charAt(0).toUpperCase() }}</div>
                     <div>
-                        <h4>{{ salesOrder.customerName }}</h4>
-                        <p class="email">customer&#64;email.com</p>
+                        <h4>{{ salesOrder.clientUsername }}</h4>
+                        <p class="email">Client ID: {{ salesOrder.clientId }}</p>
                     </div>
                 </div>
                 <div class="contact-actions">
@@ -86,8 +108,8 @@
                 <div class="address-box">
                     <i class="fas fa-map-marker-alt"></i>
                     <p>
+                        {{ salesOrder.warehouseCode }}<br>
                         123 Logistics Way<br>
-                        Warehouse District<br>
                         New York, NY 10001
                     </p>
                 </div>

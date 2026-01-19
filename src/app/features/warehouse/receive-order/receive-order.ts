@@ -1,14 +1,14 @@
-import {Component, OnInit} from '@angular/core';
-import {PurchaseOrder, PurchaseOrderStatus} from '../../../api/models/purchse-order.model';
-import {PurchaseOrderApiService} from '../../../api/services/purchase-order-api.model';
-import {InventoryApiService} from '../../../api/services/inventory-api.service';
-import {CommonModule} from '@angular/common';
-import {ReactiveFormsModule} from '@angular/forms';
-import {RouterLink} from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { PurchaseOrder, PurchaseOrderStatus } from '../../../api/models/purchse-order.model';
+import { PurchaseOrderApiService } from '../../../api/services/purchase-order-api.model';
+import { InventoryApiService } from '../../../api/services/inventory-api.service';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-receive-order',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule],
   templateUrl: './receive-order.html',
   styleUrl: './receive-order.scss',
 })
@@ -21,9 +21,9 @@ export class ReceiveOrder implements OnInit {
   PurchaseOrderStatus = PurchaseOrderStatus;
 
   constructor(
-    private purchaseOrderApiService:  PurchaseOrderApiService,
+    private purchaseOrderApiService: PurchaseOrderApiService,
     private inventoryApiService: InventoryApiService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadPendingOrders();
@@ -46,11 +46,11 @@ export class ReceiveOrder implements OnInit {
   }
 
   receiveOrder(order: PurchaseOrder): void {
-    if (! confirm(`Confirmer la réception de la commande #${order.id} du fournisseur "${order.supplierName}" ?`)) {
+    if (!confirm(`Confirmer la réception de la commande #${order.id} du fournisseur "${order.supplierName}" ?`)) {
       return;
     }
 
-    this.inventoryApiService.recordInbound(order. id).subscribe({
+    this.inventoryApiService.recordInbound(order.id).subscribe({
       next: (updatedOrder) => {
         alert(`Commande #${order.id} reçue avec succès ! \nStock mis à jour. `);
         this.loadPendingOrders();

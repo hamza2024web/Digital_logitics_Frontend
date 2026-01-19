@@ -1,167 +1,164 @@
 <div class="user-list-container">
 
   <!-- Header -->
-  <div class="page-header">
+  <header class="page-header" role="banner">
     <div class="header-content">
       <h1>👥 Gestion des Utilisateurs</h1>
-      <p class="subtitle">{{ filteredUsers.length }} utilisateur(s) trouvé(s)</p>
+      <p class="subtitle" aria-live="polite">{{ filteredUsers.length }} utilisateur(s) trouvé(s)</p>
     </div>
-    <button class="btn-primary" routerLink="/admin/users/create">
-      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <button class="btn-primary" routerLink="/admin/users/create" aria-label="Créer un nouvel utilisateur">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2" aria-hidden="true">
         <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-        <circle cx="8. 5" cy="7" r="4"></circle>
+        <circle cx="8.5" cy="7" r="4"></circle>
         <line x1="20" y1="8" x2="20" y2="14"></line>
         <line x1="23" y1="11" x2="17" y2="11"></line>
       </svg>
-      Nouvelle Utilisateur
+      Nouvel Utilisateur
     </button>
-  </div>
+  </header>
 
   <!-- Filtres et Recherche -->
-  <div class="filters-section">
+  <section class="filters-section" role="search" aria-label="Filtrer les utilisateurs">
     <div class="search-box">
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2" aria-hidden="true">
         <circle cx="11" cy="11" r="8"></circle>
         <path d="m21 21-4.35-4.35"></path>
       </svg>
-      <input
-        type="text"
-        placeholder="Rechercher par nom, prénom ou email..."
-        [value]="searchTerm"
-        (input)="onSearch($event)"
-      />
+      <input type="search" placeholder="Rechercher par nom, prénom ou email..." [value]="searchTerm"
+        (input)="onSearch($event)" aria-label="Rechercher des utilisateurs" />
     </div>
 
     <div class="filter-group">
-      <select (change)="onFilterRole($event)" [value]="filterRole">
+      <select (change)="onFilterRole($event)" [value]="filterRole" aria-label="Filtrer par rôle">
         <option value="">Tous les rôles</option>
         <option value="ADMIN">Administrateur</option>
         <option value="WAREHOUSE_MANAGER">Gestionnaire</option>
         <option value="CLIENT">Client</option>
       </select>
 
-      <select (change)="onFilterStatus($event)" [value]="filterStatus">
+      <select (change)="onFilterStatus($event)" [value]="filterStatus" aria-label="Filtrer par statut">
         <option value="">Tous les statuts</option>
         <option value="active">Actifs</option>
         <option value="inactive">Inactifs</option>
       </select>
 
-      <button (click)="resetFilters()" class="btn-secondary">
+      <button (click)="resetFilters()" class="btn-secondary" aria-label="Réinitialiser tous les filtres">
         Réinitialiser
       </button>
     </div>
-  </div>
+  </section>
 
   <!-- Message de chargement -->
   @if (isLoading) {
-    <div class="loading-state">
-      <div class="spinner"></div>
-      <p>Chargement des utilisateurs... </p>
-    </div>
+  <div class="loading-state">
+    <div class="spinner"></div>
+    <p>Chargement des utilisateurs... </p>
+  </div>
   }
 
   <!-- Message d'erreur -->
   @if (errorMessage && !isLoading) {
-    <div class="error-state">
-      <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <circle cx="12" cy="12" r="10"></circle>
-        <line x1="12" y1="8" x2="12" y2="12"></line>
-        <line x1="12" y1="16" x2="12.01" y2="16"></line>
-      </svg>
-      <p>{{ errorMessage }}</p>
-      <button (click)="loadUsers()" class="btn-primary">Réessayer</button>
-    </div>
+  <div class="error-state">
+    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="8" x2="12" y2="12"></line>
+      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+    </svg>
+    <p>{{ errorMessage }}</p>
+    <button (click)="loadUsers()" class="btn-primary">Réessayer</button>
+  </div>
   }
 
   <!-- Tableau des utilisateurs -->
   @if (! isLoading && !errorMessage) {
-    @if (filteredUsers.length > 0) {
-      <div class="table-container">
-        <table class="users-table">
-          <thead>
-          <tr>
-            <th>ID</th>
-            <th>Nom complet</th>
-            <th>Email</th>
-            <th>Rôle</th>
-            <th>Statut</th>
-            <th>Actions</th>
-          </tr>
-          </thead>
-          <tbody>
-            @for (user of filteredUsers; track user.id) {
-              <tr>
-                <td>{{ user.id }}</td>
-                <td>
-                  <div class="user-info">
-                    <div class="avatar">
-                      {{ user.firstName. charAt(0) }}{{ user.lastName.charAt(0) }}
-                    </div>
-                    <div>
-                      <div class="user-name">{{ user.firstName }} {{ user.lastName }}</div>
-                    </div>
-                  </div>
-                </td>
-                <td>{{ user.email }}</td>
-                <td>
-                  <span class="badge" [ngClass]="getRoleBadgeClass(user.role)">
-                    {{ getRoleLabel(user.role) }}
-                  </span>
-                </td>
-                <td>
-                  <span class="status-badge" [class.active]="user.active" [class.inactive]="!user.active">
-                    {{ getStatusLabel(user.active) }}
-                  </span>
-                </td>
-                <td>
-                  <div class="actions">
-                    <button
-                      (click)="toggleUserStatus(user)"
-                      class="btn-icon"
-                      [title]="user.active ? 'Désactiver' : 'Activer'"
-                    >
-                      @if (user.active) {
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                          <path d="M18 6 6 18"></path>
-                          <path d="m6 6 12 12"></path>
-                        </svg>
-                      } @else {
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                          <polyline points="20 6 9 17 4 12"></polyline>
-                        </svg>
-                      }
-                    </button>
+  @if (filteredUsers.length > 0) {
+  <div class="table-container" role="region" aria-label="Liste des utilisateurs">
+    <table class="users-table" aria-describedby="user-count">
+      <caption id="user-count" class="visually-hidden">Tableau des {{ filteredUsers.length }} utilisateurs</caption>
+      <thead>
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">Nom complet</th>
+          <th scope="col">Email</th>
+          <th scope="col">Rôle</th>
+          <th scope="col">Statut</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (user of filteredUsers; track user.id) {
+        <tr>
+          <td>{{ user.id }}</td>
+          <td>
+            <div class="user-info">
+              <div class="avatar">
+                {{ user.firstName. charAt(0) }}{{ user.lastName.charAt(0) }}
+              </div>
+              <div>
+                <div class="user-name">{{ user.firstName }} {{ user.lastName }}</div>
+              </div>
+            </div>
+          </td>
+          <td>{{ user.email }}</td>
+          <td>
+            <span class="badge" [ngClass]="getRoleBadgeClass(user.role)">
+              {{ getRoleLabel(user.role) }}
+            </span>
+          </td>
+          <td>
+            <span class="status-badge" [class.active]="user.active" [class.inactive]="!user.active">
+              {{ getStatusLabel(user.active) }}
+            </span>
+          </td>
+          <td>
+            <div class="actions">
+              <button (click)="toggleUserStatus(user)" class="btn-icon"
+                [title]="user.active ? 'Désactiver' : 'Activer'">
+                @if (user.active) {
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2">
+                  <path d="M18 6 6 18"></path>
+                  <path d="m6 6 12 12"></path>
+                </svg>
+                } @else {
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                }
+              </button>
 
-                    <button
-                      (click)="deleteUser(user)"
-                      class="btn-icon btn-danger"
-                      title="Supprimer"
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polyline points="3 6 5 6 21 6"></polyline>
-                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                      </svg>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            }
-          </tbody>
-        </table>
-      </div>
-    } @else {
-      <div class="empty-state">
-        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-          <circle cx="9" cy="7" r="4"></circle>
-          <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
-          <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-        </svg>
-        <h3>Aucun utilisateur trouvé</h3>
-        <p>Essayez de modifier vos filtres de recherche</p>
-        <button (click)="resetFilters()" class="btn-primary">Réinitialiser les filtres</button>
-      </div>
-    }
+              <button (click)="deleteUser(user)" class="btn-icon btn-danger" title="Supprimer">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2">
+                  <polyline points="3 6 5 6 21 6"></polyline>
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                </svg>
+              </button>
+            </div>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  } @else {
+  <div class="empty-state">
+    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2">
+      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+      <circle cx="9" cy="7" r="4"></circle>
+      <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+      <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+    </svg>
+    <h3>Aucun utilisateur trouvé</h3>
+    <p>Essayez de modifier vos filtres de recherche</p>
+    <button (click)="resetFilters()" class="btn-primary">Réinitialiser les filtres</button>
+  </div>
+  }
   }
 
 </div>

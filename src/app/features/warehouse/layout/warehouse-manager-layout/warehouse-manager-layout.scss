@@ -1,10 +1,10 @@
 // src/app/features/warehouse-manager/layout/warehouse-manager-layout.component.scss
 
-. dashboard-layout {
+.dashboard-layout {
   display: flex;
-  height:  100vh;
-  overflow:  hidden;
-  background:  #f8fafc;
+  height: 100vh;
+  overflow: hidden;
+  background: #f8fafc;
 }
 
 // ==================== SIDEBAR ====================
@@ -18,12 +18,12 @@
   position: relative;
   z-index: 100;
 
-  . sidebar-header {
-    display:  flex;
-    align-items:  center;
+  .sidebar-header {
+    display: flex;
+    align-items: center;
     justify-content: space-between;
     padding: 24px 20px;
-    border-bottom:  1px solid #e2e8f0;
+    border-bottom: 1px solid #e2e8f0;
 
     .logo {
       display: flex;
@@ -52,7 +52,7 @@
       }
     }
 
-    . sidebar-toggle {
+    .sidebar-toggle {
       width: 32px;
       height: 32px;
       border: none;
@@ -76,7 +76,7 @@
   }
 
   .sidebar-nav {
-    flex:  1;
+    flex: 1;
     overflow-y: auto;
     padding: 20px 0;
 
@@ -87,7 +87,7 @@
         display: block;
         padding: 0 20px 8px;
         font-size: 11px;
-        font-weight:  600;
+        font-weight: 600;
         color: #a0aec0;
         text-transform: uppercase;
         letter-spacing: 0.5px;
@@ -110,10 +110,10 @@
         }
 
         span:not(.badge) {
-          flex:  1;
+          flex: 1;
         }
 
-        . badge {
+        .badge {
           min-width: 20px;
           height: 20px;
           background: #f56565;
@@ -147,18 +147,18 @@
     }
   }
 
-  . sidebar-footer {
-    padding:  20px;
-    border-top:  1px solid #e2e8f0;
+  .sidebar-footer {
+    padding: 20px;
+    border-top: 1px solid #e2e8f0;
 
     .user-card {
       display: flex;
       align-items: center;
-      gap:  12px;
-      padding:  12px;
+      gap: 12px;
+      padding: 12px;
       background: #f7fafc;
       border-radius: 10px;
-      margin-bottom:  12px;
+      margin-bottom: 12px;
 
       .user-avatar {
         width: 40px;
@@ -170,17 +170,17 @@
         justify-content: center;
         color: white;
         font-weight: 600;
-        font-size:  16px;
+        font-size: 16px;
       }
 
-      . user-info {
-        flex:  1;
+      .user-info {
+        flex: 1;
         display: flex;
         flex-direction: column;
 
         .user-name {
           font-size: 14px;
-          font-weight:  600;
+          font-weight: 600;
           color: #2d3748;
         }
 
@@ -205,7 +205,7 @@
       font-size: 14px;
       font-weight: 500;
       cursor: pointer;
-      transition:  all 0.3s;
+      transition: all 0.3s;
 
       &:hover {
         background: #fff5f5;
@@ -218,18 +218,18 @@
 
 // ==================== SIDEBAR COLLAPSED ====================
 .dashboard-layout.sidebar-collapsed {
-  . sidebar {
+  .sidebar {
     width: 80px;
 
     .logo-text,
     .nav-section-title,
     .nav-item span:not(.badge),
-  .user-info,
-  .btn-logout span {
-    opacity: 0;
-    width: 0;
-    overflow: hidden;
-  }
+    .user-info,
+    .btn-logout span {
+      opacity: 0;
+      width: 0;
+      overflow: hidden;
+    }
 
     .sidebar-toggle svg {
       transform: rotate(180deg);
@@ -258,9 +258,9 @@
   justify-content: space-between;
   gap: 20px;
 
-  . header-left {
-    display:  flex;
-    align-items:  center;
+  .header-left {
+    display: flex;
+    align-items: center;
     gap: 20px;
 
     .mobile-menu-btn {
@@ -333,10 +333,10 @@
       height: 40px;
       border: none;
       background: #f7fafc;
-      border-radius:  8px;
-      display:  flex;
-      align-items:  center;
-      justify-content:  center;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       cursor: pointer;
       transition: all 0.3s;
 
@@ -348,7 +348,7 @@
         color: #4a5568;
       }
 
-      . notification-dot {
+      .notification-dot {
         position: absolute;
         top: 8px;
         right: 8px;
@@ -362,8 +362,8 @@
   }
 }
 
-. dashboard-content {
-  flex:  1;
+.dashboard-content {
+  flex: 1;
   overflow-y: auto;
   padding: 30px;
 }
@@ -373,26 +373,26 @@
   .sidebar {
     position: fixed;
     left: 0;
-    top:  0;
+    top: 0;
     bottom: 0;
     transform: translateX(-100%);
     box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
     z-index: 1000;
   }
 
-  .dashboard-layout. sidebar-collapsed . sidebar {
+  .dashboard-layout.sidebar-collapsed .sidebar {
     transform: translateX(0);
   }
 
   .dashboard-header {
-    . header-left {
-      . mobile-menu-btn {
+    .header-left {
+      .mobile-menu-btn {
         display: flex;
       }
     }
 
     .header-right {
-      . warehouse-selector span {
+      .warehouse-selector span {
         display: none;
       }
     }
@@ -403,11 +403,11 @@
   .dashboard-header {
     padding: 16px 20px;
 
-    .header-left . page-title h1 {
+    .header-left .page-title h1 {
       font-size: 20px;
     }
 
-    .header-right . warehouse-selector {
+    .header-right .warehouse-selector {
       display: none;
     }
   }

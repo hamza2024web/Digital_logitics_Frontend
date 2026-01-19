@@ -1,13 +1,13 @@
-import {Component, OnInit} from '@angular/core';
-import {Inventory} from '../../../api/models/inventory.model';
-import {InventoryApiService} from '../../../api/services/inventory-api.service';
-import {ReactiveFormsModule} from '@angular/forms';
-import {RouterLink} from '@angular/router';
-import {CommonModule} from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { Inventory } from '../../../api/models/inventory.model';
+import { InventoryApiService } from '../../../api/services/inventory-api.service';
+import { ReactiveFormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-inventory-list',
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './inventory-list.html',
   styleUrl: './inventory-list.scss',
 })
@@ -17,9 +17,9 @@ export class InventoryList implements OnInit {
   isLoading = false;
   errorMessage = '';
   searchTerm = '';
-  filterStockLevel:  string = '';
+  filterStockLevel: string = '';
 
-  constructor(private inventoryApiService:  InventoryApiService) {}
+  constructor(private inventoryApiService: InventoryApiService) { }
 
   ngOnInit(): void {
     this.loadInventories();
@@ -56,7 +56,7 @@ export class InventoryList implements OnInit {
 
   applyFilters(): void {
     this.filteredInventories = this.inventories.filter(inventory => {
-      const matchesSearch = ! this.searchTerm ||
+      const matchesSearch = !this.searchTerm ||
         inventory.productSku.toLowerCase().includes(this.searchTerm) ||
         inventory.warehouseCode.toLowerCase().includes(this.searchTerm);
 
@@ -101,8 +101,8 @@ export class InventoryList implements OnInit {
     return 'Normal';
   }
 
-  getReservedPercentage(inventory:  Inventory): number {
+  getReservedPercentage(inventory: Inventory): number {
     if (inventory.qtyOnHand === 0) return 0;
-    return (inventory. qtyReserved / inventory. qtyOnHand) * 100;
+    return (inventory.qtyReserved / inventory.qtyOnHand) * 100;
   }
 }

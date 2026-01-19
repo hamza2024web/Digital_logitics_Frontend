@@ -1,11 +1,11 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../../core/auth/auth.service';
-import {Inventory} from '../../../../api/models/inventory.model';
-import {PurchaseOrder, PurchaseOrderStatus} from '../../../../api/models/purchse-order.model';
-import {InventoryApiService} from '../../../../api/services/inventory-api.service';
-import {PurchaseOrderApiService} from '../../../../api/services/purchase-order-api.model';
+import { Inventory } from '../../../../api/models/inventory.model';
+import { PurchaseOrder, PurchaseOrderStatus } from '../../../../api/models/purchse-order.model';
+import { InventoryApiService } from '../../../../api/services/inventory-api.service';
+import { PurchaseOrderApiService } from '../../../../api/services/purchase-order-api.model';
 
 @Component({
   selector: 'app-warehouse-dashboard',
@@ -21,20 +21,34 @@ export class WarehouseDashboardComponent implements OnInit {
   isLoadingInventories = false;
   isLoadingOrders = false;
 
+  sidebarCollapsed = false;
+  userName = 'John Doe';
+  currentDate = new Date();
+
   stats = {
-    totalProducts: 0,
+    totalItems: 0,
     totalStock: 0,
     totalReserved: 0,
-    lowStockItems: 0,
-    pendingOrders: 0
+    lowStockAlerts: 0,
+    pendingOrders: 0,
+    inboundToday: 0,
+    outboundToday: 0,
+    capacityUsed: 0
   };
 
   constructor(
     private inventoryApiService: InventoryApiService,
-    private purchaseOrderApiService: PurchaseOrderApiService
-  ) {}
+    private purchaseOrderApiService: PurchaseOrderApiService,
+    private authService: AuthService,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
+    // Get user name from auth service if available
+    const user = this.authService.getCurrentUser();
+    if (user) {
+      this.userName = `${user.firstName} ${user.lastName}`;
+    }
     this.loadDashboardData();
   }
 
@@ -46,13 +60,13 @@ export class WarehouseDashboardComponent implements OnInit {
   loadInventories(): void {
     this.isLoadingInventories = true;
 
-    this.inventoryApiService. getAllInventories().subscribe({
+    this.inventoryApiService.getAllInventories().subscribe({
       next: (inventories) => {
         this.inventories = inventories;
         this.calculateStats();
         this.isLoadingInventories = false;
       },
-      error:  (error) => {
+      error: (error) => {
         console.error('Erreur chargement stocks:', error);
         this.isLoadingInventories = false;
       }
@@ -67,7 +81,7 @@ export class WarehouseDashboardComponent implements OnInit {
         this.pendingPurchaseOrders = orders.filter(
           order => order.status === PurchaseOrderStatus.SENT
         );
-        this.stats.pendingOrders = this. pendingPurchaseOrders. length;
+        this.stats.pendingOrders = this.pendingPurchaseOrders.length;
         this.isLoadingOrders = false;
       },
       error: (error) => {
@@ -78,14 +92,28 @@ export class WarehouseDashboardComponent implements OnInit {
   }
 
   calculateStats(): void {
-    this.stats.totalProducts = this.inventories.length;
+    this.stats.totalItems = this.inventories.length; // Renamed from totalProducts
     this.stats.totalStock = this.inventories.reduce((sum, inv) => sum + inv.qtyOnHand, 0);
     this.stats.totalReserved = this.inventories.reduce((sum, inv) => sum + inv.qtyReserved, 0);
 
     // Produits avec stock faible (< 10 unités disponibles)
-    this.stats.lowStockItems = this.inventories.filter(inv =>
+    this.stats.lowStockAlerts = this.inventories.filter(inv =>
       (inv.qtyOnHand - inv.qtyReserved) < 10
     ).length;
+
+    // Mock values for missing data
+    this.stats.inboundToday = 12;
+    this.stats.outboundToday = 8;
+    this.stats.capacityUsed = 75;
+  }
+
+  toggleSidebar(): void {
+    this.sidebarCollapsed = !this.sidebarCollapsed;
+  }
+
+  logout(): void {
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 
   getAvailableQty(inventory: Inventory): number {
@@ -100,7 +128,7 @@ export class WarehouseDashboardComponent implements OnInit {
     return this.getAvailableQty(inventory) < 5;
   }
 
-  getStockBadgeClass(inventory:  Inventory): string {
+  getStockBadgeClass(inventory: Inventory): string {
     const available = this.getAvailableQty(inventory);
     if (available === 0) return 'stock-empty';
     if (available < 5) return 'stock-critical';

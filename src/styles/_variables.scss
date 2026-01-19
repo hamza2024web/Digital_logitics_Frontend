@@ -5,6 +5,7 @@
 // === Color Palette ===
 // SCSS Variables (for usage in mixins/functions)
 $primary: #f97316;
+$primary-color: $primary; // Alias for backward compatibility
 $primary-dark: #ea580c;
 $accent: #fb923c;
 $green: #10b981;

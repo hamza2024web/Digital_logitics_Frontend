@@ -1,8 +1,8 @@
-import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, Router, RouterLink} from '@angular/router';
-import {CommonModule} from '@angular/common';
-import {PurchaseOrder, PurchaseOrderStatus} from '../../../../api/models/purchse-order.model';
-import {PurchaseOrderApiService} from '../../../../api/services/purchase-order-api.model';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { PurchaseOrder, PurchaseOrderStatus } from '../../../../api/models/purchse-order.model';
+import { PurchaseOrderApiService } from '../../../../api/services/purchase-order-api.model';
 
 @Component({
   selector: 'app-purchase-order-detail',
@@ -23,7 +23,7 @@ export class PurchaseOrderDetail implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private purchaseOrderApiService: PurchaseOrderApiService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
@@ -58,7 +58,7 @@ export class PurchaseOrderDetail implements OnInit {
       return;
     }
 
-    if (! confirm(`Voulez-vous vraiment envoyer ce bon de commande au fournisseur "${this.purchaseOrder.supplierName}" ?`)) {
+    if (!confirm(`Voulez-vous vraiment envoyer ce bon de commande au fournisseur "${this.purchaseOrder.supplierName}" ?`)) {
       return;
     }
 
@@ -109,8 +109,9 @@ export class PurchaseOrderDetail implements OnInit {
   getStatusLabel(status: PurchaseOrderStatus): string {
     const labels: { [key in PurchaseOrderStatus]: string } = {
       [PurchaseOrderStatus.DRAFT]: 'Brouillon',
+      [PurchaseOrderStatus.PENDING]: 'En attente',
       [PurchaseOrderStatus.SENT]: 'Envoyé',
-      [PurchaseOrderStatus. RECEIVED]: 'Reçu',
+      [PurchaseOrderStatus.RECEIVED]: 'Reçu',
       [PurchaseOrderStatus.CANCELLED]: 'Annulé'
     };
     return labels[status] || status;
@@ -119,16 +120,18 @@ export class PurchaseOrderDetail implements OnInit {
   getStatusBadgeClass(status: PurchaseOrderStatus): string {
     const classes: { [key in PurchaseOrderStatus]: string } = {
       [PurchaseOrderStatus.DRAFT]: 'status-draft',
+      [PurchaseOrderStatus.PENDING]: 'status-pending',
       [PurchaseOrderStatus.SENT]: 'status-sent',
-      [PurchaseOrderStatus.RECEIVED]:  'status-received',
-      [PurchaseOrderStatus. CANCELLED]: 'status-cancelled'
+      [PurchaseOrderStatus.RECEIVED]: 'status-received',
+      [PurchaseOrderStatus.CANCELLED]: 'status-cancelled'
     };
     return classes[status] || '';
   }
 
   getStatusIcon(status: PurchaseOrderStatus): string {
-    const icons: { [key in PurchaseOrderStatus]:  string } = {
-      [PurchaseOrderStatus.DRAFT]:  '📝',
+    const icons: { [key in PurchaseOrderStatus]: string } = {
+      [PurchaseOrderStatus.DRAFT]: '📝',
+      [PurchaseOrderStatus.PENDING]: '⏳',
       [PurchaseOrderStatus.SENT]: '📤',
       [PurchaseOrderStatus.RECEIVED]: '✅',
       [PurchaseOrderStatus.CANCELLED]: '❌'
@@ -193,7 +196,7 @@ export class PurchaseOrderDetail implements OnInit {
     const diffMs = now.getTime() - created.getTime();
     const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
     const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-    const diffMinutes = Math. floor(diffMs / (1000 * 60));
+    const diffMinutes = Math.floor(diffMs / (1000 * 60));
 
     if (diffDays > 0) {
       return `Il y a ${diffDays} jour${diffDays > 1 ? 's' : ''}`;
@@ -212,7 +215,7 @@ export class PurchaseOrderDetail implements OnInit {
 
   canCancel(): boolean {
     return this.purchaseOrder?.status !== PurchaseOrderStatus.RECEIVED &&
-      this.purchaseOrder?. status !== PurchaseOrderStatus. CANCELLED;
+      this.purchaseOrder?.status !== PurchaseOrderStatus.CANCELLED;
   }
 
   print(): void {

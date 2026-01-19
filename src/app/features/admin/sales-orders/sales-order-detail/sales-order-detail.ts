@@ -1,16 +1,16 @@
-import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, Router, RouterLink} from '@angular/router';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {CommonModule} from '@angular/common';
-import {SalesOrder, SalesOrderStatus} from '../../../../api/models/sales-order.model';
-import {ShipmentCreateRequest, ShipmentStatus} from '../../../../api/models/shipment.model';
-import {SalesOrderApiService} from '../../../../api/services/SalesOrder-api.service';
-import {ShipmentApiService} from '../../../../api/services/shipment-api.service';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { SalesOrder, SalesOrderStatus } from '../../../../api/models/sales-order.model';
+import { ShipmentCreateRequest, ShipmentStatus } from '../../../../api/models/shipment.model';
+import { SalesOrderApiService } from '../../../../api/services/SalesOrder-api.service';
+import { ShipmentApiService } from '../../../../api/services/shipment-api.service';
 
 @Component({
   selector: 'app-sales-order-detail',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './sales-order-detail.html',
   styleUrl: './sales-order-detail.scss',
 })
@@ -20,7 +20,7 @@ export class SalesOrderDetail implements OnInit {
   errorMessage = '';
   orderId: number | null = null;
 
-  shipmentForm! : FormGroup;
+  shipmentForm!: FormGroup;
   isCreatingShipment = false;
   showShipmentForm = false;
 
@@ -33,7 +33,7 @@ export class SalesOrderDetail implements OnInit {
     private fb: FormBuilder,
     private salesOrderApiService: SalesOrderApiService,
     private shipmentApiService: ShipmentApiService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.initShipmentForm();
@@ -41,7 +41,7 @@ export class SalesOrderDetail implements OnInit {
     this.route.params.subscribe(params => {
       if (params['id']) {
         this.orderId = +params['id'];
-        this. loadSalesOrder(this.orderId);
+        this.loadSalesOrder(this.orderId);
       }
     });
   }
@@ -56,7 +56,7 @@ export class SalesOrderDetail implements OnInit {
     this.isLoading = true;
     this.errorMessage = '';
 
-    this.salesOrderApiService. getSalesOrderById(id).subscribe({
+    this.salesOrderApiService.getSalesOrderById(id).subscribe({
       next: (order) => {
         this.salesOrder = order;
         this.isLoading = false;
@@ -73,7 +73,7 @@ export class SalesOrderDetail implements OnInit {
   }
 
   createShipment(): void {
-    if (! this.salesOrder || !this.orderId) return;
+    if (!this.salesOrder || !this.orderId) return;
 
     if (this.shipmentForm.invalid) {
       this.shipmentForm.markAllAsTouched();
@@ -89,7 +89,7 @@ export class SalesOrderDetail implements OnInit {
     this.shipmentApiService.createShipmentForOrder(this.orderId, shipmentData).subscribe({
       next: (shipment) => {
         alert(`Expédition créée avec succès !  Numéro de suivi:  ${shipment.trackingNumber}`);
-        this.loadSalesOrder(this.orderId! );
+        this.loadSalesOrder(this.orderId!);
         this.showShipmentForm = false;
         this.shipmentForm.reset();
         this.isCreatingShipment = false;
@@ -102,9 +102,9 @@ export class SalesOrderDetail implements OnInit {
   }
 
   shipOrder(): void {
-    if (!this.salesOrder || !this. orderId) return;
+    if (!this.salesOrder || !this.orderId) return;
 
-    if (! confirm('Voulez-vous marquer cette commande comme expédiée ?')) {
+    if (!confirm('Voulez-vous marquer cette commande comme expédiée ?')) {
       return;
     }
 
@@ -120,7 +120,7 @@ export class SalesOrderDetail implements OnInit {
   }
 
   deliverOrder(): void {
-    if (!this.salesOrder || ! this.orderId) return;
+    if (!this.salesOrder || !this.orderId) return;
 
     if (!confirm('Voulez-vous marquer cette commande comme livrée ?')) {
       return;
@@ -148,12 +148,12 @@ export class SalesOrderDetail implements OnInit {
   }
 
   canCreateShipment(): boolean {
-    return this.salesOrder?. status === SalesOrderStatus. RESERVED && ! this.salesOrder. shipment;
+    return this.salesOrder?.status === SalesOrderStatus.RESERVED && !this.salesOrder.shipment;
   }
 
   canShip(): boolean {
-    return this. salesOrder?.status === SalesOrderStatus.RESERVED &&
-      this.salesOrder?.shipment?. status === ShipmentStatus. PLANNED;
+    return this.salesOrder?.status === SalesOrderStatus.RESERVED &&
+      this.salesOrder?.shipment?.status === ShipmentStatus.PLANNED;
   }
 
   canDeliver(): boolean {
@@ -172,17 +172,17 @@ export class SalesOrderDetail implements OnInit {
   }
 
   getOrderStatusLabel(status: SalesOrderStatus): string {
-    const labels: { [key in SalesOrderStatus]:  string } = {
+    const labels: { [key in SalesOrderStatus]: string } = {
       [SalesOrderStatus.PENDING]: 'En attente',
-      [SalesOrderStatus.RESERVED]:  'Réservé',
-      [SalesOrderStatus. SHIPPED]: 'Expédié',
+      [SalesOrderStatus.RESERVED]: 'Réservé',
+      [SalesOrderStatus.SHIPPED]: 'Expédié',
       [SalesOrderStatus.DELIVERED]: 'Livré',
       [SalesOrderStatus.CANCELLED]: 'Annulé'
     };
     return labels[status] || status;
   }
 
-  getShipmentStatusLabel(status:  ShipmentStatus): string {
+  getShipmentStatusLabel(status: ShipmentStatus): string {
     const labels: { [key in ShipmentStatus]: string } = {
       [ShipmentStatus.PLANNED]: 'Planifié',
       [ShipmentStatus.IN_TRANSIT]: 'En transit',
@@ -197,15 +197,15 @@ export class SalesOrderDetail implements OnInit {
       [SalesOrderStatus.PENDING]: 'status-pending',
       [SalesOrderStatus.RESERVED]: 'status-reserved',
       [SalesOrderStatus.SHIPPED]: 'status-shipped',
-      [SalesOrderStatus.DELIVERED]:  'status-delivered',
+      [SalesOrderStatus.DELIVERED]: 'status-delivered',
       [SalesOrderStatus.CANCELLED]: 'status-cancelled'
     };
     return classes[status] || '';
   }
 
   getShipmentStatusBadgeClass(status: ShipmentStatus): string {
-    const classes:  { [key in ShipmentStatus]: string } = {
-      [ShipmentStatus.PLANNED]:  'shipment-planned',
+    const classes: { [key in ShipmentStatus]: string } = {
+      [ShipmentStatus.PLANNED]: 'shipment-planned',
       [ShipmentStatus.IN_TRANSIT]: 'shipment-transit',
       [ShipmentStatus.DELIVERED]: 'shipment-delivered',
       [ShipmentStatus.CANCELLED]: 'shipment-cancelled'

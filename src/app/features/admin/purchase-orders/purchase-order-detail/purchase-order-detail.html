@@ -2,109 +2,124 @@
     <!-- Header -->
     <div class="page-header">
         <div class="header-left">
-            <button class="back-btn" (click)="goBack()">
-                <i class="fas fa-arrow-left"></i>
-            </button>
-            <div class="header-text">
-                <div class="title-row">
-                    <h1>Order #{{ purchaseOrder.orderNumber }}</h1>
-                    <span class="status-badge" [ngClass]="purchaseOrder.status.toLowerCase()">
-                        {{ purchaseOrder.status }}
-                    </span>
+            <a class="back-link" (click)="goBack()">
+                <i class="fas fa-arrow-left"></i> Back to Orders
+            </a>
+            <div class="title-row">
+                <div class="icon-box">
+                    <i class="fas fa-shopping-cart"></i>
                 </div>
-                <p class="subtitle">Created on {{ purchaseOrder.orderDate | date:'fullDate' }}</p>
+                <div>
+                    <h1>Order #{{ purchaseOrder.id }}</h1>
+                    <p class="subtitle">Created on {{ purchaseOrder.createdAt | date:'fullDate' }}</p>
+                </div>
             </div>
         </div>
         <div class="header-actions">
-            <button class="btn-secondary">
+            <!-- Actions based on status -->
+            <button class="btn-secondary" *ngIf="canCancel()" (click)="cancelOrder()">
+                Cancel Order
+            </button>
+            <button class="btn-primary" *ngIf="purchaseOrder.status === PurchaseOrderStatus.DRAFT"
+                (click)="sendOrder()">
+                <i class="fas fa-paper-plane"></i> Send to Supplier
+            </button>
+            <button class="btn-outline" (click)="print()">
                 <i class="fas fa-print"></i> Print
             </button>
-            <button class="btn-secondary">
-                <i class="fas fa-download"></i> PDF
-            </button>
-            <button class="btn-primary" *ngIf="purchaseOrder.status === 'Pending'">
-                Approve Order
-            </button>
         </div>
     </div>
 
-    <div class="details-grid">
-        <!-- Main Info -->
-        <div class="info-card">
-            <h3>Supplier Details</h3>
-            <div class="info-row">
-                <div class="info-group">
-                    <label>Supplier Name</label>
-                    <p>{{ purchaseOrder.supplierName }}</p>
-                </div>
-                <div class="info-group">
-                    <label>Warehouse</label>
-                    <p>{{ purchaseOrder.warehouseName }}</p>
+    <!-- Status Tracker -->
+    <div class="status-tracker">
+        <div class="track-step" [class.completed]="purchaseOrder.status !== PurchaseOrderStatus.DRAFT">
+            <div class="step-icon"><i class="fas fa-file-invoice"></i></div>
+            <div class="step-label">Draft</div>
+        </div>
+        <div class="track-line" [class.active]="purchaseOrder.status !== PurchaseOrderStatus.DRAFT"></div>
+
+        <div class="track-step"
+            [class.completed]="purchaseOrder.status === PurchaseOrderStatus.SENT || purchaseOrder.status === PurchaseOrderStatus.RECEIVED">
+            <div class="step-icon"><i class="fas fa-paper-plane"></i></div>
+            <div class="step-label">Sent</div>
+        </div>
+        <div class="track-line"
+            [class.active]="purchaseOrder.status === PurchaseOrderStatus.SENT || purchaseOrder.status === PurchaseOrderStatus.RECEIVED">
+        </div>
+
+        <div class="track-step" [class.completed]="purchaseOrder.status === PurchaseOrderStatus.RECEIVED">
+            <div class="step-icon"><i class="fas fa-box-open"></i></div>
+            <div class="step-label">Received</div>
+        </div>
+    </div>
+
+    <div class="content-layout">
+        <div class="main-content">
+            <!-- Supplier Info -->
+            <div class="section-card">
+                <h3>Supplier Information</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <label>Supplier</label>
+                        <p>{{ purchaseOrder.supplierName }}</p>
+                    </div>
+                    <div class="info-item">
+                        <label>Destination Warehouse</label>
+                        <p>{{ purchaseOrder.destinationWarehouseCode }}</p>
+                    </div>
+                    <div class="info-item">
+                        <label>Status</label>
+                        <span class="status-badge" [ngClass]="getStatusBadgeClass(purchaseOrder.status)">
+                            {{ getStatusLabel(purchaseOrder.status) }}
+                        </span>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Order Timelines/Status -->
-        <div class="info-card status-card">
-            <h3>Order Progress</h3>
-            <div class="progress-track">
-                <div class="step completed">
-                    <div class="circle"><i class="fas fa-check"></i></div>
-                    <span>Created</span>
-                </div>
-                <!-- Logic for steps based on status -->
-                <div class="step" [class.completed]="purchaseOrder.status !== 'Pending'">
-                    <div class="circle">2</div>
-                    <span>Approved</span>
-                </div>
-                <div class="step" [class.completed]="purchaseOrder.status === 'Received'">
-                    <div class="circle">3</div>
-                    <span>Received</span>
-                </div>
+            <!-- Order Lines -->
+            <div class="section-card">
+                <h3>Order Items</h3>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>SKU</th>
+                            <th class="text-center">Qty Ordered</th>
+                            <th class="text-center">Qty Received</th>
+                            <th class="text-right">Unit Price</th>
+                            <th class="text-right">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (line of purchaseOrder.lines; track line.id) {
+                        <tr>
+                            <td>
+                                <div class="product-info">
+                                    <div class="product-icon"><i class="fas fa-box"></i></div>
+                                    <span>Product #{{ line.productId }}</span>
+                                </div>
+                            </td>
+                            <td>{{ line.productSku }}</td>
+                            <td class="text-center">{{ line.quantityOrdered }}</td>
+                            <td class="text-center">
+                                <span class="qty-pill"
+                                    [class.full]="isLineFullyReceived(line.quantityOrdered, line.quantityReserved)">
+                                    {{ line.quantityReserved }} / {{ line.quantityOrdered }}
+                                </span>
+                            </td>
+                            <td class="text-right">{{ line.price | currency }}</td>
+                            <td class="text-right value">{{ getLineSubtotal(line.quantityOrdered, line.price) | currency
+                                }}</td>
+                        </tr>
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="5" class="text-right label">Total Amount</td>
+                            <td class="text-right value">{{ getOrderTotal() | currency }}</td>
+                        </tr>
+                    </tfoot>
+                </table>
             </div>
         </div>
     </div>
-
-    <!-- Order Items -->
-    <div class="items-card">
-        <h3>Order Items</h3>
-        <div class="table-responsive">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Product</th>
-                        <th>SKU</th>
-                        <th class="text-right">Quantity</th>
-                        <th class="text-right">Unit Price</th>
-                        <th class="text-right">Total</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @for (item of purchaseOrder.items; track item.productId) {
-                    <tr>
-                        <td>{{ item.productName }}</td>
-                        <td class="sku">#{{ item.productId }}</td> <!-- Assuming ID as SKU for now -->
-                        <td class="text-right">{{ item.quantity }}</td>
-                        <td class="text-right">{{ item.unitPrice | currency }}</td>
-                        <td class="text-right font-bold">{{ item.totalPrice | currency }}</td>
-                    </tr>
-                    }
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <td colspan="4" class="text-right label">Subtotal</td>
-                        <td class="text-right value">{{ purchaseOrder.totalAmount | currency }}</td>
-                    </tr>
-                    <tr>
-                        <td colspan="4" class="text-right label">Tax (0%)</td>
-                        <td class="text-right value">$0.00</td>
-                    </tr>
-                    <tr class="total-row">
-                        <td colspan="4" class="text-right label">Total Amount</td>
-                        <td class="text-right value">{{ purchaseOrder.totalAmount | currency }}</td>
-                    </tr>
-                </tfoot>
-            </table>
-        </div>
-    </div>
-</div>

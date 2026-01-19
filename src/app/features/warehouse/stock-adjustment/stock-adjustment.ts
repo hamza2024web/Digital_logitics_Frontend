@@ -1,31 +1,31 @@
-import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {Product} from '../../../api/models/product.model';
-import {Warehouse} from '../../../api/models/warehouse.model';
-import {InventoryApiService} from '../../../api/services/inventory-api.service';
-import {ProductApiService} from '../../../api/services/product-api.service';
-import {WarehouseApiService} from '../../../api/services/warehouse-api.service';
-import {Router, RouterLink} from '@angular/router';
-import {AdjustmentRequest} from '../../../api/models/inventory.model';
-import {CommonModule} from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Product } from '../../../api/models/product.model';
+import { Warehouse } from '../../../api/models/warehouse.model';
+import { InventoryApiService } from '../../../api/services/inventory-api.service';
+import { ProductApiService } from '../../../api/services/product-api.service';
+import { WarehouseApiService } from '../../../api/services/warehouse-api.service';
+import { Router, RouterLink } from '@angular/router';
+import { AdjustmentRequest } from '../../../api/models/inventory.model';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-stock-adjustment',
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './stock-adjustment.html',
   styleUrl: './stock-adjustment.scss',
 })
 export class StockAdjustment implements OnInit {
-  adjustmentForm! : FormGroup;
+  adjustmentForm!: FormGroup;
   isLoading = false;
   errorMessage = '';
 
   products: Product[] = [];
-  warehouses:  Warehouse[] = [];
+  warehouses: Warehouse[] = [];
 
   adjustmentTypes = [
     { value: 'add', label: 'Ajouter du stock', icon: '➕' },
-    { value:  'remove', label: 'Retirer du stock', icon: '➖' }
+    { value: 'remove', label: 'Retirer du stock', icon: '➖' }
   ];
 
   constructor(
@@ -34,7 +34,7 @@ export class StockAdjustment implements OnInit {
     private productApiService: ProductApiService,
     private warehouseApiService: WarehouseApiService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.initForm();
@@ -57,7 +57,7 @@ export class StockAdjustment implements OnInit {
       next: (products) => {
         this.products = products;
       },
-      error:  (error) => {
+      error: (error) => {
         console.error('Erreur chargement produits:', error);
       }
     });
@@ -107,11 +107,11 @@ export class StockAdjustment implements OnInit {
 
     // Calculer la quantité (négative si retrait)
     const finalQuantity = formValue.adjustmentType === 'add'
-      ? formValue. quantity
+      ? formValue.quantity
       : -formValue.quantity;
 
     const adjustmentData: AdjustmentRequest = {
-      productId: formValue. productId,
+      productId: formValue.productId,
       warehouseId: formValue.warehouseId,
       quantity: finalQuantity,
       reason: formValue.reason
@@ -131,7 +131,7 @@ export class StockAdjustment implements OnInit {
 
   cancel(): void {
     if (this.adjustmentForm.dirty) {
-      if (! confirm('Voulez-vous vraiment quitter sans sauvegarder ?')) {
+      if (!confirm('Voulez-vous vraiment quitter sans sauvegarder ?')) {
         return;
       }
     }

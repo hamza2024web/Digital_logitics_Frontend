@@ -1,204 +1,394 @@
-@import '../../../../../../styles/variables';
+// Purchase Order Form - Modern Admin Design
+@import '../../../../../styles/variables';
 
-.page-container {
-    padding: 2rem;
-    display: flex;
-    justify-content: center;
-    animation: fadeIn 0.3s ease-out;
+// =====================
+// ANIMATIONS
+// =====================
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-.form-card {
-    background: #1e293b;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 16px;
-    padding: 2rem;
-    width: 100%;
-    max-width: 900px;
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
 
-    .card-header {
+// =====================
+// CONTAINER
+// =====================
+.page-container {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    animation: fadeInUp 0.5s ease;
+}
+
+// =====================
+// PAGE HEADER
+// =====================
+.page-header {
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .header-content {
+        h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: white;
+            margin: 0 0 0.5rem 0;
+        }
+
+        p {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+            margin: 0;
+        }
+    }
+}
+
+// =====================
+// LAYOUT GRID
+// =====================
+.content-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+// =====================
+// CARDS
+// =====================
+.card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+
+    .section-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 2rem;
+        margin-bottom: 1.5rem;
         padding-bottom: 1rem;
-        border-bottom: 1px solid rgba(255,255,255,0.05);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 
-        h2 { color: white; margin: 0; }
-        .close-btn {
-            background: transparent;
-            border: none;
-            color: #94a3b8;
-            font-size: 1.25rem;
-            cursor: pointer;
-            &:hover { color: white; }
+        h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: white;
+            margin: 0;
+        }
+
+        .btn-secondary {
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
         }
     }
 }
 
-.form-section {
-    margin-bottom: 2.5rem;
+// =====================
+// FORM CONTROLS (GLOBAL)
+// =====================
+.form-control,
+select,
+input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: rgba(255, 255, 255, 0.08);
+    /* Lighter background for better contrast */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    font-size: 0.95rem;
+    color: white;
+    transition: all 0.3s;
 
-    h3 {
-        color: #e2e8f0;
-        font-size: 1.1rem;
-        margin-bottom: 1rem;
+    /* Ensure browser defaults are overridden */
+    color-scheme: dark;
+
+    &::placeholder {
+        color: rgba(255, 255, 255, 0.5);
     }
 
-    .form-row {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 1.5rem;
+    &:focus {
+        outline: none;
+        border-color: #f97316;
+        background: rgba(255, 255, 255, 0.12);
+        box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.2);
     }
+
+    &.error {
+        border-color: #ef4444;
+        background: rgba(239, 68, 68, 0.05);
+
+        &:focus {
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+        }
+    }
+}
+
+select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    padding-right: 2.5rem;
+    cursor: pointer;
+
+    option {
+        background-color: #1e293b;
+        /* Dark Slate */
+        color: white;
+        padding: 10px;
+    }
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
 }
 
 .form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+    margin-bottom: 1rem;
 
     label {
-        color: #94a3b8;
+        display: block;
         font-size: 0.85rem;
-        font-weight: 500;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.8);
+        margin-bottom: 0.5rem;
     }
 
-    input, select {
-        padding: 0.75rem;
-        background: #0f172a;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 8px;
-        color: white;
-        width: 100%;
-        transition: border-color 0.2s;
-
-        &:focus {
-            outline: none;
-            border-color: $primary-color;
-        }
-
-        &::placeholder { color: #475569; }
+    .error-text {
+        color: #ef4444;
+        font-size: 0.8rem;
+        margin-top: 0.5rem;
     }
 }
 
-.items-list {
+// =====================
+// BACK BUTTON
+// =====================
+.btn-back {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    svg {
+        opacity: 0.8;
+    }
+}
+
+// =====================
+// ORDER LINES
+// =====================
+.lines-container {
     display: flex;
     flex-direction: column;
     gap: 1rem;
 }
 
-.item-row {
+.line-row {
     display: grid;
     grid-template-columns: 3fr 1fr 1fr 1fr auto;
     gap: 1rem;
-    align-items: flex-start;
-    animation: slideIn 0.3s ease;
+    align-items: start;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    transition: all 0.3s;
 
-    .calculated-price {
+    &:hover {
+        background: rgba(255, 255, 255, 0.05);
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    label {
+        display: block;
+        font-size: 0.75rem;
+        color: rgba(255, 255, 255, 0.5);
+        margin-bottom: 0.25rem;
+    }
+
+    .total-value {
         padding: 0.75rem;
-        color: white;
+        color: #f97316;
         font-weight: 600;
         text-align: right;
     }
 
     .remove-btn {
-        background: rgba(239, 68, 68, 0.1);
-        color: #ef4444;
-        border: none;
-        width: 38px;
-        height: 38px;
-        border-radius: 6px;
-        cursor: pointer;
+        margin-top: 1.5rem;
+        width: 36px;
+        height: 36px;
         display: flex;
         align-items: center;
         justify-content: center;
+        background: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
         transition: all 0.2s;
 
         &:hover {
-            background: rgba(239, 68, 68, 0.2);
+            background: #ef4444;
+            color: white;
         }
     }
 }
 
-.section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
+// =====================
+// SUMMARY
+// =====================
+.order-summary {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
 
-    .btn-secondary {
-        background: rgba(255,255,255,0.05);
-        color: #e2e8f0;
-        border: 1px solid rgba(255,255,255,0.1);
-        padding: 0.5rem 1rem;
-        border-radius: 6px;
-        font-size: 0.9rem;
-        cursor: pointer;
-        
-        &:hover { background: rgba(255,255,255,0.1); }
+    .summary-row {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 2rem;
+
+        span {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 1.1rem;
+        }
+
+        .amount {
+            color: white;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #f97316;
+        }
     }
 }
 
-.order-total {
+// =====================
+// BUTTONS (GLOBAL)
+// =====================
+button {
     display: flex;
-    justify-content: flex-end;
     align-items: center;
-    gap: 1rem;
-    margin-top: 1.5rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid rgba(255,255,255,0.05);
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 0.95rem;
 
-    span { color: #94a3b8; font-size: 1.1rem; }
-    .amount { color: $primary-color; font-size: 1.5rem; font-weight: 700; }
+    &.btn-secondary {
+        background: transparent;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: rgba(255, 255, 255, 0.8);
+
+        &:hover {
+            border-color: white;
+            color: white;
+            background: rgba(255, 255, 255, 0.05);
+        }
+    }
+
+    &.btn-primary {
+        background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+        border: none;
+        color: white;
+        box-shadow: 0 4px 15px rgba(249, 115, 22, 0.3);
+
+        &:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(249, 115, 22, 0.4);
+        }
+
+        &:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+    }
 }
 
+// =====================
+// ACTIONS CONTAINER
+// =====================
 .form-actions {
     display: flex;
     justify-content: flex-end;
     gap: 1rem;
-    margin-top: 2rem;
+    margin-top: 1rem;
+}
 
-    button {
-        padding: 0.75rem 1.5rem;
-        border-radius: 8px;
-        font-weight: 500;
-        cursor: pointer;
-        transition: all 0.2s;
+// =====================
+// RESPONSIVE
+// =====================
+@media (max-width: 768px) {
+    .page-container {
+        padding: 1rem;
+    }
 
-        &.btn-text {
-            background: transparent;
-            border: none;
-            color: #94a3b8;
-            &:hover { color: white; }
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .line-row {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.75rem;
+        padding: 1rem;
+
+        .line-product {
+            grid-column: span 2;
         }
 
-        &.btn-primary {
-            background: $primary-color;
-            border: none;
-            color: white;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-
-            &:disabled {
-                opacity: 0.5;
-                cursor: not-allowed;
-            }
-
-            &:hover:not(:disabled) {
-                background: darken($primary-color, 5%);
-                transform: translateY(-2px);
-            }
+        .remove-btn {
+            grid-column: span 2;
+            width: 100%;
+            margin-top: 0.5rem;
         }
     }
-}
 
-@keyframes slideIn {
-    from { opacity: 0; transform: translateX(-10px); }
-    to { opacity: 1; transform: translateX(0); }
-}
+    .form-actions {
+        flex-direction: column;
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: scale(0.98); }
-    to { opacity: 1; transform: scale(1); }
+        button {
+            width: 100%;
+            justify-content: center;
+        }
+    }
 }

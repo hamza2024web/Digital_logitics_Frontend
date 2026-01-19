@@ -1,26 +1,27 @@
-import {Component, OnInit} from '@angular/core';
-import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Warehouse} from '../../../../api/models/warehouse.model';
-import {Supplier} from '../../../../api/models/supplier.model';
-import {Product} from '../../../../api/models/product.model';
-import {Router} from '@angular/router';
-import {ProductApiService} from '../../../../api/services/product-api.service';
-import {WarehouseApiService} from '../../../../api/services/warehouse-api.service';
-import {SupplierApiService} from '../../../../api/services/supplier-api.service';
-import {PurchaseOrderApiService} from '../../../../api/services/purchase-order-api.model';
-import {PurchaseOrderCreateRequest} from '../../../../api/models/purchse-order.model';
+import { Component, OnInit } from '@angular/core';
+import { FormArray, FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { Warehouse } from '../../../../api/models/warehouse.model';
+import { Supplier } from '../../../../api/models/supplier.model';
+import { Product } from '../../../../api/models/product.model';
+import { Router, RouterLink } from '@angular/router';
+import { ProductApiService } from '../../../../api/services/product-api.service';
+import { WarehouseApiService } from '../../../../api/services/warehouse-api.service';
+import { SupplierApiService } from '../../../../api/services/supplier-api.service';
+import { PurchaseOrderApiService } from '../../../../api/services/purchase-order-api.model';
+import { PurchaseOrderCreateRequest } from '../../../../api/models/purchse-order.model';
+import { CommonModule, CurrencyPipe } from '@angular/common';
 
 @Component({
   selector: 'app-purchase-order-form',
-  imports: [],
+  imports: [CommonModule, ReactiveFormsModule, CurrencyPipe],
   templateUrl: './purchase-order-form.html',
   styleUrl: './purchase-order-form.scss',
 })
 export class PurchaseOrderForm implements OnInit {
-  orderForm! : FormGroup;
+  orderForm!: FormGroup;
   isLoading = false;
   errorMessage = '';
-  fieldErrors: { [key: string]: string} = {};
+  fieldErrors: { [key: string]: string } = {};
 
   suppliers: Supplier[] = [];
   warehouses: Warehouse[] = [];
@@ -37,18 +38,18 @@ export class PurchaseOrderForm implements OnInit {
     private warehouseApiService: WarehouseApiService,
     private productApiService: ProductApiService,
     private router: Router
-  ) {}
+  ) { }
 
-    ngOnInit(): void {
-        this.initForm();
-        this.loadSuppliers();
-        this.loadWarehouses();
-        this.loadProducts();
-    }
+  ngOnInit(): void {
+    this.initForm();
+    this.loadSuppliers();
+    this.loadWarehouses();
+    this.loadProducts();
+  }
 
   private initForm(): void {
     this.orderForm = this.fb.group({
-      supplierId:  [null, [Validators.required]],
+      supplierId: [null, [Validators.required]],
       destinationWarehouseId: [null, [Validators.required]],
       lines: this.fb.array([], [Validators.required, Validators.minLength(1)])
     });
@@ -63,7 +64,7 @@ export class PurchaseOrderForm implements OnInit {
         this.suppliers = suppliers;
         this.isLoadingSuppliers = false;
       },
-      error:  (error) => {
+      error: (error) => {
         console.error('Erreur chargement suppliers:', error);
         this.isLoadingSuppliers = false;
       }
@@ -86,12 +87,12 @@ export class PurchaseOrderForm implements OnInit {
 
   private loadProducts(): void {
     this.isLoadingProducts = true;
-    this.productApiService. getAllProducts().subscribe({
+    this.productApiService.getAllProducts().subscribe({
       next: (products) => {
         this.products = products;
         this.isLoadingProducts = false;
       },
-      error:  (error) => {
+      error: (error) => {
         console.error('Erreur chargement products:', error);
         this.isLoadingProducts = false;
       }
@@ -143,7 +144,7 @@ export class PurchaseOrderForm implements OnInit {
   getLineTotal(index: number): number {
     const line = this.lines.at(index);
     const quantity = line.get('quantity')?.value || 0;
-    const price = line. get('price')?.value || 0;
+    const price = line.get('price')?.value || 0;
     return quantity * price;
   }
 
@@ -156,7 +157,7 @@ export class PurchaseOrderForm implements OnInit {
   }
 
   getProductName(productId: number): string {
-    const product = this. products.find(p => p. id === productId);
+    const product = this.products.find(p => p.id === productId);
     return product ? product.name : '';
   }
 
@@ -174,14 +175,14 @@ export class PurchaseOrderForm implements OnInit {
 
     const orderData: PurchaseOrderCreateRequest = {
       supplierId: this.orderForm.value.supplierId,
-      destinationWarehouseId: this.orderForm.value. destinationWarehouseId,
+      destinationWarehouseId: this.orderForm.value.destinationWarehouseId,
       lines: this.orderForm.value.lines
     };
 
     this.purchaseOrderApiService.createPurchaseOrder(orderData).subscribe({
       next: (response) => {
         console.log('✅ Bon de commande créé:', response);
-        alert(`Bon de commande #${response.id} créé avec succès ! `);
+        alert(`Bon de commande #${response.id} créé avec succès! `);
         this.router.navigate(['/admin/purchase-orders']);
       },
       error: (error) => {
@@ -202,8 +203,8 @@ export class PurchaseOrderForm implements OnInit {
   }
 
   private handleError(error: any): void {
-    if (error.status === 400 && error.error?. errors) {
-      this.fieldErrors = error.error. errors;
+    if (error.status === 400 && error.error?.errors) {
+      this.fieldErrors = error.error.errors;
       this.errorMessage = 'Veuillez corriger les erreurs dans le formulaire. ';
     } else {
       this.errorMessage = error.message || 'Une erreur est survenue lors de la création du bon de commande.';
@@ -225,7 +226,7 @@ export class PurchaseOrderForm implements OnInit {
         return;
       }
     }
-    this.router. navigate(['/admin/purchase-orders']);
+    this.router.navigate(['/admin/purchase-orders']);
   }
 
   formatPrice(price: number): string {

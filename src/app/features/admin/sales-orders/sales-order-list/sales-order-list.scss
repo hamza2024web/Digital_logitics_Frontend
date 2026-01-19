@@ -1,194 +1,303 @@
-@import '../../../../../../styles/variables';
+// Sales Order List - Modern Dark Theme Design
+@import '../../../../../styles/variables';
 
-.page-container {
+// =====================
+// ANIMATIONS
+// =====================
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+// =====================
+// CONTAINER
+// =====================
+.sales-order-list-container {
     padding: 2rem;
-    animation: fadeIn 0.4s ease-out;
+    max-width: 1600px;
+    margin: 0 auto;
+    animation: fadeInUp 0.5s ease;
 }
 
+// =====================
+// PAGE HEADER
+// =====================
 .page-header {
-    margin-bottom: 2rem;
-    h1 { color: white; margin-bottom: 0.5rem; }
-    p { color: #94a3b8; }
-}
-
-.content-card {
-    background: #1e293b;
-    border-radius: 16px;
-    border: 1px solid rgba(255,255,255,0.05);
-    overflow: hidden;
-}
-
-.toolbar {
-    padding: 1.5rem;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+
+    .header-content {
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+            margin: 0 0 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .subtitle {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.95rem;
+            margin: 0;
+        }
+    }
+
+    .btn-primary {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.875rem 1.5rem;
+        background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+
+        &:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(249, 115, 22, 0.4);
+        }
+    }
+}
+
+// =====================
+// FILTERS SECTION
+// =====================
+.filters-section {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 1.25rem;
+    border-radius: 16px;
+    margin-bottom: 2rem;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    align-items: center;
+    animation: scaleIn 0.4s ease;
 
     .search-box {
+        flex: 1;
+        min-width: 280px;
         position: relative;
-        width: 320px;
-        
+
         i {
             position: absolute;
             left: 1rem;
             top: 50%;
             transform: translateY(-50%);
-            color: #64748b;
+            color: rgba(255, 255, 255, 0.4);
+            transition: color 0.3s;
         }
 
         input {
             width: 100%;
-            padding: 0.75rem 1rem 0.75rem 2.5rem;
-            background: #0f172a;
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 8px;
+            padding: 0.875rem 1rem 0.875rem 2.75rem;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            font-size: 0.9rem;
             color: white;
-            transition: all 0.2s;
+            transition: all 0.3s;
+
+            &::placeholder {
+                color: rgba(255, 255, 255, 0.4);
+            }
 
             &:focus {
                 outline: none;
-                background: #0f172a;
-                border-color: $primary-color;
-                box-shadow: 0 0 0 2px rgba($primary-color, 0.2);
-            }
-        }
-    }
+                border-color: #f97316;
+                background: rgba(255, 255, 255, 0.1);
+                box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.2);
 
-    .view-toggles {
-        background: #0f172a;
-        padding: 0.25rem;
-        border-radius: 8px;
-        display: flex;
-        gap: 0.25rem;
-
-        .toggle-btn {
-            width: 36px;
-            height: 36px;
-            border-radius: 6px;
-            border: none;
-            background: transparent;
-            color: #64748b;
-            cursor: pointer;
-
-            &.active {
-                background: #1e293b;
-                color: white;
-                box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+                &+i {
+                    color: #f97316;
+                }
             }
         }
     }
 }
 
+// =====================
+// TABLE
+// =====================
 .table-container {
-    overflow-x: auto;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    overflow: hidden;
+    animation: scaleIn 0.5s ease;
+}
 
-    table {
-        width: 100%;
-        border-collapse: collapse;
+.sales-table {
+    width: 100%;
+    border-collapse: collapse;
+
+    thead {
+        background: rgba(255, 255, 255, 0.05);
 
         th {
-            text-align: left;
             padding: 1rem 1.5rem;
-            color: #64748b;
-            font-size: 0.85rem;
+            text-align: left;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.5);
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            background: #1e293b;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         }
+    }
 
+    tbody {
         tr {
-            transition: background 0.2s;
-            border-bottom: 1px solid rgba(255,255,255,0.03);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            transition: all 0.2s;
 
             &:hover {
-                background: rgba(255,255,255,0.02);
+                background: rgba(255, 255, 255, 0.05);
             }
 
-            &:last-child { border-bottom: none; }
+            &:last-child {
+                border-bottom: none;
+            }
         }
 
         td {
             padding: 1rem 1.5rem;
-            color: #e2e8f0;
+            color: rgba(255, 255, 255, 0.9);
             vertical-align: middle;
         }
+    }
 
-        .id-col { font-family: monospace; color: $primary-color; font-weight: 500; }
+    .id-col {
+        font-family: monospace;
+        color: #f97316;
+        font-weight: 600;
+    }
 
-        .customer-cell {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
+    .amount {
+        font-weight: 600;
+        color: #34d399;
+    }
 
-            .avatar {
-                width: 32px;
-                height: 32px;
-                border-radius: 50%;
-                background: linear-gradient(135deg, #ec4899, #db2777);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                color: white;
-                font-weight: bold;
-                font-size: 0.85rem;
-            }
-        }
+    .customer-cell {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
 
-        .amount {
-            font-weight: 600;
-        }
-
-        .status-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.25rem 0.75rem;
-            border-radius: 100px;
-            font-size: 0.85rem;
-            border: 1px solid transparent;
-
-            .dot {
-                width: 6px;
-                height: 6px;
-                border-radius: 50%;
-                background: currentColor;
-            }
-
-            &.new { background: rgba(59, 130, 246, 0.1); color: #3b82f6; border-color: rgba(59, 130, 246, 0.2); }
-            &.shipped { background: rgba(245, 158, 11, 0.1); color: #f59e0b; border-color: rgba(245, 158, 11, 0.2); }
-            &.delivered { background: rgba(16, 185, 129, 0.1); color: #10b981; border-color: rgba(16, 185, 129, 0.2); }
-        }
-
-        .payment-badge {
-            font-size: 0.85rem;
-            color: #94a3b8;
-            i { margin-right: 0.25rem; }
-            
-            &.paid { color: #10b981; }
-        }
-
-        .btn-icon {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            border: 1px solid rgba(255,255,255,0.1);
-            background: transparent;
-            color: #94a3b8;
-            cursor: pointer;
+        .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #6366f1, #4f46e5);
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s;
+            color: white;
+            font-weight: bold;
+            font-size: 0.85rem;
+        }
+    }
 
-            &:hover {
-                background: rgba(255,255,255,0.1);
-                color: white;
-            }
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.4rem 0.875rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        border: 1px solid transparent;
+
+        .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        // Default/Pending
+        background: rgba(255, 255, 255, 0.1);
+        color: rgba(255, 255, 255, 0.7);
+
+        &.PENDING {
+            background: rgba(245, 158, 11, 0.15);
+            color: #fbbf24;
+            border-color: rgba(245, 158, 11, 0.3);
+        }
+
+        &.CONFIRMED {
+            background: rgba(59, 130, 246, 0.15);
+            color: #60a5fa;
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+
+        &.SHIPPED {
+            background: rgba(139, 92, 246, 0.15);
+            color: #a78bfa;
+            border-color: rgba(139, 92, 246, 0.3);
+        }
+
+        &.DELIVERED {
+            background: rgba(16, 185, 129, 0.15);
+            color: #34d399;
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
+        &.CANCELLED {
+            background: rgba(239, 68, 68, 0.15);
+            color: #f87171;
+            border-color: rgba(239, 68, 68, 0.3);
         }
     }
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+.btn-icon {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s;
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.7);
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.15);
+        color: white;
+        transform: translateY(-2px);
+    }
 }

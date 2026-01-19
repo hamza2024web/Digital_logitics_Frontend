@@ -1,8 +1,8 @@
-import {Component, OnInit} from '@angular/core';
-import {RouterLink} from '@angular/router';
-import {CommonModule} from '@angular/common';
-import {PurchaseOrder, PurchaseOrderStatus} from '../../../../api/models/purchse-order.model';
-import {PurchaseOrderApiService} from '../../../../api/services/purchase-order-api.model';
+import { Component, OnInit } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { PurchaseOrder, PurchaseOrderStatus } from '../../../../api/models/purchse-order.model';
+import { PurchaseOrderApiService } from '../../../../api/services/purchase-order-api.model';
 
 @Component({
   selector: 'app-purchase-order-list',
@@ -17,15 +17,15 @@ export class PurchaseOrderList implements OnInit {
   isLoading = false;
   errorMessage = '';
   searchTerm = '';
-  filterStatus:  string = '';
+  filterStatus: string = '';
 
   PurchaseOrderStatus = PurchaseOrderStatus;
 
-  constructor(private purchaseOrderApiService : PurchaseOrderApiService) {}
+  constructor(private purchaseOrderApiService: PurchaseOrderApiService) { }
 
-    ngOnInit(): void {
-        this.loadPurchaseOrders();
-    }
+  ngOnInit(): void {
+    this.loadPurchaseOrders();
+  }
 
   loadPurchaseOrders(): void {
     this.isLoading = true;
@@ -40,32 +40,29 @@ export class PurchaseOrderList implements OnInit {
       error: (error) => {
         this.errorMessage = error.message || 'Erreur lors du chargement des bons de commande';
         this.isLoading = false;
-    }
+      }
     });
   }
 
-  onSearch(event: Event):void {
+  onSearch(event: Event): void {
     const input = event.target as HTMLInputElement;
     this.searchTerm = input.value.toLowerCase();
     this.applyFilters();
   }
 
-  onFilterStatus(event: Event): void {
-    const select = event.target as HTMLSelectElement;
-    this.filterStatus = select.value;
-    this. applyFilters();
+  setFilter(status: string): void {
+    this.filterStatus = status;
+    this.applyFilters();
   }
 
   applyFilters(): void {
     this.filteredOrders = this.purchaseOrders.filter(order => {
-      // Filtre recherche
-      const matchesSearch = ! this.searchTerm ||
+      const matchesSearch = !this.searchTerm ||
         order.id.toString().includes(this.searchTerm) ||
         order.supplierName.toLowerCase().includes(this.searchTerm) ||
         order.destinationWarehouseCode.toLowerCase().includes(this.searchTerm);
 
-      // Filtre statut
-      const matchesStatus = ! this.filterStatus || order.status === this.filterStatus;
+      const matchesStatus = !this.filterStatus || order.status === this.filterStatus;
 
       return matchesSearch && matchesStatus;
     });
@@ -77,9 +74,9 @@ export class PurchaseOrderList implements OnInit {
     this.filteredOrders = this.purchaseOrders;
   }
 
-  sendOrder(order: PurchaseOrder):void {
-    if (order.status !== PurchaseOrderStatus.DRAFT) {
-      alert('Seuls les bons de commande en brouillon peuvent être envoyés');
+  sendOrder(order: PurchaseOrder): void {
+    if (order.status !== PurchaseOrderStatus.PENDING) {
+      alert('Seuls les bons de commande en attente (PENDING) peuvent être envoyés');
       return;
     }
 
@@ -104,8 +101,9 @@ export class PurchaseOrderList implements OnInit {
   }
 
   getStatusLabel(status: PurchaseOrderStatus): string {
-    const labels: { [key in PurchaseOrderStatus]: string} = {
+    const labels: { [key in PurchaseOrderStatus]: string } = {
       [PurchaseOrderStatus.DRAFT]: 'Brouillon',
+      [PurchaseOrderStatus.PENDING]: 'En attente',
       [PurchaseOrderStatus.SENT]: 'Envoyé',
       [PurchaseOrderStatus.RECEIVED]: 'Reçu',
       [PurchaseOrderStatus.CANCELLED]: 'Annulé'
@@ -114,8 +112,9 @@ export class PurchaseOrderList implements OnInit {
   }
 
   getStatusBadgeClass(status: PurchaseOrderStatus): string {
-    const classes : {[key in PurchaseOrderStatus]: string} = {
+    const classes: { [key in PurchaseOrderStatus]: string } = {
       [PurchaseOrderStatus.DRAFT]: 'status-draft',
+      [PurchaseOrderStatus.PENDING]: 'status-pending',
       [PurchaseOrderStatus.SENT]: 'status-sent',
       [PurchaseOrderStatus.RECEIVED]: 'status-received',
       [PurchaseOrderStatus.CANCELLED]: 'status-cancelled'

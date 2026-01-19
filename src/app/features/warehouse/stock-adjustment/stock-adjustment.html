@@ -1,0 +1,287 @@
+<!-- Stock Adjustment - Inventory Correction Form -->
+<div class="adjustment-page">
+    <!-- Page Header -->
+    <header class="page-header">
+        <div class="header-content">
+            <div class="header-text">
+                <h1 class="page-title">Ajustement de stock</h1>
+                <p class="page-subtitle">Modifiez les quantités d'inventaire manuellement</p>
+            </div>
+            <div class="header-actions">
+                <a routerLink="/warehouse/dashboard/inventory" class="btn-secondary">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="19" y1="12" x2="5" y2="12"></line>
+                        <polyline points="12 19 5 12 12 5"></polyline>
+                    </svg>
+                    <span class="btn-text">Retour à l'inventaire</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="adjustment-content">
+        <!-- Form Card -->
+        <section class="form-card">
+            <div class="form-header">
+                <div class="form-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                    </svg>
+                </div>
+                <div class="form-title">
+                    <h2>Nouvel ajustement</h2>
+                    <p>Remplissez les informations ci-dessous pour ajuster le stock</p>
+                </div>
+            </div>
+
+            <form [formGroup]="adjustmentForm" (ngSubmit)="submitAdjustment()">
+                <!-- Adjustment Type Selection -->
+                <div class="form-section">
+                    <label class="section-label">Type d'ajustement</label>
+                    <div class="type-selector">
+                        <label class="type-option" [class.selected]="adjustmentForm.get('type')?.value === 'IN'">
+                            <input type="radio" formControlName="type" value="IN" class="type-radio">
+                            <div class="type-content">
+                                <div class="type-icon in">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                                        <polyline points="19 12 12 19 5 12"></polyline>
+                                    </svg>
+                                </div>
+                                <div class="type-info">
+                                    <span class="type-name">Entrée de stock</span>
+                                    <span class="type-desc">Ajouter des unités à l'inventaire</span>
+                                </div>
+                            </div>
+                        </label>
+                        <label class="type-option" [class.selected]="adjustmentForm.get('type')?.value === 'OUT'">
+                            <input type="radio" formControlName="type" value="OUT" class="type-radio">
+                            <div class="type-content">
+                                <div class="type-icon out">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <line x1="12" y1="19" x2="12" y2="5"></line>
+                                        <polyline points="5 12 12 5 19 12"></polyline>
+                                    </svg>
+                                </div>
+                                <div class="type-info">
+                                    <span class="type-name">Sortie de stock</span>
+                                    <span class="type-desc">Retirer des unités de l'inventaire</span>
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Product Selection -->
+                <div class="form-section">
+                    <label class="section-label" for="productId">Produit *</label>
+                    <div class="select-wrapper">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path
+                                d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z">
+                            </path>
+                        </svg>
+                        <select id="productId" formControlName="productId" class="form-select">
+                            <option value="">Sélectionner un produit</option>
+                            @for (product of products; track product.id) {
+                            <option [value]="product.id">{{ product.sku }} - {{ product.name }}</option>
+                            }
+                        </select>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="chevron">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                    @if (adjustmentForm.get('productId')?.hasError('required') &&
+                    adjustmentForm.get('productId')?.touched) {
+                    <span class="error-message">Ce champ est requis</span>
+                    }
+                </div>
+
+                <!-- Warehouse Selection -->
+                <div class="form-section">
+                    <label class="section-label" for="warehouseId">Entrepôt *</label>
+                    <div class="select-wrapper">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                            <circle cx="12" cy="10" r="3"></circle>
+                        </svg>
+                        <select id="warehouseId" formControlName="warehouseId" class="form-select">
+                            <option value="">Sélectionner un entrepôt</option>
+                            @for (warehouse of warehouses; track warehouse.id) {
+                            <option [value]="warehouse.id">{{ warehouse.code }} - {{ warehouse.name }}</option>
+                            }
+                        </select>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="chevron">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                    @if (adjustmentForm.get('warehouseId')?.hasError('required') &&
+                    adjustmentForm.get('warehouseId')?.touched) {
+                    <span class="error-message">Ce champ est requis</span>
+                    }
+                </div>
+
+                <!-- Quantity Input -->
+                <div class="form-section">
+                    <label class="section-label" for="quantity">Quantité *</label>
+                    <div class="quantity-input">
+                        <button type="button" class="qty-btn minus" (click)="decrementQuantity()"
+                            [disabled]="getQuantity() <= 1">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                        </button>
+                        <input type="number" id="quantity" formControlName="quantity" class="qty-input" min="1"
+                            placeholder="0">
+                        <button type="button" class="qty-btn plus" (click)="incrementQuantity()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                        </button>
+                    </div>
+                    @if (adjustmentForm.get('quantity')?.hasError('required') &&
+                    adjustmentForm.get('quantity')?.touched) {
+                    <span class="error-message">Ce champ est requis</span>
+                    }
+                    @if (adjustmentForm.get('quantity')?.hasError('min')) {
+                    <span class="error-message">La quantité doit être supérieure à 0</span>
+                    }
+                </div>
+
+                <!-- Reason Selection -->
+                <div class="form-section">
+                    <label class="section-label" for="reason">Motif de l'ajustement *</label>
+                    <div class="select-wrapper">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="16" x2="12" y2="12"></line>
+                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                        </svg>
+                        <select id="reason" formControlName="reason" class="form-select">
+                            <option value="">Sélectionner un motif</option>
+                            <option value="INVENTORY_COUNT">Inventaire physique</option>
+                            <option value="DAMAGE">Produit endommagé</option>
+                            <option value="THEFT">Vol / Perte</option>
+                            <option value="CORRECTION">Correction d'erreur</option>
+                            <option value="RETURN">Retour client</option>
+                            <option value="EXPIRED">Produit périmé</option>
+                            <option value="OTHER">Autre</option>
+                        </select>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="chevron">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                    @if (adjustmentForm.get('reason')?.hasError('required') && adjustmentForm.get('reason')?.touched) {
+                    <span class="error-message">Ce champ est requis</span>
+                    }
+                </div>
+
+                <!-- Notes -->
+                <div class="form-section">
+                    <label class="section-label" for="notes">Notes (optionnel)</label>
+                    <textarea id="notes" formControlName="notes" class="form-textarea" rows="3"
+                        placeholder="Ajouter des détails supplémentaires..."></textarea>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" (click)="resetForm()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                        Annuler
+                    </button>
+                    <button type="submit" class="btn-submit" [disabled]="adjustmentForm.invalid || isSubmitting">
+                        @if (isSubmitting) {
+                        <span class="spinner"></span>
+                        Traitement...
+                        } @else {
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                        </svg>
+                        Enregistrer l'ajustement
+                        }
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Info Sidebar -->
+        <aside class="info-sidebar">
+            <!-- Help Card -->
+            <div class="help-card">
+                <div class="help-header">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                    </svg>
+                    <h3>Guide d'utilisation</h3>
+                </div>
+                <ul class="help-list">
+                    <li>
+                        <strong>Entrée de stock</strong> - Utilisez ce type pour ajouter des produits après un
+                        inventaire
+                        physique révélant un surplus ou lors d'un retour client.
+                    </li>
+                    <li>
+                        <strong>Sortie de stock</strong> - Utilisez ce type pour les produits endommagés,
+                        périmés, volés ou pour corriger un excédent dans le système.
+                    </li>
+                    <li>
+                        <strong>Motif</strong> - Sélectionnez toujours le motif approprié pour assurer
+                        la traçabilité des ajustements.
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Recent Adjustments -->
+            <div class="recent-card">
+                <div class="recent-header">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                    </svg>
+                    <h3>Ajustements récents</h3>
+                </div>
+                <div class="recent-list">
+                    <div class="empty-recent">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                        </svg>
+                        <p>Aucun ajustement récent</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+</div>

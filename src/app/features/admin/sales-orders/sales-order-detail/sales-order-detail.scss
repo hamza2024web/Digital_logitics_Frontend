@@ -1,64 +1,84 @@
-@import '../../../../../../styles/variables';
+// Sales Order Detail - Modern Dark Theme
+@import '../../../../../styles/variables';
 
-.page-container {
-    padding: 2rem;
-    max-width: 1200px;
-    margin: 0 auto;
-    animation: slideUp 0.4s ease-out;
+// =====================
+// ANIMATIONS
+// =====================
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+// =====================
+// CONTAINER
+// =====================
+.page-container {
+    padding: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    animation: fadeInUp 0.5s ease;
+}
+
+// =====================
+// HEADER
+// =====================
 .top-nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1.5rem;
 
     .back-link {
-        color: #94a3b8;
-        cursor: pointer;
+        color: rgba(255, 255, 255, 0.6);
+        text-decoration: none;
         display: flex;
         align-items: center;
         gap: 0.5rem;
-        transition: color 0.2s;
+        font-size: 0.9rem;
+        transition: color 0.3s;
+        cursor: pointer;
 
-        &:hover { color: white; }
+        &:hover {
+            color: #f97316;
+        }
     }
 
     .order-id {
         font-family: monospace;
-        color: #64748b;
-        background: rgba(255,255,255,0.05);
-        padding: 0.25rem 0.75rem;
-        border-radius: 6px;
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: white;
+        background: rgba(255, 255, 255, 0.05);
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
     }
 }
 
-.content-grid {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 2rem;
-
-    @media (max-width: 1024px) {
-        grid-template-columns: 1fr;
-    }
-}
-
-.card {
-    background: #1e293b;
-    border: 1px solid rgba(255,255,255,0.05);
-    border-radius: 12px;
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
-
-    h3 {
-        color: #94a3b8;
-        font-size: 0.85rem;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        margin-bottom: 1rem;
-    }
-}
-
+// =====================
+// STATUS BANNER
+// =====================
 .status-banner {
     display: flex;
     align-items: center;
@@ -68,13 +88,23 @@
     margin-bottom: 2rem;
     position: relative;
     overflow: hidden;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 
-    &::after {
-        content: '';
-        position: absolute;
-        top: 0; left: 0; right: 0; bottom: 0;
-        opacity: 0.1;
-        z-index: 0;
+    // Status variants
+    &.status-pending {
+        background: rgba(59, 130, 246, 0.15);
+        border-color: rgba(59, 130, 246, 0.3);
+    }
+
+    &.status-shipped {
+        background: rgba(245, 158, 11, 0.15);
+        border-color: rgba(245, 158, 11, 0.3);
+    }
+
+    &.status-delivered {
+        background: rgba(16, 185, 129, 0.15);
+        border-color: rgba(16, 185, 129, 0.3);
     }
 
     .status-icon {
@@ -85,66 +115,197 @@
         align-items: center;
         justify-content: center;
         font-size: 1.75rem;
-        background: rgba(255,255,255,0.2);
+        background: rgba(255, 255, 255, 0.2);
         color: white;
         z-index: 1;
+        backdrop-filter: blur(5px);
     }
 
     .status-text {
         flex: 1;
         z-index: 1;
-        
-        h2 { color: white; margin-bottom: 0.25rem; font-size: 1.5rem; }
-        p { color: rgba(255,255,255,0.7); }
+
+        h2 {
+            color: white;
+            margin: 0 0 0.25rem 0;
+            font-size: 1.5rem;
+        }
+
+        p {
+            color: rgba(255, 255, 255, 0.7);
+            margin: 0;
+        }
     }
 
     .action-wrapper {
         z-index: 1;
-    }
+        display: flex;
+        gap: 0.75rem;
 
-    &.new { 
-        background: linear-gradient(135deg, #3b82f6, #2563eb); 
-        box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.4);
-    }
-    
-    &.shipped { 
-        background: linear-gradient(135deg, #f59e0b, #d97706);
-        box-shadow: 0 10px 25px -5px rgba(217, 119, 6, 0.4);
-    }
-    
-    &.delivered { 
-        background: linear-gradient(135deg, #10b981, #059669);
-        box-shadow: 0 10px 25px -5px rgba(5, 150, 105, 0.4);
-    }
+        button {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
 
-    .btn-primary {
-        background: white;
-        color: #0f172a;
-        border: none;
-        padding: 0.75rem 1.5rem;
-        border-radius: 8px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: transform 0.2s;
+            &.btn-primary {
+                background: white;
+                color: #0f172a;
 
-        &:hover { transform: translateY(-2px); }
+                &:hover {
+                    background: #f1f5f9;
+                    transform: translateY(-2px);
+                }
+            }
+        }
     }
 }
 
+// =====================
+// CONTENT GRID
+// =====================
+.content-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+
+    @media (max-width: 1024px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+// =====================
+// CARDS
+// =====================
+.card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    animation: scaleIn 0.5s ease;
+
+    h3 {
+        color: white;
+        font-size: 1.1rem;
+        margin-bottom: 1.25rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        text-transform: none;
+        letter-spacing: normal;
+    }
+}
+
+// =====================
+// SHIPMENT FORM
+// =====================
+.shipment-form {
+    border-color: #f97316;
+    background: rgba(249, 115, 22, 0.05);
+
+    .form-group {
+        margin-bottom: 1.5rem;
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: white;
+
+            &:focus {
+                outline: none;
+                border-color: #f97316;
+            }
+        }
+    }
+
+    .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 1rem;
+
+        button {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+
+            &.btn-secondary {
+                background: rgba(255, 255, 255, 0.1);
+                color: white;
+
+                &:hover {
+                    background: rgba(255, 255, 255, 0.2);
+                }
+            }
+
+            &.btn-primary {
+                background: #f97316;
+                color: white;
+
+                &:hover {
+                    background: darken(#f97316, 5%);
+                }
+
+                &:disabled {
+                    opacity: 0.7;
+                    cursor: not-allowed;
+                }
+            }
+        }
+    }
+}
+
+// =====================
+// ITEMS LIST
+// =====================
 .items-table {
     .item-row {
         display: flex;
         align-items: center;
         padding: 1rem 0;
-        border-bottom: 1px solid rgba(255,255,255,0.05);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 
         .item-main {
             flex: 1;
-            h4 { color: white; margin-bottom: 0.25rem; }
-            .sku { color: #64748b; font-size: 0.85rem; font-family: monospace; }
+
+            h4 {
+                color: white;
+                margin: 0 0 0.25rem 0;
+            }
+
+            .sku {
+                color: #94a3b8;
+                font-size: 0.85rem;
+                font-family: monospace;
+                background: rgba(255, 255, 255, 0.05);
+                padding: 0.1rem 0.4rem;
+                border-radius: 4px;
+            }
         }
 
-        .item-qty, .item-price {
+        .item-qty {
+            width: 80px;
+            color: #94a3b8;
+            text-align: right;
+        }
+
+        .item-price {
             width: 100px;
             color: #94a3b8;
             text-align: right;
@@ -155,6 +316,7 @@
             color: white;
             font-weight: 600;
             text-align: right;
+            font-size: 1.1rem;
         }
     }
 
@@ -165,12 +327,24 @@
         gap: 2rem;
         padding-top: 1.5rem;
         margin-top: 0.5rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
 
-        .summary-label { color: #94a3b8; font-size: 1.1rem; }
-        .summary-value { color: $primary-color; font-size: 1.75rem; font-weight: 700; }
+        .summary-label {
+            color: #94a3b8;
+            font-size: 1.1rem;
+        }
+
+        .summary-value {
+            color: #34d399;
+            font-size: 1.75rem;
+            font-weight: 700;
+        }
     }
 }
 
+// =====================
+// SIDEBAR CARDS
+// =====================
 .customer-profile {
     display: flex;
     align-items: center;
@@ -181,17 +355,27 @@
         width: 56px;
         height: 56px;
         border-radius: 50%;
-        background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+        background: linear-gradient(135deg, #6366f1, #4f46e5);
         color: white;
         font-size: 1.5rem;
         display: flex;
         align-items: center;
         justify-content: center;
         font-weight: bold;
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
     }
 
-    h4 { color: white; margin-bottom: 0.25rem; font-size: 1.1rem; }
-    .email { color: #64748b; font-size: 0.9rem; }
+    h4 {
+        color: white;
+        margin: 0 0 0.25rem 0;
+        font-size: 1.1rem;
+    }
+
+    .email {
+        color: #94a3b8;
+        font-size: 0.9rem;
+        margin: 0;
+    }
 }
 
 .contact-actions {
@@ -201,7 +385,7 @@
 
     .btn-outline {
         background: transparent;
-        border: 1px solid rgba(255,255,255,0.1);
+        border: 1px solid rgba(255, 255, 255, 0.1);
         color: #e2e8f0;
         padding: 0.6rem;
         border-radius: 6px;
@@ -214,8 +398,9 @@
         transition: all 0.2s;
 
         &:hover {
-            background: rgba(255,255,255,0.05);
-            border-color: rgba(255,255,255,0.2);
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.2);
+            color: white;
         }
     }
 }
@@ -223,13 +408,15 @@
 .address-box {
     display: flex;
     gap: 1rem;
-    color: #e2e8f0;
+    color: #cbd5e1;
     line-height: 1.6;
-    
-    i { color: $primary-color; margin-top: 0.25rem; }
-}
 
-@keyframes slideUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+    i {
+        color: #f97316;
+        margin-top: 0.25rem;
+    }
+
+    p {
+        margin: 0;
+    }
 }

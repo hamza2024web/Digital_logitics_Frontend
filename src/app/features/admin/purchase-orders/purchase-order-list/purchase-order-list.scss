@@ -1,74 +1,147 @@
-@import '../../../../../../styles/variables';
+// Purchase Order List - Modern Dark Theme Design
+@import '../../../../../styles/variables';
 
-.page-container {
-    padding: 2rem;
-    animation: fadeInUp 0.5s ease-out;
+// =====================
+// ANIMATIONS
+// =====================
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+// =====================
+// CONTAINER
+// =====================
+.purchase-order-list-container {
+    padding: 2rem;
+    max-width: 1600px;
+    margin: 0 auto;
+    animation: fadeInUp 0.5s ease;
+}
+
+// =====================
+// PAGE HEADER
+// =====================
 .page-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1.5rem;
 
     .header-content {
-        h1 { font-size: 2rem; color: white; margin-bottom: 0.5rem; }
-        p { color: #94a3b8; }
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+            margin: 0 0 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .subtitle {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.95rem;
+            margin: 0;
+        }
     }
 
     .btn-primary {
-        background: linear-gradient(135deg, $primary-color 0%, darken($primary-color, 10%) 100%);
-        color: white;
-        padding: 0.75rem 1.5rem;
-        border-radius: 8px;
-        border: none;
-        font-weight: 500;
         display: flex;
         align-items: center;
-        gap: 0.5rem;
+        gap: 0.75rem;
+        padding: 0.875rem 1.5rem;
+        background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 0.95rem;
+        font-weight: 600;
         cursor: pointer;
-        transition: transform 0.2s;
+        transition: all 0.3s ease;
+        text-decoration: none;
 
-        &:hover { transform: translateY(-2px); }
+        &:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(249, 115, 22, 0.4);
+        }
     }
 }
 
-.content-card {
-    background: #1e293b;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+// =====================
+// FILTERS SECTION
+// =====================
+.filters-section {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 1.25rem;
     border-radius: 16px;
-    padding: 1.5rem;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-}
-
-.table-actions {
+    margin-bottom: 2rem;
     display: flex;
-    justify-content: space-between;
-    margin-bottom: 1.5rem;
+    gap: 1rem;
+    flex-wrap: wrap;
+    align-items: center;
+    animation: scaleIn 0.4s ease;
 
     .search-box {
+        flex: 1;
+        min-width: 280px;
         position: relative;
-        width: 300px;
 
         i {
             position: absolute;
             left: 1rem;
             top: 50%;
             transform: translateY(-50%);
-            color: #94a3b8;
+            color: rgba(255, 255, 255, 0.4);
+            transition: color 0.3s;
         }
 
         input {
             width: 100%;
-            padding: 0.75rem 1rem 0.75rem 2.5rem;
-            background: #0f172a;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
+            padding: 0.875rem 1rem 0.875rem 2.75rem;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            font-size: 0.9rem;
             color: white;
+            transition: all 0.3s;
+
+            &::placeholder {
+                color: rgba(255, 255, 255, 0.4);
+            }
 
             &:focus {
                 outline: none;
-                border-color: $primary-color;
+                border-color: #f97316;
+                background: rgba(255, 255, 255, 0.1);
+                box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.2);
+
+                &+i {
+                    color: #f97316;
+                }
             }
         }
     }
@@ -76,123 +149,196 @@
     .filter-group {
         display: flex;
         gap: 0.5rem;
-        background: #0f172a;
-        padding: 0.25rem;
-        border-radius: 8px;
 
         .filter-btn {
-            background: transparent;
-            border: none;
-            color: #94a3b8;
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+            padding: 0.75rem 1.25rem;
+            border-radius: 10px;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s;
+            font-weight: 500;
 
-            &.active {
-                background: #1e293b;
+            &:hover {
+                background: rgba(255, 255, 255, 0.15);
                 color: white;
             }
-            
-            &:hover:not(.active) { color: #e2e8f0; }
+
+            &.active {
+                background: rgba(249, 115, 22, 0.2);
+                color: #fb923c;
+                border-color: rgba(249, 115, 22, 0.3);
+            }
         }
     }
 }
 
-.table-responsive {
-    overflow-x: auto;
-    
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        
+// =====================
+// TABLE
+// =====================
+.table-container {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    overflow: hidden;
+    animation: scaleIn 0.5s ease;
+}
+
+.purchase-table {
+    width: 100%;
+    border-collapse: collapse;
+
+    thead {
+        background: rgba(255, 255, 255, 0.05);
+
         th {
+            padding: 1rem 1.5rem;
             text-align: left;
-            padding: 1rem;
-            color: #94a3b8;
-            font-weight: 500;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+    }
+
+    tbody {
+        tr {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            transition: all 0.2s;
+
+            &:hover {
+                background: rgba(255, 255, 255, 0.05);
+            }
+
+            &:last-child {
+                border-bottom: none;
+            }
         }
 
         td {
-            padding: 1rem;
-            color: #e2e8f0;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding: 1rem 1.5rem;
+            color: rgba(255, 255, 255, 0.9);
             vertical-align: middle;
         }
+    }
 
-        .id-badge {
-            font-family: monospace;
-            background: rgba(255,255,255,0.05);
-            padding: 0.25rem 0.5rem;
-            border-radius: 4px;
-        }
+    .id-col {
+        font-family: monospace;
+        color: #f97316;
+        font-weight: 600;
+    }
 
-        .supplier-info {
+    .amount {
+        font-weight: 600;
+        color: #34d399;
+    }
+
+    .supplier-cell {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+
+        .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #ec4899, #db2777); // Pink/Rose for Suppliers
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-
-            .avatar {
-                width: 32px;
-                height: 32px;
-                background: linear-gradient(135deg, #6366f1, #4f46e5);
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-weight: bold;
-                color: white;
-            }
-        }
-
-        .amount { font-family: monospace; font-weight: 600; }
-
-        .status-badge {
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
             font-size: 0.85rem;
-            text-transform: capitalize;
-            
-            &.pending { background: rgba(245, 158, 11, 0.1); color: #f59e0b; }
-            &.approved { background: rgba(59, 130, 246, 0.1); color: #3b82f6; }
-            &.received { background: rgba(16, 185, 129, 0.1); color: #10b981; }
-            &.cancelled { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
+        }
+    }
+
+    .actions {
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+        justify-content: flex-start;
+    }
+
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.4rem 0.875rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        border: 1px solid transparent;
+
+        .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: currentColor;
         }
 
-        .action-buttons {
-            display: flex;
-            gap: 0.5rem;
+        // Default/Pending
+        background: rgba(255, 255, 255, 0.1);
+        color: rgba(255, 255, 255, 0.7);
 
-            .btn-icon {
-                width: 32px;
-                height: 32px;
-                border-radius: 6px;
-                border: 1px solid rgba(255,255,255,0.1);
-                background: transparent;
-                color: #94a3b8;
-                cursor: pointer;
-                transition: all 0.2s;
-                display: flex;
-                align-items: center;
-                justify-content: center;
+        // Matching PurchaseOrderStatus
+        &.DRAFT {
+            background: rgba(148, 163, 184, 0.15); // Slate
+            color: #cbd5e1;
+            border-color: rgba(148, 163, 184, 0.3);
+        }
 
-                &:hover {
-                    background: rgba(255,255,255,0.05);
-                    color: white;
-                }
+        &.PENDING {
+            background: rgba(245, 158, 11, 0.15); // Amber
+            color: #fbbf24;
+            border-color: rgba(245, 158, 11, 0.3);
+        }
 
-                &.delete:hover {
-                    background: rgba(239, 68, 68, 0.1);
-                    color: #ef4444;
-                    border-color: rgba(239, 68, 68, 0.2);
-                }
-            }
+        &.SENT {
+            background: rgba(59, 130, 246, 0.15); // Blue
+            color: #60a5fa;
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+
+        &.APPROVED {
+            background: rgba(59, 130, 246, 0.15); // Blue
+            color: #60a5fa;
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+
+        &.RECEIVED {
+            background: rgba(16, 185, 129, 0.15); // Emerald
+            color: #34d399;
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
+        &.CANCELLED {
+            background: rgba(239, 68, 68, 0.15); // Red
+            color: #f87171;
+            border-color: rgba(239, 68, 68, 0.3);
         }
     }
 }
 
-@keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+.btn-icon {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s;
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.7);
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.15);
+        color: white;
+        transform: translateY(-2px);
+    }
 }

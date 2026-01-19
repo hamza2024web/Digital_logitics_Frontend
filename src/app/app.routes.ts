@@ -42,10 +42,9 @@ export const routes: Routes = [
     children: [
       {
         path: 'dashboard',
-        loadComponent: () => import('./features/warehouse/dashboard/warehouse-dashboard/warehouse-dashboard')
-          .then(m => m.WarehouseDashboardComponent)
+        loadChildren: () => import('./features/warehouse/warehouse-manager.routes')
+          .then(m => m.WAREHOUSE_MANAGER_ROUTES)
       },
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
   },
   {

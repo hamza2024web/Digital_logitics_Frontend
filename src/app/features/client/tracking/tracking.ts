@@ -118,6 +118,7 @@ export class Tracking implements OnInit {
     return order.lines. reduce((sum, line) => sum + (line.price * line.quantity), 0);
   }
 
+
   formatPrice(price: number): string {
     return `${price.toFixed(2)} €`;
   }

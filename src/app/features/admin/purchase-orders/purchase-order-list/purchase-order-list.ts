@@ -76,8 +76,8 @@ export class PurchaseOrderList implements OnInit {
   }
 
   sendOrder(order: PurchaseOrder): void {
-    if (order.status !== PurchaseOrderStatus.DRAFT) {
-      alert('Seuls les bons de commande en brouillon peuvent être envoyés');
+    if (order.status !== PurchaseOrderStatus.PENDING) {
+      alert('Seuls les bons de commande en attente (PENDING) peuvent être envoyés');
       return;
     }
 

@@ -807,6 +807,113 @@ $transition-normal: 0.3s ease;
   }
 }
 
+// === Activity List ===
+.activity-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.activity-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px;
+  background: $wh-gray-50;
+  border-radius: 12px;
+  transition: all $transition-fast;
+
+  &:hover {
+    background: $wh-gray-100;
+  }
+}
+
+.activity-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  @include flex-center;
+  flex-shrink: 0;
+  background: $wh-gray-200;
+  color: $wh-gray-500;
+
+  &.movement-in {
+    background: $wh-success-light;
+    color: $wh-success;
+  }
+
+  &.movement-out {
+    background: $wh-info-light;
+    color: $wh-info;
+  }
+
+  &.movement-adj {
+    background: $wh-warning-light;
+    color: $wh-warning;
+  }
+}
+
+.activity-content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.activity-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .activity-type {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: $wh-dark;
+  }
+
+  .activity-date {
+    font-size: 0.75rem;
+    color: $wh-gray-400;
+  }
+}
+
+.activity-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .product-sku {
+    font-size: 0.8rem;
+    color: $wh-gray-500;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .qty-badge {
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    background: $wh-gray-200;
+    color: $wh-gray-600;
+
+    &.movement-in {
+      background: $wh-success-light;
+      color: $wh-success;
+    }
+
+    &.movement-out {
+      background: $wh-info-light;
+      color: $wh-info;
+    }
+
+    &.movement-adj {
+      background: $wh-warning-light;
+      color: $wh-warning;
+    }
+  }
+}
+
 // === Print Styles ===
 @media print {
   .dashboard-page {

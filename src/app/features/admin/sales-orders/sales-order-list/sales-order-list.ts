@@ -111,7 +111,6 @@ export class SalesOrderList implements OnInit {
 
   getOrderStatusBadgeClass(status: SalesOrderStatus): string {
     const classes: { [key in SalesOrderStatus]: string } = {
-      [SalesOrderStatus. PENDING]: 'status-pending',
       [SalesOrderStatus.RESERVED]: 'status-reserved',
       [SalesOrderStatus.SHIPPED]: 'status-shipped',
       [SalesOrderStatus.DELIVERED]:  'status-delivered',

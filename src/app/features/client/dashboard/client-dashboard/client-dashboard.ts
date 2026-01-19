@@ -2,6 +2,8 @@ import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../../core/auth/auth.service';
+import {SalesOrder, SalesOrderStatus} from '../../../../api/models/sales-order.model';
+import {ClientOrderApiService} from '../../../../api/services/SalesOrder-api.service';
 
 interface Order {
   id: string;
@@ -29,76 +31,92 @@ interface Notification {
   styleUrl: './client-dashboard.scss'
 })
 export class ClientDashboardComponent implements OnInit {
-  private authService = inject(AuthService);
+  recentOrders: SalesOrder[] = [];
+  isLoading = false;
 
-  userEmail = '';
-  userRole = '';
-  userName = 'Client';
-  currentDate = new Date();
-  sidebarCollapsed = false;
-
-  // KPI Data - will be populated from API
   stats = {
-    ordersInProgress: 0,
-    ordersDelivered: 0,
-    ordersPending: 0,
-    totalSpent: 0
+    totalOrders:  0,
+    pendingOrders: 0,
+    shippedOrders: 0,
+    deliveredOrders: 0
   };
 
-  // Order lifecycle stages
-  orderStages = [
-    { status: 'CREATED', label: 'Créée', icon: '📝', count: 0 },
-    { status: 'RESERVED', label: 'Réservée', icon: '📦', count: 0 },
-    { status: 'SHIPPED', label: 'Expédiée', icon: '🚚', count: 0 },
-    { status: 'DELIVERED', label: 'Livrée', icon: '✅', count: 0 }
-  ];
+  // Exposer l'enum
+  SalesOrderStatus = SalesOrderStatus;
 
-  // Data arrays - will be populated from API
-  recentOrders: Order[] = [];
-  activeShipments: { orderId: string; carrier: string; trackingNumber: string; status: string; eta: string; progress: number }[] = [];
-  notifications: Notification[] = [];
+  constructor(private clientOrderApiService: ClientOrderApiService) {}
 
   ngOnInit(): void {
-    this.userEmail = this.authService.getUserEmail();
-    this.userRole = this.authService.getUserRole();
-    this.userName = this.userEmail.split('@')[0] || 'Client';
+    this.loadDashboardData();
   }
 
-  toggleSidebar(): void {
-    this.sidebarCollapsed = !this.sidebarCollapsed;
+  loadDashboardData(): void {
+    this.isLoading = true;
+
+    this.clientOrderApiService. getMyOrders().subscribe({
+      next: (orders) => {
+        this.recentOrders = orders.slice(0, 5); // 5 dernières commandes
+        this.calculateStats(orders);
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Erreur chargement commandes:', error);
+        this.isLoading = false;
+      }
+    });
   }
 
-  logout(): void {
-    this.authService.logout();
+  calculateStats(orders: SalesOrder[]): void {
+    this.stats.totalOrders = orders.length;
+    this.stats.pendingOrders = orders. filter(o =>
+      o.status === SalesOrderStatus. CREATED ||
+      o.status === SalesOrderStatus.RESERVED ||
+      o.status === SalesOrderStatus.PARTIALLY_RESERVED
+    ).length;
+    this.stats.shippedOrders = orders.filter(o => o.status === SalesOrderStatus.SHIPPED).length;
+    this.stats.deliveredOrders = orders.filter(o => o. status === SalesOrderStatus.DELIVERED).length;
   }
 
-  getStatusClass(status: string): string {
-    const classes: Record<string, string> = {
-      'CREATED': 'status-created',
-      'RESERVED': 'status-reserved',
-      'SHIPPED': 'status-shipped',
-      'DELIVERED': 'status-delivered',
-      'CANCELED': 'status-canceled',
-      'PLANNED': 'status-planned',
-      'IN_TRANSIT': 'status-transit'
-    };
-    return classes[status] || '';
-  }
-
-  getStatusLabel(status: string): string {
-    const labels: Record<string, string> = {
-      'CREATED': 'Créée',
-      'RESERVED': 'Réservée',
-      'SHIPPED': 'Expédiée',
-      'DELIVERED': 'Livrée',
-      'CANCELED': 'Annulée',
-      'PLANNED': 'Planifiée',
-      'IN_TRANSIT': 'En transit'
+  getStatusLabel(status: SalesOrderStatus): string {
+    const labels:  { [key in SalesOrderStatus]: string } = {
+      [SalesOrderStatus.CREATED]: 'Créée',
+      [SalesOrderStatus.PARTIALLY_RESERVED]: 'Partiellement réservée',
+      [SalesOrderStatus.RESERVED]: 'Réservée',
+      [SalesOrderStatus. AWAITING_SHIPMENT]: 'En attente',
+      [SalesOrderStatus. SHIPPED]: 'Expédiée',
+      [SalesOrderStatus.DELIVERED]: 'Livrée',
+      [SalesOrderStatus. CANCELLED]: 'Annulée'
     };
     return labels[status] || status;
   }
 
-  formatCurrency(amount: number): string {
-    return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(amount);
+  getStatusBadgeClass(status: SalesOrderStatus): string {
+    const classes:  { [key in SalesOrderStatus]: string } = {
+      [SalesOrderStatus.CREATED]:  'status-created',
+      [SalesOrderStatus.PARTIALLY_RESERVED]: 'status-partial',
+      [SalesOrderStatus. RESERVED]: 'status-reserved',
+      [SalesOrderStatus.AWAITING_SHIPMENT]: 'status-waiting',
+      [SalesOrderStatus.SHIPPED]: 'status-shipped',
+      [SalesOrderStatus.DELIVERED]: 'status-delivered',
+      [SalesOrderStatus.CANCELLED]: 'status-cancelled'
+    };
+    return classes[status] || '';
+  }
+
+  calculateTotal(order: SalesOrder): number {
+    return order.lines.reduce((sum, line) => sum + (line.price * line.quantity), 0);
+  }
+
+  formatDate(dateString: string): string {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('fr-FR', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
+  }
+
+  formatPrice(price: number): string {
+    return `${price.toFixed(2)} €`;
   }
 }

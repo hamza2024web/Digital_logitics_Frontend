@@ -24,16 +24,10 @@ export const routes: Routes = [
   },
   {
     path: 'client',
-    canActivate: [authGuard, roleGuard],
-    data: { roles: ['CLIENT'] },
-    children: [
-      {
-        path: 'dashboard',
-        loadComponent: () => import('./features/client/dashboard/client-dashboard/client-dashboard')
-          .then(m => m.ClientDashboardComponent)
-      },
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
-    ]
+    loadChildren:  () => import('./features/client/client.routes')
+      .then(m => m.CLIENT_ROUTES),
+    canActivate: [authGuard],
+    data: { roles: ['CLIENT'] }
   },
   {
     path: 'warehouse',

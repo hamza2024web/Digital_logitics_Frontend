@@ -1,7 +1,7 @@
 import {ProductQuery, ProductResponse} from '../../api/models/product.model';
 import {createActionGroup, props} from '@ngrx/store';
 
-export const ProductActions = createActionGroup({
+export const ProductsActions = createActionGroup({
   source: 'Products',
   events: {
     'Load Products': props<{ query: ProductQuery }>(),

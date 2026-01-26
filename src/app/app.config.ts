@@ -8,11 +8,13 @@ import {ApplicationConfig, isDevMode, provideZoneChangeDetection} from '@angular
 import {provideStoreDevtools} from '@ngrx/store-devtools';
 import {provideEffects} from '@ngrx/effects';
 import {provideStore} from '@ngrx/store';
+import {productsFeature} from './store/products/product.reducer';
+import {ProductsEffects} from './store/products/product.effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideStore(),
-    provideEffects([]),
+    provideStore({ [productsFeature.name]: productsFeature.reducer}),
+    provideEffects([ProductsEffects]),
     provideStoreDevtools({
       maxAge: 25,
       logOnly: !isDevMode(),

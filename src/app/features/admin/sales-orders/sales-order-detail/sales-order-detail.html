@@ -15,7 +15,7 @@
             <!-- Order Status Banner -->
             <div class="status-banner" [ngClass]="getOrderStatusBadgeClass(salesOrder.status)">
                 <div class="status-icon">
-                    <i class="fas" [class.fa-box]="salesOrder.status === SalesOrderStatus.PENDING"
+                    <i class="fas" [class.fa-box]="salesOrder.status === SalesOrderStatus.CREATED"
                         [class.fa-truck]="salesOrder.status === SalesOrderStatus.SHIPPED"
                         [class.fa-check]="salesOrder.status === SalesOrderStatus.DELIVERED"
                         [class.fa-times]="salesOrder.status === SalesOrderStatus.CANCELLED"></i>

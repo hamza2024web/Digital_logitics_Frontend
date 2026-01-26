@@ -8,8 +8,9 @@ export enum ShipmentStatus {
 export interface Shipment {
   id: number;
   trackingNumber: string;
+  carrier: string; // Add carrier to model
   status: ShipmentStatus;
-  creationDate:  string;  // ISO date string
+  creationDate: string;  // ISO date string
   lastUpdatedDate: string;  // ISO date string
 }
 

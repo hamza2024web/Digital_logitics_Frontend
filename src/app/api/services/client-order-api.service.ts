@@ -11,14 +11,14 @@ import { SalesOrder, SalesOrderCreateRequest } from '../models/sales-order.model
 export class ClientOrderApiService {
   private readonly API_URL = `${environment.apiBaseUrl}/api/client/orders`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   createOrder(order: SalesOrderCreateRequest): Observable<SalesOrder> {
     return this.http.post<SalesOrder>(this.API_URL, order);
   }
 
   reserveOrderStock(orderId: number): Observable<SalesOrder> {
-    return this. http.patch<SalesOrder>(`${this.API_URL}/${orderId}/reserve`, null);
+    return this.http.patch<SalesOrder>(`${this.API_URL}/${orderId}/reserve`, null);
   }
 
   getMyOrders(): Observable<SalesOrder[]> {
@@ -28,4 +28,6 @@ export class ClientOrderApiService {
   getOrderById(orderId: number): Observable<SalesOrder> {
     return this.http.get<SalesOrder>(`${this.API_URL}/${orderId}`);
   }
+
 }
+

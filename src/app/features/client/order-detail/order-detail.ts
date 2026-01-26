@@ -1,12 +1,13 @@
-import {Component, OnInit} from '@angular/core';
-import {ClientOrderApiService} from '../../../api/services/SalesOrder-api.service';
-import {ActivatedRoute, Router} from '@angular/router';
-import {SalesOrder, SalesOrderLineStatus, SalesOrderStatus} from '../../../api/models/sales-order.model';
-import {ShipmentStatus} from '../../../api/models/shipment.model';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ClientOrderApiService } from '../../../api/services/client-order-api.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { SalesOrder, SalesOrderLineStatus, SalesOrderStatus } from '../../../api/models/sales-order.model';
+import { ShipmentStatus } from '../../../api/models/shipment.model';
 
 @Component({
   selector: 'app-order-detail',
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './order-detail.html',
   styleUrl: './order-detail.scss',
 })
@@ -22,16 +23,20 @@ export class OrderDetail implements OnInit {
   ShipmentStatus = ShipmentStatus;
 
   constructor(
-    private route:  ActivatedRoute,
+    private route: ActivatedRoute,
     private router: Router,
     private clientOrderApiService: ClientOrderApiService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      if (params['id']) {
-        this.orderId = +params['id'];
+      const idParam = params['id'];
+
+      if (idParam && !isNaN(+idParam)) {
+        this.orderId = +idParam;
         this.loadOrder(this.orderId);
+      } else if (idParam) {
+        this.errorMessage = 'ID de commande invalide.';
       }
     });
   }
@@ -41,11 +46,11 @@ export class OrderDetail implements OnInit {
     this.errorMessage = '';
 
     this.clientOrderApiService.getOrderById(id).subscribe({
-      next: (order) => {
+      next: (order: SalesOrder) => {
         this.order = order;
         this.isLoading = false;
       },
-      error:  (error) => {
+      error: (error: any) => {
         this.errorMessage = error.message || 'Erreur lors du chargement de la commande';
         this.isLoading = false;
       }
@@ -54,14 +59,14 @@ export class OrderDetail implements OnInit {
 
 
   reserveStock(): void {
-    if (!this. order || !this.orderId) return;
+    if (!this.order || !this.orderId) return;
 
     if (this.order.status !== SalesOrderStatus.CREATED) {
       alert('Seules les commandes créées peuvent être réservées');
       return;
     }
 
-    if (! confirm('Voulez-vous réserver le stock pour cette commande ? ')) {
+    if (!confirm('Voulez-vous réserver le stock pour cette commande ? ')) {
       return;
     }
 
@@ -89,42 +94,42 @@ export class OrderDetail implements OnInit {
   }
 
   canReserve(): boolean {
-    return this. order?.status === SalesOrderStatus.CREATED;
+    return this.order?.status === SalesOrderStatus.CREATED;
   }
 
   getOrderTotal(): number {
     if (!this.order) return 0;
-    return this.order. lines.reduce((sum, line) => sum + (line.price * line.quantity), 0);
+    return this.order.lines.reduce((sum, line) => sum + (line.price * line.quantity), 0);
   }
 
   getTotalItems(): number {
     if (!this.order) return 0;
-    return this.order. lines.reduce((sum, line) => sum + line.quantity, 0);
+    return this.order.lines.reduce((sum, line) => sum + line.quantity, 0);
   }
 
   getProgressPercentage(): number {
     if (!this.order) return 0;
 
-    const statusProgress:  { [key in SalesOrderStatus]: number } = {
+    const statusProgress: { [key in SalesOrderStatus]: number } = {
       [SalesOrderStatus.CREATED]: 20,
       [SalesOrderStatus.PARTIALLY_RESERVED]: 40,
       [SalesOrderStatus.RESERVED]: 60,
-      [SalesOrderStatus. AWAITING_SHIPMENT]: 70,
+      [SalesOrderStatus.AWAITING_SHIPMENT]: 70,
       [SalesOrderStatus.SHIPPED]: 85,
       [SalesOrderStatus.DELIVERED]: 100,
-      [SalesOrderStatus. CANCELLED]: 0
+      [SalesOrderStatus.CANCELLED]: 0
     };
 
     return statusProgress[this.order.status] || 0;
   }
 
   getOrderStatusLabel(status: SalesOrderStatus): string {
-    const labels:  { [key in SalesOrderStatus]: string } = {
-      [SalesOrderStatus.CREATED]:  'Créée',
-      [SalesOrderStatus.PARTIALLY_RESERVED]:  'Partiellement réservée',
+    const labels: { [key in SalesOrderStatus]: string } = {
+      [SalesOrderStatus.CREATED]: 'Créée',
+      [SalesOrderStatus.PARTIALLY_RESERVED]: 'Partiellement réservée',
       [SalesOrderStatus.RESERVED]: 'Réservée',
       [SalesOrderStatus.AWAITING_SHIPMENT]: 'En attente d\'expédition',
-      [SalesOrderStatus. SHIPPED]: 'Expédiée',
+      [SalesOrderStatus.SHIPPED]: 'Expédiée',
       [SalesOrderStatus.DELIVERED]: 'Livrée',
       [SalesOrderStatus.CANCELLED]: 'Annulée'
     };
@@ -134,7 +139,7 @@ export class OrderDetail implements OnInit {
   getLineStatusLabel(status: SalesOrderLineStatus): string {
     const labels: { [key in SalesOrderLineStatus]: string } = {
       [SalesOrderLineStatus.CREATED]: 'Créée',
-      [SalesOrderLineStatus. RESERVED]: 'Réservée',
+      [SalesOrderLineStatus.RESERVED]: 'Réservée',
       [SalesOrderLineStatus.BACKORDERED]: 'En rupture',
       [SalesOrderLineStatus.AWAITING_TRANSFER]: 'En attente de transfert'
     };
@@ -143,8 +148,8 @@ export class OrderDetail implements OnInit {
 
   getShipmentStatusLabel(status: ShipmentStatus): string {
     const labels: { [key in ShipmentStatus]: string } = {
-      [ShipmentStatus. PLANNED]: 'Planifiée',
-      [ShipmentStatus. IN_TRANSIT]: 'En transit',
+      [ShipmentStatus.PLANNED]: 'Planifiée',
+      [ShipmentStatus.IN_TRANSIT]: 'En transit',
       [ShipmentStatus.DELIVERED]: 'Livrée',
       [ShipmentStatus.CANCELLED]: 'Annulée'
     };
@@ -153,9 +158,9 @@ export class OrderDetail implements OnInit {
 
   getOrderStatusBadgeClass(status: SalesOrderStatus): string {
     const classes: { [key in SalesOrderStatus]: string } = {
-      [SalesOrderStatus. CREATED]: 'status-created',
+      [SalesOrderStatus.CREATED]: 'status-created',
       [SalesOrderStatus.PARTIALLY_RESERVED]: 'status-partial',
-      [SalesOrderStatus. RESERVED]: 'status-reserved',
+      [SalesOrderStatus.RESERVED]: 'status-reserved',
       [SalesOrderStatus.AWAITING_SHIPMENT]: 'status-waiting',
       [SalesOrderStatus.SHIPPED]: 'status-shipped',
       [SalesOrderStatus.DELIVERED]: 'status-delivered',
@@ -165,8 +170,8 @@ export class OrderDetail implements OnInit {
   }
 
   getLineStatusBadgeClass(status: SalesOrderLineStatus): string {
-    const classes: { [key in SalesOrderLineStatus]:  string } = {
-      [SalesOrderLineStatus.CREATED]:  'line-created',
+    const classes: { [key in SalesOrderLineStatus]: string } = {
+      [SalesOrderLineStatus.CREATED]: 'line-created',
       [SalesOrderLineStatus.RESERVED]: 'line-reserved',
       [SalesOrderLineStatus.BACKORDERED]: 'line-backordered',
       [SalesOrderLineStatus.AWAITING_TRANSFER]: 'line-transfer'
@@ -181,7 +186,7 @@ export class OrderDetail implements OnInit {
       month: 'long',
       day: 'numeric',
       hour: '2-digit',
-      minute:  '2-digit'
+      minute: '2-digit'
     });
   }
 

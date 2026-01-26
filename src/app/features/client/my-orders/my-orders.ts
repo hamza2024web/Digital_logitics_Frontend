@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
-import {SalesOrder, SalesOrderStatus} from '../../../api/models/sales-order.model';
-import {ClientOrderApiService} from '../../../api/services/SalesOrder-api.service';
+import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
+import { SalesOrder, SalesOrderStatus } from '../../../api/models/sales-order.model';
+import { ClientOrderApiService } from '../../../api/services/client-order-api.service';
 
 @Component({
   selector: 'app-my-orders',
-  imports: [],
+  imports: [CommonModule, RouterLink],
   templateUrl: './my-orders.html',
   styleUrl: './my-orders.scss',
 })
@@ -13,11 +15,11 @@ export class MyOrders {
   filteredOrders: SalesOrder[] = [];
   isLoading = false;
   errorMessage = '';
-  filterStatus:  string = '';
+  filterStatus: string = '';
 
   SalesOrderStatus = SalesOrderStatus;
 
-  constructor(private clientOrderApiService: ClientOrderApiService) {}
+  constructor(private clientOrderApiService: ClientOrderApiService) { }
 
   ngOnInit(): void {
     this.loadOrders();
@@ -28,14 +30,14 @@ export class MyOrders {
     this.errorMessage = '';
 
     this.clientOrderApiService.getMyOrders().subscribe({
-      next: (orders) => {
-        this.orders = orders. sort((a, b) =>
+      next: (orders: SalesOrder[]) => {
+        this.orders = orders.sort((a, b) =>
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         );
         this.filteredOrders = orders;
         this.isLoading = false;
       },
-      error: (error) => {
+      error: (error: any) => {
         this.errorMessage = error.message || 'Erreur lors du chargement des commandes';
         this.isLoading = false;
       }
@@ -44,13 +46,13 @@ export class MyOrders {
 
   onFilterStatus(event: Event): void {
     const select = event.target as HTMLSelectElement;
-    this.filterStatus = select. value;
+    this.filterStatus = select.value;
     this.applyFilters();
   }
 
   applyFilters(): void {
     this.filteredOrders = this.orders.filter(order => {
-      return ! this.filterStatus || order.status === this.filterStatus;
+      return !this.filterStatus || order.status === this.filterStatus;
     });
   }
 
@@ -65,16 +67,16 @@ export class MyOrders {
       return;
     }
 
-    if (! confirm('Voulez-vous réserver le stock pour cette commande ?')) {
+    if (!confirm('Voulez-vous réserver le stock pour cette commande ?')) {
       return;
     }
 
-    this.clientOrderApiService. reserveOrderStock(order.id).subscribe({
+    this.clientOrderApiService.reserveOrderStock(order.id).subscribe({
       next: (updatedOrder) => {
         alert('Stock réservé avec succès ! ');
         this.loadOrders();
       },
-      error:  (error) => {
+      error: (error) => {
         alert(`Erreur:  ${error.message}`);
       }
     });
@@ -82,11 +84,29 @@ export class MyOrders {
 
   // Mêmes méthodes utilitaires que le dashboard
   getStatusLabel(status: SalesOrderStatus): string {
-
+    const labels: { [key in SalesOrderStatus]: string } = {
+      [SalesOrderStatus.CREATED]: 'Créée',
+      [SalesOrderStatus.PARTIALLY_RESERVED]: 'Partiellement réservée',
+      [SalesOrderStatus.RESERVED]: 'Réservée',
+      [SalesOrderStatus.AWAITING_SHIPMENT]: 'En attente',
+      [SalesOrderStatus.SHIPPED]: 'Expédiée',
+      [SalesOrderStatus.DELIVERED]: 'Livrée',
+      [SalesOrderStatus.CANCELLED]: 'Annulée'
+    };
+    return labels[status] || status;
   }
 
   getStatusBadgeClass(status: SalesOrderStatus): string {
-
+    const classes: { [key in SalesOrderStatus]: string } = {
+      [SalesOrderStatus.CREATED]: 'status-created',
+      [SalesOrderStatus.PARTIALLY_RESERVED]: 'status-partial',
+      [SalesOrderStatus.RESERVED]: 'status-reserved',
+      [SalesOrderStatus.AWAITING_SHIPMENT]: 'status-waiting',
+      [SalesOrderStatus.SHIPPED]: 'status-shipped',
+      [SalesOrderStatus.DELIVERED]: 'status-delivered',
+      [SalesOrderStatus.CANCELLED]: 'status-cancelled'
+    };
+    return classes[status] || '';
   }
 
   calculateTotal(order: SalesOrder): number {

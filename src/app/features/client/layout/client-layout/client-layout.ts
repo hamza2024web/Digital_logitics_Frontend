@@ -2,14 +2,14 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
-import {AuthService} from '../../../../core/auth/auth.service';
+import { AuthService } from '../../../../core/auth/auth.service';
 
 @Component({
   selector: 'app-client-layout',
   standalone: true,
   imports: [CommonModule, RouterLink, RouterOutlet],
   templateUrl: './client-layout.html',
-  styleUrls:  ['./client-layout.scss']
+  styleUrls: ['./client-layout.scss']
 })
 export class ClientLayoutComponent implements OnInit {
   sidebarCollapsed = false;
@@ -19,7 +19,7 @@ export class ClientLayoutComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadUserInfo();
@@ -29,7 +29,7 @@ export class ClientLayoutComponent implements OnInit {
   }
 
   private loadUserInfo(): void {
-    const user = this.authService. getCurrentUser();
+    const user = this.authService.getCurrentUser();
     if (user) {
       this.userName = user.firstName && user.lastName ? `${user.firstName} ${user.lastName}`
         : user.email.split('@')[0];
@@ -45,7 +45,7 @@ export class ClientLayoutComponent implements OnInit {
   logout(): void {
     if (confirm('Voulez-vous vraiment vous déconnecter ?')) {
       this.authService.logout();
-      this.router.navigate(['/auth/login']);
+      this.router.navigate(['/login']);
     }
   }
 }

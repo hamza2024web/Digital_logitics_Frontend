@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { SalesOrder, SalesOrderStatus } from '../../../../api/models/sales-order.model';
 import { ShipmentCreateRequest, ShipmentStatus } from '../../../../api/models/shipment.model';
-import { SalesOrderApiService } from '../../../../api/services/SalesOrder-api.service';
 import { ShipmentApiService } from '../../../../api/services/shipment-api.service';
+import {SalesOrderApiService} from '../../../../api/services/sales-order-api.service';
 
 @Component({
   selector: 'app-sales-order-detail',
@@ -57,11 +57,11 @@ export class SalesOrderDetail implements OnInit {
     this.errorMessage = '';
 
     this.salesOrderApiService.getSalesOrderById(id).subscribe({
-      next: (order) => {
+      next: (order: SalesOrder) => {
         this.salesOrder = order;
         this.isLoading = false;
       },
-      error: (error) => {
+      error: (error: any) => {
         this.errorMessage = error.message || 'Erreur lors du chargement de la commande';
         this.isLoading = false;
       }
@@ -173,11 +173,13 @@ export class SalesOrderDetail implements OnInit {
 
   getOrderStatusLabel(status: SalesOrderStatus): string {
     const labels: { [key in SalesOrderStatus]: string } = {
-      [SalesOrderStatus.PENDING]: 'En attente',
-      [SalesOrderStatus.RESERVED]: 'Réservé',
-      [SalesOrderStatus.SHIPPED]: 'Expédié',
-      [SalesOrderStatus.DELIVERED]: 'Livré',
-      [SalesOrderStatus.CANCELLED]: 'Annulé'
+      [SalesOrderStatus.CREATED]: 'Créée',
+      [SalesOrderStatus.PARTIALLY_RESERVED]: 'Partiellement réservée',
+      [SalesOrderStatus.RESERVED]: 'Réservée',
+      [SalesOrderStatus.AWAITING_SHIPMENT]: 'En attente d\'expédition',
+      [SalesOrderStatus.SHIPPED]: 'Expédiée',
+      [SalesOrderStatus.DELIVERED]: 'Livrée',
+      [SalesOrderStatus.CANCELLED]: 'Annulée'
     };
     return labels[status] || status;
   }
@@ -194,8 +196,10 @@ export class SalesOrderDetail implements OnInit {
 
   getOrderStatusBadgeClass(status: SalesOrderStatus): string {
     const classes: { [key in SalesOrderStatus]: string } = {
-      [SalesOrderStatus.PENDING]: 'status-pending',
+      [SalesOrderStatus.CREATED]: 'status-created',
+      [SalesOrderStatus.PARTIALLY_RESERVED]: 'status-partial',
       [SalesOrderStatus.RESERVED]: 'status-reserved',
+      [SalesOrderStatus.AWAITING_SHIPMENT]: 'status-waiting',
       [SalesOrderStatus.SHIPPED]: 'status-shipped',
       [SalesOrderStatus.DELIVERED]: 'status-delivered',
       [SalesOrderStatus.CANCELLED]: 'status-cancelled'

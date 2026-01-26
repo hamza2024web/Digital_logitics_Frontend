@@ -1,1 +1,117 @@
-<p>new-order works!</p>
+<div class="new-order-page">
+    <div class="page-header">
+        <div class="header-content">
+            <h1>Nouvelle Commande</h1>
+            <p>Créez une nouvelle commande client en sélectionnant les produits et l'entrepôt de départ.</p>
+        </div>
+        <button class="btn-cancel" (click)="cancel()">Annuler</button>
+    </div>
+
+    <form [formGroup]="orderForm" (ngSubmit)="onSubmit()" class="order-form">
+        <div class="form-grid">
+            <!-- Left Column: Main Info -->
+            <div class="form-main">
+                <div class="card warehouse-card">
+                    <div class="card-header">
+                        <span class="step-badge">1</span>
+                        <h3>Sélection de l'Entrepôt</h3>
+                    </div>
+                    <div class="form-group">
+                        <label for="warehouseId">Choisissez un entrepôt de départ</label>
+                        <select id="warehouseId" formControlName="warehouseId" class="form-control"
+                            [class.error]="warehouseId?.invalid && warehouseId?.touched">
+                            <option [ngValue]="null">Sélectionnez un entrepôt...</option>
+                            <option *ngFor="let w of warehouses" [ngValue]="w.id">
+                                {{ w.name }} ({{ w.code }})
+                            </option>
+                        </select>
+                        <div class="error-msg" *ngIf="warehouseId?.invalid && warehouseId?.touched">
+                            L'entrepôt est requis.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card lines-card">
+                    <div class="card-header">
+                        <span class="step-badge">2</span>
+                        <h3>Articles de la Commande</h3>
+                        <button type="button" class="btn-add" (click)="addLine()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                            Ajouter un produit
+                        </button>
+                    </div>
+
+                    <div formArrayName="lines" class="lines-container">
+                        <div *ngFor="let line of lines.controls; let i = index" [formGroupName]="i" class="line-row">
+                            <div class="line-number">#{{ i + 1 }}</div>
+                            <div class="field product-field">
+                                <label>Produit</label>
+                                <select formControlName="productId" class="form-control">
+                                    <option [ngValue]="null">Choisir un produit...</option>
+                                    <option *ngFor="let p of products" [ngValue]="p.id">
+                                        {{ p.name }} - {{ formatPrice(p.price) }}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="field quantity-field">
+                                <label>Quantité</label>
+                                <input type="number" formControlName="quantity" min="1" class="form-control">
+                            </div>
+                            <div class="field total-field">
+                                <label>Sous-total</label>
+                                <div class="price-display">{{ formatPrice(getLineTotal(i)) }}</div>
+                            </div>
+                            <button type="button" class="btn-remove" (click)="$event.stopPropagation(); removeLine(i)"
+                                [disabled]="lines.length <= 1">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="empty-lines" *ngIf="lines.length === 0">
+                        <p>Aucun article ajouté. Veuillez ajouter au moins un produit.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Summary & Actions -->
+            <div class="form-sidebar">
+                <div class="card summary-card">
+                    <h3>Résumé de la Commande</h3>
+                    <div class="summary-details">
+                        <div class="summary-row">
+                            <span>Soustotal articles</span>
+                            <span>{{ lines.length }}</span>
+                        </div>
+                        <div class="summary-row total">
+                            <span>Total estimé</span>
+                            <span class="grand-total">{{ formatPrice(getGrandTotal()) }}</span>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-submit" [disabled]="isLoading || orderForm.invalid">
+                        <span *ngIf="!isLoading">Confirmer la Commande</span>
+                        <div class="spinner-sm" *ngIf="isLoading"></div>
+                    </button>
+                    <p class="summary-note">
+                        * Les taxes et frais d'expédition seront calculés lors de la préparation.
+                    </p>
+                </div>
+
+                <div class="card help-card">
+                    <h4>Besoin d'aide ?</h4>
+                    <p>Contactez notre support client pour toute assistance lors de votre commande.</p>
+                    <a href="mailto:support@digital-logistics.com"
+                        class="support-link">support@digital-logistics.com</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

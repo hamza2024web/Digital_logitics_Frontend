@@ -1,11 +1,13 @@
-import {Component, OnInit} from '@angular/core';
-import {SalesOrder, SalesOrderStatus} from '../../../api/models/sales-order.model';
-import {ClientOrderApiService} from '../../../api/services/SalesOrder-api.service';
-import {ShipmentStatus} from '../../../api/models/shipment.model';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
+import { SalesOrder, SalesOrderStatus } from '../../../api/models/sales-order.model';
+import { ClientOrderApiService } from '../../../api/services/client-order-api.service';
+import { ShipmentStatus } from '../../../api/models/shipment.model';
 
 @Component({
   selector: 'app-tracking',
-  imports: [],
+  imports: [CommonModule, RouterLink],
   templateUrl: './tracking.html',
   styleUrl: './tracking.scss',
 })
@@ -18,7 +20,7 @@ export class Tracking implements OnInit {
   SalesOrderStatus = SalesOrderStatus;
   ShipmentStatus = ShipmentStatus;
 
-  constructor(private clientOrderApiService: ClientOrderApiService) {}
+  constructor(private clientOrderApiService: ClientOrderApiService) { }
 
   ngOnInit(): void {
     this.loadOrdersWithShipment();
@@ -29,13 +31,13 @@ export class Tracking implements OnInit {
     this.errorMessage = '';
 
     this.clientOrderApiService.getMyOrders().subscribe({
-      next: (orders) => {
+      next: (orders: SalesOrder[]) => {
         this.ordersWithShipment = orders
           .filter(o => o.shipment)
           .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
         this.isLoading = false;
       },
-      error: (error) => {
+      error: (error: any) => {
         this.errorMessage = error.message || 'Erreur lors du chargement des expéditions';
         this.isLoading = false;
       }
@@ -43,11 +45,11 @@ export class Tracking implements OnInit {
   }
 
   getShipmentProgress(status: ShipmentStatus): number {
-    const progress:  { [key in ShipmentStatus]: number } = {
+    const progress: { [key in ShipmentStatus]: number } = {
       [ShipmentStatus.PLANNED]: 33,
       [ShipmentStatus.IN_TRANSIT]: 66,
-      [ShipmentStatus. DELIVERED]: 100,
-      [ShipmentStatus. CANCELLED]: 0
+      [ShipmentStatus.DELIVERED]: 100,
+      [ShipmentStatus.CANCELLED]: 0
     };
     return progress[status] || 0;
   }
@@ -68,13 +70,13 @@ export class Tracking implements OnInit {
       },
       {
         label: 'En transit',
-        completed: shipmentStatus === ShipmentStatus. DELIVERED,
+        completed: shipmentStatus === ShipmentStatus.DELIVERED,
         active: shipmentStatus === ShipmentStatus.IN_TRANSIT
       },
       {
         label: 'Livrée',
-        completed: shipmentStatus === ShipmentStatus. DELIVERED,
-        active: shipmentStatus === ShipmentStatus. DELIVERED
+        completed: shipmentStatus === ShipmentStatus.DELIVERED,
+        active: shipmentStatus === ShipmentStatus.DELIVERED
       }
     ];
   }
@@ -85,7 +87,7 @@ export class Tracking implements OnInit {
 
   getShipmentStatusLabel(status: ShipmentStatus): string {
     const labels: { [key in ShipmentStatus]: string } = {
-      [ShipmentStatus. PLANNED]: 'Planifiée',
+      [ShipmentStatus.PLANNED]: 'Planifiée',
       [ShipmentStatus.IN_TRANSIT]: 'En transit',
       [ShipmentStatus.DELIVERED]: 'Livrée',
       [ShipmentStatus.CANCELLED]: 'Annulée'
@@ -94,8 +96,8 @@ export class Tracking implements OnInit {
   }
 
   getShipmentStatusBadgeClass(status: ShipmentStatus): string {
-    const classes:  { [key in ShipmentStatus]: string } = {
-      [ShipmentStatus.PLANNED]:  'shipment-planned',
+    const classes: { [key in ShipmentStatus]: string } = {
+      [ShipmentStatus.PLANNED]: 'shipment-planned',
       [ShipmentStatus.IN_TRANSIT]: 'shipment-transit',
       [ShipmentStatus.DELIVERED]: 'shipment-delivered',
       [ShipmentStatus.CANCELLED]: 'shipment-cancelled'
@@ -115,7 +117,7 @@ export class Tracking implements OnInit {
   }
 
   calculateTotal(order: SalesOrder): number {
-    return order.lines. reduce((sum, line) => sum + (line.price * line.quantity), 0);
+    return order.lines.reduce((sum, line) => sum + (line.price * line.quantity), 0);
   }
 
 

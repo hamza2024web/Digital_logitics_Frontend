@@ -1,10 +1,12 @@
-import {Component, OnInit} from '@angular/core';
-import {ProductApiService} from '../../../api/services/product-api.service';
-import {Product} from '../../../api/models/product.model';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
+import { ProductApiService } from '../../../api/services/product-api.service';
+import { Product } from '../../../api/models/product.model';
 
 @Component({
   selector: 'app-products-catalog',
-  imports: [],
+  imports: [CommonModule, RouterLink],
   templateUrl: './products-catalog.html',
   styleUrl: './products-catalog.scss',
 })
@@ -14,9 +16,9 @@ export class ProductsCatalog implements OnInit {
   isLoading = false;
   errorMessage = '';
   searchTerm = '';
-  sortBy:  string = 'name';
+  sortBy: string = 'name';
 
-  constructor(private productApiService:  ProductApiService) {}
+  constructor(private productApiService: ProductApiService) { }
 
   ngOnInit(): void {
     this.loadProducts();
@@ -27,14 +29,14 @@ export class ProductsCatalog implements OnInit {
     this.errorMessage = '';
 
     this.productApiService.getAllProducts().subscribe({
-      next: (products) => {
+      next: (products: Product[]) => {
         // Filtrer uniquement les produits actifs
         this.products = products.filter(p => p.active);
-        this.filteredProducts = this. products;
+        this.filteredProducts = this.products;
         this.applySorting();
         this.isLoading = false;
       },
-      error: (error) => {
+      error: (error: any) => {
         this.errorMessage = error.message || 'Erreur lors du chargement des produits';
         this.isLoading = false;
       }
@@ -50,14 +52,14 @@ export class ProductsCatalog implements OnInit {
   onSort(event: Event): void {
     const select = event.target as HTMLSelectElement;
     this.sortBy = select.value;
-    this. applySorting();
+    this.applySorting();
   }
 
   applyFilters(): void {
-    this.filteredProducts = this. products.filter(product => {
-      return ! this.searchTerm ||
+    this.filteredProducts = this.products.filter(product => {
+      return !this.searchTerm ||
         product.name.toLowerCase().includes(this.searchTerm) ||
-        product. sku.toLowerCase().includes(this.searchTerm);
+        product.sku.toLowerCase().includes(this.searchTerm);
     });
     this.applySorting();
   }
@@ -65,13 +67,13 @@ export class ProductsCatalog implements OnInit {
   applySorting(): void {
     switch (this.sortBy) {
       case 'name':
-        this.filteredProducts.sort((a, b) => a.name.localeCompare(b. name));
+        this.filteredProducts.sort((a, b) => a.name.localeCompare(b.name));
         break;
       case 'price-asc':
-        this.filteredProducts. sort((a, b) => a.price - b.price);
+        this.filteredProducts.sort((a, b) => a.price - b.price);
         break;
       case 'price-desc':
-        this. filteredProducts.sort((a, b) => b.price - a.price);
+        this.filteredProducts.sort((a, b) => b.price - a.price);
         break;
     }
   }

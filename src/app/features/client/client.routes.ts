@@ -1,4 +1,3 @@
-// src/app/features/client/client.routes.ts
 import { Routes } from '@angular/router';
 
 export const CLIENT_ROUTES: Routes = [
@@ -20,22 +19,22 @@ export const CLIENT_ROUTES: Routes = [
       {
         path: 'orders/:id',
         loadComponent:  () => import('./order-detail/order-detail')
-          .then(m => m.OrderDetailComponent)
+          .then(m => m.OrderDetail)
       },
       {
         path: 'new-order',
-        loadComponent: () => import('./new-order/new-order.component')
-          .then(m => m.NewOrderComponent)
+        loadComponent: () => import('./new-order/new-order')
+          .then(m => m.NewOrder)
       },
       {
         path: 'products',
-        loadComponent: () => import('./products-catalog/products-catalog.component')
-          .then(m => m. ProductsCatalogComponent)
+        loadComponent: () => import('./products-catalog/products-catalog')
+          .then(m => m. ProductsCatalog)
       },
       {
         path: 'tracking',
-        loadComponent: () => import('./tracking/tracking.component')
-          .then(m => m.TrackingComponent)
+        loadComponent: () => import('./tracking/tracking')
+          .then(m => m.Tracking)
       },
       {
         path: '',

@@ -45,7 +45,7 @@ export class ProductApiService {
       .set('active', query.active.toString());
 
     if (query.sort) params = params.set('sort', query.sort);
-    if (query.search) params = params.set('size', query.search)
+    if (query.search) params = params.set('search', query.search)
     if (query.category) params = params.set('category', query.category);
 
     return this.http.get<ProductResponse>(this.API_URL, { params });

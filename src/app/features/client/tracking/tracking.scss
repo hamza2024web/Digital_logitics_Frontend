@@ -1,0 +1,243 @@
+@import 'styles/variables';
+
+// =====================
+// TRACKING PAGE
+// =====================
+.tracking-page {
+    animation: fadeIn 0.5s ease;
+}
+
+.page-header {
+    @include flex-between;
+    margin-bottom: 2.5rem;
+    gap: 1.5rem;
+
+    .header-content {
+        h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--neutral-900);
+            margin: 0;
+            letter-spacing: -0.02em;
+        }
+
+        p {
+            color: var(--text-muted);
+            margin: 0.5rem 0 0;
+        }
+    }
+
+    .btn-refresh {
+        @include button-secondary;
+        gap: 0.5rem;
+
+        &.loading svg {
+            animation: spin 1s linear infinite;
+        }
+    }
+}
+
+// =====================
+// SHIPMENT CARDS
+// =====================
+.shipments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.shipment-card {
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 24px;
+    padding: 2.5rem;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    &:hover {
+        box-shadow: var(--shadow-lg);
+        border-color: var(--primary-light);
+    }
+
+    .card-header {
+        @include flex-between;
+        margin-bottom: 2.5rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid var(--border-light);
+
+        .shipment-info {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+
+            .tracking-number {
+                font-size: 1.25rem;
+                font-weight: 800;
+                color: var(--neutral-900);
+                font-family: var(--font-family-mono);
+            }
+        }
+
+        .order-ref {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+    }
+}
+
+// =====================
+// TRACKING TIMELINE
+// =====================
+.tracking-timeline {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 3rem;
+    padding: 0 1rem;
+    position: relative;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 15px;
+        left: 5%;
+        width: 90%;
+        height: 4px;
+        background: var(--neutral-100);
+        z-index: 1;
+    }
+
+    .timeline-step {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.75rem;
+        position: relative;
+        z-index: 2;
+        flex: 1;
+
+        .step-icon {
+            width: 32px;
+            height: 32px;
+            background: white;
+            border: 3px solid var(--neutral-200);
+            border-radius: 50%;
+            @include flex-center;
+            transition: all 0.3s;
+
+            .step-dot {
+                width: 8px;
+                height: 8px;
+                background: var(--neutral-300);
+                border-radius: 50%;
+            }
+
+            svg {
+                color: white;
+                display: none;
+            }
+        }
+
+        .step-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-light);
+            text-align: center;
+        }
+
+        &.completed {
+            .step-icon {
+                background: var(--success);
+                border-color: var(--success);
+
+                svg {
+                    display: block;
+                }
+            }
+
+            .step-label {
+                color: var(--success-dark);
+            }
+
+            &+.timeline-step::before {
+                content: '';
+                position: absolute;
+                top: 15px;
+                left: -50%;
+                width: 100%;
+                height: 4px;
+                background: var(--success);
+                z-index: -1;
+            }
+        }
+
+        &.active {
+            .step-icon {
+                border-color: var(--primary);
+                box-shadow: 0 0 0 4px var(--primary-light);
+
+                .step-dot {
+                    background: var(--primary);
+                }
+            }
+
+            .step-label {
+                color: var(--primary);
+                font-weight: 800;
+            }
+        }
+    }
+}
+
+// =====================
+// SHIPMENT DETAILS
+// =====================
+.shipment-details {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    padding: 1.5rem;
+    background: var(--neutral-50);
+    border-radius: 20px;
+}
+
+.detail-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    .label {
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .value {
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--neutral-900);
+    }
+}
+
+.card-footer {
+    margin-top: 2rem;
+    @include flex-center;
+
+    .btn-outline {
+        @include button-secondary;
+        padding: 0.75rem 2rem;
+    }
+}
+
+// =====================
+// STATES
+// =====================
+.loading-state,
+.error-state,
+.empty-state {
+    @include card;
+    text-align: center;
+    padding: 6rem 2rem;
+}

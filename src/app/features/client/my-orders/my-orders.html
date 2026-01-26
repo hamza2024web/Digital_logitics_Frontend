@@ -1,0 +1,89 @@
+<div class="orders-page">
+    <div class="page-header">
+        <div class="header-content">
+            <h1>Mes Commandes</h1>
+            <p>Consultez l'historique et le statut de vos commandes</p>
+        </div>
+        <div class="header-actions">
+            <div class="filter-group">
+                <label for="statusFilter">Filtrer par statut:</label>
+                <select id="statusFilter" (change)="onFilterStatus($event)">
+                    <option value="">Tous les statuts</option>
+                    <option [value]="SalesOrderStatus.CREATED">Créée</option>
+                    <option [value]="SalesOrderStatus.RESERVED">Réservée</option>
+                    <option [value]="SalesOrderStatus.SHIPPED">Expédiée</option>
+                    <option [value]="SalesOrderStatus.DELIVERED">Livrée</option>
+                    <option [value]="SalesOrderStatus.CANCELLED">Annulée</option>
+                </select>
+            </div>
+            <button class="btn-reset" (click)="resetFilters()" *ngIf="filterStatus">
+                Réinitialiser
+            </button>
+        </div>
+    </div>
+
+    <div class="orders-content">
+        <div class="loading-state" *ngIf="isLoading">
+            <div class="spinner"></div>
+            <p>Chargement des commandes...</p>
+        </div>
+
+        <div class="error-state" *ngIf="errorMessage">
+            <p>{{ errorMessage }}</p>
+            <button (click)="loadOrders()">Réessayer</button>
+        </div>
+
+        <div class="empty-state" *ngIf="!isLoading && !errorMessage && filteredOrders.length === 0">
+            <div class="empty-icon">📦</div>
+            <h3>Aucune commande trouvée</h3>
+            <p>Vous n'avez pas encore passé de commande ou aucune commande ne correspond à vos filtres.</p>
+            <a routerLink="/client/new-order" class="btn-primary">Passer une commande</a>
+        </div>
+
+        <div class="orders-list" *ngIf="!isLoading && filteredOrders.length > 0">
+            <div class="order-card" *ngFor="let order of filteredOrders">
+                <div class="card-header">
+                    <div class="order-id">
+                        <span class="label">Commande</span>
+                        <span class="value">#{{ order.id }}</span>
+                    </div>
+                    <div class="order-date">
+                        {{ formatDate(order.createdAt) }}
+                    </div>
+                    <div class="order-status">
+                        <span class="status-badge" [ngClass]="getStatusBadgeClass(order.status)">
+                            {{ getStatusLabel(order.status) }}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="order-info">
+                        <div class="info-item">
+                            <span class="label">Entrepôt</span>
+                            <span class="value">{{ order.warehouseCode }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">Articles</span>
+                            <span class="value">{{ order.lines.length }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">Total</span>
+                            <span class="value total">{{ formatPrice(calculateTotal(order)) }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-footer">
+                    <button class="btn-outline" (click)="reserveStock(order)"
+                        *ngIf="order.status === SalesOrderStatus.CREATED">
+                        Réserver Stock
+                    </button>
+                    <a [routerLink]="['/client/orders', order.id]" class="btn-primary">
+                        Voir Détails
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,9 +1,9 @@
-import {Component, OnInit} from '@angular/core';
-import {RouterLink} from '@angular/router';
-import {CommonModule} from '@angular/common';
-import {SalesOrder, SalesOrderStatus} from '../../../../api/models/sales-order.model';
-import {SalesOrderApiService} from '../../../../api/services/SalesOrder-api.service';
-import {ShipmentStatus} from '../../../../api/models/shipment.model';
+import { Component, OnInit } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { SalesOrder, SalesOrderStatus } from '../../../../api/models/sales-order.model';
+import { ShipmentStatus } from '../../../../api/models/shipment.model';
+import {SalesOrderApiService} from '../../../../api/services/sales-order-api.service';
 
 @Component({
   selector: 'app-sales-order-list',
@@ -18,13 +18,13 @@ export class SalesOrderList implements OnInit {
   isLoading = false;
   errorMessage = '';
   searchTerm = '';
-  filterStatus:  string = '';
+  filterStatus: string = '';
   filterShipmentStatus: string = '';
 
   SalesOrderStatus = SalesOrderStatus;
   ShipmentStatus = ShipmentStatus;
 
-  constructor(private salesOrderApiService: SalesOrderApiService) {}
+  constructor(private salesOrderApiService: SalesOrderApiService) { }
 
   ngOnInit(): void {
     this.loadSalesOrders();
@@ -35,14 +35,14 @@ export class SalesOrderList implements OnInit {
     this.errorMessage = '';
 
     this.salesOrderApiService.getAllSalesOrders().subscribe({
-      next: (orders) => {
+      next: (orders: SalesOrder[]) => {
         this.salesOrders = orders;
-        this. filteredOrders = orders;
+        this.filteredOrders = orders;
         this.isLoading = false;
       },
-      error: (error) => {
+      error: (error: any) => {
         this.errorMessage = error.message || 'Erreur lors du chargement des commandes';
-        this. isLoading = false;
+        this.isLoading = false;
       }
     });
   }
@@ -56,23 +56,23 @@ export class SalesOrderList implements OnInit {
   onFilterStatus(event: Event): void {
     const select = event.target as HTMLSelectElement;
     this.filterStatus = select.value;
-    this. applyFilters();
+    this.applyFilters();
   }
 
   onFilterShipmentStatus(event: Event): void {
-    const select = event. target as HTMLSelectElement;
+    const select = event.target as HTMLSelectElement;
     this.filterShipmentStatus = select.value;
-    this. applyFilters();
+    this.applyFilters();
   }
 
   applyFilters(): void {
-    this.filteredOrders = this. salesOrders.filter(order => {
-      const matchesSearch = ! this.searchTerm ||
+    this.filteredOrders = this.salesOrders.filter(order => {
+      const matchesSearch = !this.searchTerm ||
         order.id.toString().includes(this.searchTerm) ||
         order.clientUsername.toLowerCase().includes(this.searchTerm) ||
         order.warehouseCode.toLowerCase().includes(this.searchTerm);
 
-      const matchesStatus = ! this.filterStatus || order.status === this.filterStatus;
+      const matchesStatus = !this.filterStatus || order.status === this.filterStatus;
 
       const matchesShipmentStatus = !this.filterShipmentStatus ||
         (order.shipment && order.shipment.status === this.filterShipmentStatus);
@@ -89,19 +89,21 @@ export class SalesOrderList implements OnInit {
   }
 
   getOrderStatusLabel(status: SalesOrderStatus): string {
-    const labels:  { [key in SalesOrderStatus]: string } = {
-      [SalesOrderStatus.PENDING]: 'En attente',
-      [SalesOrderStatus.RESERVED]: 'Réservé',
-      [SalesOrderStatus.SHIPPED]: 'Expédié',
-      [SalesOrderStatus.DELIVERED]: 'Livré',
-      [SalesOrderStatus. CANCELLED]: 'Annulé'
+    const labels: { [key in SalesOrderStatus]: string } = {
+      [SalesOrderStatus.CREATED]: 'Créée',
+      [SalesOrderStatus.PARTIALLY_RESERVED]: 'Partiellement réservée',
+      [SalesOrderStatus.RESERVED]: 'Réservée',
+      [SalesOrderStatus.AWAITING_SHIPMENT]: 'En attente d\'expédition',
+      [SalesOrderStatus.SHIPPED]: 'Expédiée',
+      [SalesOrderStatus.DELIVERED]: 'Livrée',
+      [SalesOrderStatus.CANCELLED]: 'Annulée'
     };
     return labels[status] || status;
   }
 
   getShipmentStatusLabel(status: ShipmentStatus): string {
     const labels: { [key in ShipmentStatus]: string } = {
-      [ShipmentStatus. PLANNED]: 'Planifié',
+      [ShipmentStatus.PLANNED]: 'Planifié',
       [ShipmentStatus.IN_TRANSIT]: 'En transit',
       [ShipmentStatus.DELIVERED]: 'Livré',
       [ShipmentStatus.CANCELLED]: 'Annulé'
@@ -111,10 +113,12 @@ export class SalesOrderList implements OnInit {
 
   getOrderStatusBadgeClass(status: SalesOrderStatus): string {
     const classes: { [key in SalesOrderStatus]: string } = {
-      [SalesOrderStatus. PENDING]: 'status-pending',
+      [SalesOrderStatus.CREATED]: 'status-created',
+      [SalesOrderStatus.PARTIALLY_RESERVED]: 'status-partial',
       [SalesOrderStatus.RESERVED]: 'status-reserved',
+      [SalesOrderStatus.AWAITING_SHIPMENT]: 'status-waiting',
       [SalesOrderStatus.SHIPPED]: 'status-shipped',
-      [SalesOrderStatus.DELIVERED]:  'status-delivered',
+      [SalesOrderStatus.DELIVERED]: 'status-delivered',
       [SalesOrderStatus.CANCELLED]: 'status-cancelled'
     };
     return classes[status] || '';

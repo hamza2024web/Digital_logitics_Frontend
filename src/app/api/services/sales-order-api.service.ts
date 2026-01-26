@@ -1,8 +1,7 @@
-// src/app/api/services/sales-order-api.service.ts
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { environment } from '../../../environments/environment';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {environment} from '../../../environments/environment';
+import {Observable} from 'rxjs';
 import {SalesOrder} from '../models/sales-order.model';
 
 @Injectable({
@@ -11,7 +10,7 @@ import {SalesOrder} from '../models/sales-order.model';
 export class SalesOrderApiService {
   private readonly API_URL = `${environment.apiBaseUrl}/api/admin/sales-orders`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getAllSalesOrders(): Observable<SalesOrder[]> {
     return this.http.get<SalesOrder[]>(this.API_URL);

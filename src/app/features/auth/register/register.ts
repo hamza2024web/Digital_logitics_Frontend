@@ -44,7 +44,7 @@ export class RegisterComponent implements OnInit {
     });
 
     // Watch password changes for strength indicator
-    this.registerForm.get('password')?.valueChanges.subscribe(value => {
+    this.registerForm.get('password')?.valueChanges.subscribe((value: string) => {
       this.calculatePasswordStrength(value);
     });
   }
@@ -131,7 +131,7 @@ export class RegisterComponent implements OnInit {
     const { confirmPassword, acceptTerms, ...credentials } = this.registerForm.value;
 
     this.authService.register(credentials).subscribe({
-      next: (response) => {
+      next: (response: any) => {
         console.log('✅ Inscription réussie:', response);
         this.successMessage = 'Inscription réussie ! Redirection vers la page de connexion...';
 
@@ -139,7 +139,7 @@ export class RegisterComponent implements OnInit {
           this.router.navigate(['/login']);
         }, 2000);
       },
-      error: (error) => {
+      error: (error: any) => {
         console.error('❌ Erreur inscription:', error);
         this.errorMessage = error.message || 'Erreur lors de l\'inscription';
       }

@@ -1,0 +1,122 @@
+<div class="order-detail-page">
+    <div class="page-header">
+        <button class="btn-back" (click)="goBack()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            Retour
+        </button>
+        <div class="header-content" *ngIf="order">
+            <h1>Commande #{{ order.id }}</h1>
+            <span class="status-badge large" [ngClass]="getOrderStatusBadgeClass(order.status)">
+                {{ getOrderStatusLabel(order.status) }}
+            </span>
+        </div>
+    </div>
+
+    <div class="loading-state" *ngIf="isLoading">
+        <div class="spinner"></div>
+        <p>Chargement de la commande...</p>
+    </div>
+
+    <div class="error-state" *ngIf="errorMessage">
+        <p>{{ errorMessage }}</p>
+        <button (click)="refresh()">Réessayer</button>
+    </div>
+
+    <div class="order-content" *ngIf="order && !isLoading">
+        <!-- Info Cards -->
+        <div class="info-grid">
+            <div class="info-card">
+                <h3>Informations</h3>
+                <div class="info-row">
+                    <span class="label">Date:</span>
+                    <span class="value">{{ formatDate(order.createdAt) }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Entrepôt:</span>
+                    <span class="value">{{ order.warehouseCode }}</span>
+                </div>
+            </div>
+
+            <div class="info-card">
+                <h3>Résumé</h3>
+                <div class="info-row">
+                    <span class="label">Articles:</span>
+                    <span class="value">{{ getTotalItems() }}</span>
+                </div>
+                <div class="info-row total">
+                    <span class="label">Total:</span>
+                    <span class="value">{{ formatPrice(getOrderTotal()) }}</span>
+                </div>
+            </div>
+
+            <div class="info-card shipment" *ngIf="order.shipment">
+                <h3>Expédition</h3>
+                <div class="info-row">
+                    <span class="label">Suivi:</span>
+                    <span class="value tracking">{{ order.shipment.trackingNumber }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Statut:</span>
+                    <span class="value status">{{ getShipmentStatusLabel(order.shipment.status) }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="order-progress">
+            <div class="progress-bar">
+                <div class="progress-fill" [style.width.%]="getProgressPercentage()"></div>
+            </div>
+            <div class="progress-steps">
+                <div class="step" [class.active]="getProgressPercentage() >= 20">Créée</div>
+                <div class="step" [class.active]="getProgressPercentage() >= 60">Réservée</div>
+                <div class="step" [class.active]="getProgressPercentage() >= 85">Expédiée</div>
+                <div class="step" [class.active]="getProgressPercentage() >= 100">Livrée</div>
+            </div>
+        </div>
+
+        <!-- Order Lines -->
+        <div class="lines-section">
+            <h3>Articles</h3>
+            <div class="lines-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Produit</th>
+                            <th>SKU</th>
+                            <th>Prix Unitaire</th>
+                            <th>Quantité</th>
+                            <th>Total</th>
+                            <th>Statut</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let line of order.lines">
+                            <td>Produit #{{ line.productId }}</td>
+                            <td class="sku">{{ line.productSku }}</td>
+                            <td>{{ formatPrice(line.price) }}</td>
+                            <td>{{ line.quantity }}</td>
+                            <td class="line-total">{{ formatPrice(line.price * line.quantity) }}</td>
+                            <td>
+                                <span class="line-status" [ngClass]="getLineStatusBadgeClass(line.status)">
+                                    {{ getLineStatusLabel(line.status) }}
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="order-actions" *ngIf="canReserve()">
+            <button class="btn-primary" (click)="reserveStock()">
+                Réserver le Stock
+            </button>
+        </div>
+    </div>
+</div>

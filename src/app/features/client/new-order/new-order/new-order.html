@@ -1,0 +1,105 @@
+<div class="new-order-page">
+    <div class="page-header">
+        <div class="header-content">
+            <h1>Nouvelle Commande</h1>
+            <p>Créez une nouvelle commande en sélectionnant un entrepôt et des produits</p>
+        </div>
+    </div>
+
+    <div class="order-form-container">
+        <form [formGroup]="orderForm" (ngSubmit)="onSubmit()">
+
+            <!-- General Info -->
+            <section class="form-section">
+                <h3>Informations Générales</h3>
+                <div class="form-group" [class.error]="warehouseId?.invalid && warehouseId?.touched">
+                    <label for="warehouse">Entrepôt de départ</label>
+                    <select id="warehouse" formControlName="warehouseId">
+                        <option [ngValue]="null">Sélectionnez un entrepôt</option>
+                        <option *ngFor="let wh of warehouses" [value]="wh.id">
+                            {{ wh.code }} - {{ wh.name }}
+                        </option>
+                    </select>
+                    <div class="error-message" *ngIf="warehouseId?.errors?.['required'] && warehouseId?.touched">
+                        L'entrepôt est requis
+                    </div>
+                </div>
+            </section>
+
+            <!-- Order Lines -->
+            <section class="form-section lines-section">
+                <div class="section-header">
+                    <h3>Lignes de commande</h3>
+                    <button type="button" class="btn-add" (click)="addLine()">
+                        + Ajouter un produit
+                    </button>
+                </div>
+
+                <div class="lines-list" formArrayName="lines">
+                    <div class="line-item" *ngFor="let line of lines.controls; let i = index" [formGroupName]="i">
+                        <div class="line-header">
+                            <span class="line-number">Article #{{ i + 1 }}</span>
+                            <button type="button" class="btn-remove" (click)="removeLine(i)"
+                                [disabled]="lines.length === 1">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <div class="line-fields">
+                            <div class="form-group product-select"
+                                [class.error]="line.get('productId')?.invalid && line.get('productId')?.touched">
+                                <label>Produit</label>
+                                <select formControlName="productId">
+                                    <option [ngValue]="null">Sélectionnez un produit</option>
+                                    <option *ngFor="let product of products" [value]="product.id">
+                                        {{ product.sku }} - {{ product.name }} ({{ formatPrice(product.price) }})
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="form-group quantity-input"
+                                [class.error]="line.get('quantity')?.invalid && line.get('quantity')?.touched">
+                                <label>Quantité</label>
+                                <input type="number" formControlName="quantity" min="1">
+                            </div>
+
+                            <div class="line-total-display">
+                                <label>Total Ligne</label>
+                                <span class="value">{{ formatPrice(getLineTotal(i)) }}</span>
+                            </div>
+                        </div>
+
+                        <div class="line-error"
+                            *ngIf="line.get('productId')?.invalid && line.get('productId')?.touched">
+                            Le produit est requis
+                        </div>
+                    </div>
+                </div>
+
+                <div class="order-summary">
+                    <div class="summary-row total">
+                        <span class="label">Total Commande:</span>
+                        <span class="value">{{ formatPrice(getGrandTotal()) }}</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Form Actions -->
+            <div class="form-actions">
+                <button type="button" class="btn-cancel" (click)="cancel()">Annuler</button>
+                <button type="submit" class="btn-submit" [disabled]="orderForm.invalid || isLoading">
+                    <span *ngIf="!isLoading">Créer la commande</span>
+                    <span *ngIf="isLoading" class="spinner-sm"></span>
+                </button>
+            </div>
+
+            <div class="error-banner" *ngIf="errorMessage">
+                {{ errorMessage }}
+            </div>
+        </form>
+    </div>
+</div>

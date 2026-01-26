@@ -1,0 +1,91 @@
+<div class="tracking-page">
+    <div class="page-header">
+        <div class="header-content">
+            <h1>Suivi des Expéditions</h1>
+            <p>Suivez l'état de vos commandes en temps réel</p>
+        </div>
+        <div class="header-actions">
+            <button class="btn-refresh" (click)="refresh()" [class.loading]="isLoading">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2">
+                    <path d="M23 4v6h-6"></path>
+                    <path d="M1 20v-6h6"></path>
+                    <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                </svg>
+                Actualiser
+            </button>
+        </div>
+    </div>
+
+    <div class="tracking-content">
+        <div class="loading-state" *ngIf="isLoading">
+            <div class="spinner"></div>
+            <p>Recherche des expéditions en cours...</p>
+        </div>
+
+        <div class="error-state" *ngIf="errorMessage">
+            <p>{{ errorMessage }}</p>
+            <button (click)="refresh()">Réessayer</button>
+        </div>
+
+        <div class="empty-state" *ngIf="!isLoading && !errorMessage && ordersWithShipment.length === 0">
+            <div class="empty-icon">🚚</div>
+            <h3>Aucune expédition en cours</h3>
+            <p>Vous n'avez aucune commande en cours d'expédition pour le moment.</p>
+            <a routerLink="/client/orders" class="btn-primary">Voir mes commandes</a>
+        </div>
+
+        <div class="shipments-list" *ngIf="!isLoading && ordersWithShipment.length > 0">
+            <div class="shipment-card" *ngFor="let order of ordersWithShipment">
+                <div class="card-header">
+                    <div class="shipment-info">
+                        <span class="tracking-number">Suivi: {{ order.shipment?.trackingNumber }}</span>
+                        <span class="status-badge" [ngClass]="getShipmentStatusBadgeClass(order.shipment!.status)">
+                            {{ getShipmentStatusLabel(order.shipment!.status) }}
+                        </span>
+                    </div>
+                    <div class="order-ref">
+                        Commande #{{ order.id }} du {{ formatDate(order.createdAt) }}
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="tracking-timeline">
+                        <div class="timeline-step" *ngFor="let step of getDeliverySteps(order)"
+                            [class.completed]="step.completed" [class.active]="step.active">
+                            <div class="step-icon">
+                                <svg *ngIf="step.completed" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                                <div *ngIf="!step.completed" class="step-dot"></div>
+                            </div>
+                            <span class="step-label">{{ step.label }}</span>
+                        </div>
+                    </div>
+
+                    <div class="shipment-details">
+                        <div class="detail-item">
+                            <span class="label">Transporteur</span>
+                            <span class="value">DHL Express</span> <!-- Placeholder as model missing carrier -->
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">Total Commande</span>
+                            <span class="value">{{ formatPrice(calculateTotal(order)) }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">Adresse</span>
+                            <span class="value">{{ order.warehouseCode }}</span> <!-- Placeholder for address -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-footer">
+                    <a [routerLink]="['/client/orders', order.id]" class="btn-outline">
+                        Détails de la commande
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

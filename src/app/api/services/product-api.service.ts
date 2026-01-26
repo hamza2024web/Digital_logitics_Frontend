@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { Product, ProductCreateRequest } from '../models/product.model';
+import {Product, ProductCreateRequest, ProductQuery, ProductResponse} from '../models/product.model';
 
 @Injectable({
   providedIn: 'root'
@@ -36,5 +36,18 @@ export class ProductApiService {
   toggleProductStatus(id: number, active: boolean): Observable<Product> {
     const params = new HttpParams().set('active', active.toString());
     return this.http.patch<Product>(`${this.API_URL}/${id}/status`,null,{ params })
+  }
+
+  list(query : ProductQuery): Observable<ProductResponse> {
+    let params = new HttpParams()
+      .set('page', query.page.toString())
+      .set('size', query.size.toString())
+      .set('active', query.active.toString());
+
+    if (query.sort) params = params.set('sort', query.sort);
+    if (query.search) params = params.set('size', query.search)
+    if (query.category) params = params.set('category', query.category);
+
+    return this.http.get<ProductResponse>(this.API_URL, { params });
   }
 }

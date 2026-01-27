@@ -1,88 +1,74 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { ProductApiService } from '../../../api/services/product-api.service';
-import { Product } from '../../../api/models/product.model';
+import {Store} from '@ngrx/store';
+import {
+  selectError,
+  selectItems,
+  selectLoading,
+  selectQuery,
+  selectTotalElements, selectTotalPages
+} from '../../../store/products/products.selectors';
+import {ProductsActions} from '../../../store/products/product.actions';
 
 @Component({
   selector: 'app-products-catalog',
   imports: [CommonModule, RouterLink],
   templateUrl: './products-catalog.html',
   styleUrl: './products-catalog.scss',
+  standalone: true,
 })
 export class ProductsCatalog implements OnInit {
-  products: Product[] = [];
-  filteredProducts: Product[] = [];
-  isLoading = false;
-  errorMessage = '';
-  searchTerm = '';
-  sortBy: string = 'name';
+  private store = inject(Store);
 
-  constructor(private productApiService: ProductApiService) { }
+  products$ = this.store.select(selectItems);
+  loading$ = this.store.select(selectLoading);
+  error$ = this.store.select(selectError);
+  query$ = this.store.select(selectQuery);
+  totalElements$ = this.store.select(selectTotalElements);
+  totalPages = this.store.select(selectTotalPages);
+
+  categories = ['Electronics','Home','Fashion','Sports'];
 
   ngOnInit(): void {
-    this.loadProducts();
-  }
-
-  loadProducts(): void {
-    this.isLoading = true;
-    this.errorMessage = '';
-
-    this.productApiService.getAllProducts().subscribe({
-      next: (products: Product[]) => {
-        // Filtrer uniquement les produits actifs
-        this.products = products.filter(p => p.active);
-        this.filteredProducts = this.products;
-        this.applySorting();
-        this.isLoading = false;
-      },
-      error: (error: any) => {
-        this.errorMessage = error.message || 'Erreur lors du chargement des produits';
-        this.isLoading = false;
-      }
-    });
+    this.store.dispatch(ProductsActions.loadProducts({
+      query: { page: 0, size: 10, active: true}
+    }));
   }
 
   onSearch(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    this.searchTerm = input.value.toLowerCase();
-    this.applyFilters();
+    const search = (event.target as HTMLInputElement).value;
+
+    this.store.dispatch(ProductsActions.setQuery({
+      partialQuery: { search, page:0 }
+    }));
   }
 
-  onSort(event: Event): void {
-    const select = event.target as HTMLSelectElement;
-    this.sortBy = select.value;
-    this.applySorting();
+  onCategoryChange(event: Event): void {
+    const category = (event.target as HTMLSelectElement).value;
+
+    this.store.dispatch(ProductsActions.setQuery({
+      partialQuery: { category: category || undefined, page: 0}
+    }));
   }
 
-  applyFilters(): void {
-    this.filteredProducts = this.products.filter(product => {
-      return !this.searchTerm ||
-        product.name.toLowerCase().includes(this.searchTerm) ||
-        product.sku.toLowerCase().includes(this.searchTerm);
-    });
-    this.applySorting();
+  onPageChange(page: number): void {
+    this.store.dispatch(ProductsActions.setQuery({
+      partialQuery: { page }
+    }));
   }
 
-  applySorting(): void {
-    switch (this.sortBy) {
-      case 'name':
-        this.filteredProducts.sort((a, b) => a.name.localeCompare(b.name));
-        break;
-      case 'price-asc':
-        this.filteredProducts.sort((a, b) => a.price - b.price);
-        break;
-      case 'price-desc':
-        this.filteredProducts.sort((a, b) => b.price - a.price);
-        break;
-    }
+  onSizeChange(event: Event): void {
+    const size = parseInt((event.target as HTMLSelectElement).value, 10);
+    this.store.dispatch(ProductsActions.setQuery({
+      partialQuery: { size, page:0 }
+    }));
   }
 
-  resetFilters(): void {
-    this.searchTerm = '';
-    this.sortBy = 'name';
-    this.filteredProducts = this.products;
-    this.applySorting();
+  onSort(field: string): void {
+    this.store.dispatch(ProductsActions.setQuery({
+      partialQuery: { sort: `${field},asc`, page:0 }
+    }));
   }
 
   formatPrice(price: number): string {

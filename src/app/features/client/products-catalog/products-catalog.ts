@@ -26,7 +26,7 @@ export class ProductsCatalog implements OnInit {
   error$ = this.store.select(selectError);
   query$ = this.store.select(selectQuery);
   totalElements$ = this.store.select(selectTotalElements);
-  totalPages = this.store.select(selectTotalPages);
+  totalPages$ = this.store.select(selectTotalPages);
 
   categories = ['Electronics','Home','Fashion','Sports'];
 

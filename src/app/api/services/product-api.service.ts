@@ -1,9 +1,9 @@
 // src/app/api/services/product-api.service.ts
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpParams} from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import {map, Observable} from 'rxjs';
 import { environment } from '../../../environments/environment';
-import {Product, ProductCreateRequest, ProductQuery, ProductResponse} from '../models/product.model';
+import { Product, ProductCreateRequest, ProductQuery, ProductResponse } from '../models/product.model';
 
 @Injectable({
   providedIn: 'root'
@@ -11,10 +11,10 @@ import {Product, ProductCreateRequest, ProductQuery, ProductResponse} from '../m
 export class ProductApiService {
   private readonly API_URL = `${environment.apiBaseUrl}/api/admin/products`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getAllProducts(): Observable<Product[]> {
-    return this. http.get<Product[]>(this.API_URL);
+    return this.http.get<Product[]>(this.API_URL);
   }
 
   getProductById(id: number): Observable<Product> {
@@ -25,7 +25,7 @@ export class ProductApiService {
     return this.http.post<Product>(this.API_URL, product);
   }
 
-  updateProduct(id: number, product:  Partial<ProductCreateRequest>): Observable<Product> {
+  updateProduct(id: number, product: Partial<ProductCreateRequest>): Observable<Product> {
     return this.http.put<Product>(`${this.API_URL}/${id}`, product);
   }
 
@@ -35,10 +35,10 @@ export class ProductApiService {
 
   toggleProductStatus(id: number, active: boolean): Observable<Product> {
     const params = new HttpParams().set('active', active.toString());
-    return this.http.patch<Product>(`${this.API_URL}/${id}/status`,null,{ params })
+    return this.http.patch<Product>(`${this.API_URL}/${id}/status`, null, { params })
   }
 
-  list(query : ProductQuery): Observable<ProductResponse> {
+  list(query: ProductQuery): Observable<ProductResponse> {
     let params = new HttpParams()
       .set('page', query.page.toString())
       .set('size', query.size.toString())
@@ -48,6 +48,12 @@ export class ProductApiService {
     if (query.search) params = params.set('search', query.search)
     if (query.category) params = params.set('category', query.category);
 
-    return this.http.get<ProductResponse>(this.API_URL, { params });
+    return this.http.get<any>(this.API_URL, { params }).pipe(
+      map(response => ({
+        items: response.content,
+        totalElements: response.totalElements,
+        totalPages: response.totalPages
+      }))
+    );
   }
 }

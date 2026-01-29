@@ -5,7 +5,7 @@ import {Store} from '@ngrx/store';
 import {ProductsActions} from './product.actions';
 import {selectQuery} from './products.selectors';
 import {concatLatestFrom} from '@ngrx/operators';
-import {catchError, map, of, switchMap} from 'rxjs';
+import {catchError, map, of, switchMap, tap} from 'rxjs';
 
 @Injectable()
 export class ProductsEffects {
@@ -19,10 +19,15 @@ export class ProductsEffects {
       concatLatestFrom(() => this.store.select(selectQuery)),
       switchMap(([action, query]) =>
         this.productService.list(query).pipe(
-          map(response => ProductsActions.loadProductsSuccess({ response })),
-          catchError(error => of(ProductsActions.loadProductsFailure({ error })))
+          tap(() => console.log('Effect triggered with query:', query)),
+          map(response =>
+            ProductsActions.loadProductsSuccess({ response })
+          ),
+          catchError(error =>
+            of(ProductsActions.loadProductsFailure({ error }))
+          )
         )
       )
     )
-  )
+  );
 }

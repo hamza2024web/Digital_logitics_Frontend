@@ -1,9 +1,17 @@
-// src/app/features/admin/products/products-list/products-list.component.ts
-import { Component, OnInit } from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ProductApiService } from '../../../../api/services/product-api.service';
 import { Product } from '../../../../api/models/product.model';
+import {Store} from '@ngrx/store';
+import {
+  selectError,
+  selectItems,
+  selectLoading,
+  selectQuery,
+  selectTotalElements, selectTotalPages
+} from '../../../../store/products/products.selectors';
+import {ProductsActions} from '../../../../store/products/product.actions';
 
 @Component({
   selector: 'app-products-list',
@@ -13,108 +21,82 @@ import { Product } from '../../../../api/models/product.model';
   styleUrls: ['./products-list.scss']
 })
 export class ProductsListComponent implements OnInit {
-  products: Product[] = [];
-  filteredProducts: Product[] = [];
-  isLoading = false;
-  errorMessage = '';
-  searchTerm = '';
+  private store = inject(Store);
+  private productApiService = inject(ProductApiService);
 
-  filterActive: string = '';
-  filterPrice: number | null = null;
+  products$ = this.store.select(selectItems);
+  loading$ = this.store.select(selectLoading);
+  error$ = this.store.select(selectError);
+  query$ = this.store.select(selectQuery);
+  totalElements$ = this.store.select(selectTotalElements);
+  totalPages$ = this.store.select(selectTotalPages);
 
-  constructor(private productApiService: ProductApiService) {}
 
   ngOnInit(): void {
-    this.loadProducts();
-  }
-
-  loadProducts(): void {
-    this.isLoading = true;
-    this.errorMessage = '';
-
-    this.productApiService. getAllProducts().subscribe({
-      next: (products) => {
-        this.products = products;
-        this.filteredProducts = products;
-        this.isLoading = false;
-      },
-      error:  (error) => {
-        this.errorMessage = error.message || 'Erreur lors du chargement des produits';
-        this.isLoading = false;
-      }
-    });
+    this.store.dispatch(ProductsActions.loadProducts({
+      query: { page: 0, size: 10, active: undefined as any}
+    }));
   }
 
   onSearch(event:  Event): void {
-    const input = event.target as HTMLInputElement;
-    this.searchTerm = input.value.toLowerCase();
-    this.applyFilters();
+    const search = (event.target as HTMLInputElement).value;
+
+    this.store.dispatch(ProductsActions.setQuery({
+      partialQuery: { search, page:0 }
+    }));
   }
 
   onFilterStatus(event: Event): void {
-    const select = event.target as HTMLSelectElement;
-    this.filterActive = select.value;
-    this.applyFilters();
+    const value = (event.target as HTMLSelectElement).value;
+    const active = value === '' ? undefined : (value === 'active');
+
+    this.store.dispatch(ProductsActions.setQuery({
+      partialQuery: { active, page: 0}
+    }));
   }
 
-  applyFilters(): void {
-    this.filteredProducts = this.products.filter(product => {
-      const matchesSearch = !this.searchTerm ||
-        product.sku. toLowerCase().includes(this.searchTerm) ||
-        product.name.toLowerCase().includes(this.searchTerm);
-
-      const matchesStatus = ! this.filterActive ||
-        (this.filterActive === 'active' && product.active) ||
-        (this.filterActive === 'inactive' && !product.active);
-
-      return matchesSearch && matchesStatus;
-    });
+  onPageChange(page: number): void {
+    this.store.dispatch(ProductsActions.setQuery({
+      partialQuery: { page }
+    }));
   }
 
-  resetFilters(): void {
-    this.searchTerm = '';
-    this.filterActive = '';
-    this.filterPrice = null;
-    this.filteredProducts = this. products;
+  onSizeChange(event: Event): void {
+    const size = parseInt((event.target as HTMLSelectElement).value, 10);
+    this.store.dispatch(ProductsActions.setQuery({
+      partialQuery: { size, page:0 }
+    }));
   }
 
-  toggleProductStatus(product: Product): void {
+  onSort(field: string): void {
+    this.store.dispatch(ProductsActions.setQuery({
+      partialQuery: { sort: `${field},asc`, page:0 }
+    }));
+  }
+
+
+  toggleStatusProduct(product: Product): void {
     const action = product.active ? 'désactiver' : 'activer';
+    if (!confirm(`Voulez-vous vraiment ${action} le produit ${product.name} ?`)) return;
 
-    if (!confirm(`Voulez-vous vraiment ${action} le produit ${product.name} ? `)) {
-      return;
-    }
-
-    this.productApiService.toggleProductStatus(product. id, !product.active).subscribe({
-      next: (updatedProduct) => {
-        // Mettre à jour dans la liste
-        const index = this.products.findIndex(p => p.id === updatedProduct. id);
-        if (index !== -1) {
-          this.products[index] = updatedProduct;
-        }
-        this.applyFilters();
+    this.productApiService.toggleProductStatus(product.id, !product.active).subscribe({
+      next: () => {
+        this.store.dispatch(ProductsActions.loadProducts({ query: {} as any }));
         alert(`Produit ${action} avec succès`);
       },
-      error: (error) => {
-        alert(`Erreur lors de la modification: ${error.message}`);
-      }
+      error: (error) => alert(`Erreur: ${error.message}`)
     });
   }
 
   deleteProduct(product: Product): void {
-    if (!confirm(`Voulez-vous vraiment supprimer le produit ${product.name} ?\nCette action est irréversible.`)) {
-      return;
-    }
+    if (!confirm(`Voulez-vous vraiment supprimer ${product.name} ?`)) return;
 
     this.productApiService.deleteProduct(product.id).subscribe({
       next: () => {
-        this.products = this.products.filter(p => p.id !== product.id);
-        this.applyFilters();
-        alert('Produit supprimé avec succès');
+        this.store.dispatch(ProductsActions.loadProducts({ query: {} as any }));
+        alert('Produit supprimé');
       },
-      error: (error) => {
-        alert(`Erreur lors de la suppression:  ${error.message}`);
-      }
+      error: (error) => alert(`Erreur: ${error.message}`)
     });
   }
 

@@ -54,7 +54,7 @@
   </section>
 
   <!-- Message de chargement -->
-  @if (isLoading) {
+  @if (isLoading$ | undefined) {
   <div class="loading-state">
     <div class="spinner"></div>
     <p>Chargement des produits... </p>

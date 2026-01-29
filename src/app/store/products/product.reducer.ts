@@ -1,6 +1,6 @@
-import {createFeature, createReducer, on} from '@ngrx/store';
-import {Product} from '../../api/models/product.model';
-import {ProductsActions} from './product.actions';
+import { createFeature, createReducer, on } from '@ngrx/store';
+import { Product } from '../../api/models/product.model';
+import { ProductsActions } from './product.actions';
 
 export interface ProductState {
   items: Product[];
@@ -8,7 +8,7 @@ export interface ProductState {
   totalPages: number;
   loading: boolean;
   error: any;
-  query : {
+  query: {
     page: number,
     size: number,
     sort?: string,
@@ -24,7 +24,7 @@ const initialState: ProductState = {
   totalPages: 0,
   loading: false,
   error: null,
-  query : { page:0 , size : 10 , active : true}
+  query: { page: 0, size: 10, active: true }
 };
 
 export const productsFeature = createFeature({
@@ -33,10 +33,11 @@ export const productsFeature = createFeature({
     initialState,
     on(ProductsActions.setQuery, (state, { partialQuery }) => ({
       ...state,
-      query: { ...state.query, ...partialQuery}
+      query: { ...state.query, ...partialQuery }
     })),
-    on(ProductsActions.loadProducts, (state) => ({
+    on(ProductsActions.loadProducts, (state, { query }) => ({
       ...state,
+      query: { ...state.query, ...query},
       loading: true,
       error: null
     })),

@@ -1,7 +1,7 @@
 // src/app/api/services/product-api.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import {map, Observable} from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Product, ProductCreateRequest, ProductQuery, ProductResponse } from '../models/product.model';
 
@@ -14,7 +14,9 @@ export class ProductApiService {
   constructor(private http: HttpClient) { }
 
   getAllProducts(): Observable<Product[]> {
-    return this.http.get<Product[]>(this.API_URL);
+    return this.http.get<any>(this.API_URL).pipe(
+      map(response => Array.isArray(response) ? response : (response.content || []))
+    );
   }
 
   getProductById(id: number): Observable<Product> {
@@ -41,8 +43,11 @@ export class ProductApiService {
   list(query: ProductQuery): Observable<ProductResponse> {
     let params = new HttpParams()
       .set('page', query.page.toString())
-      .set('size', query.size.toString())
-      .set('active', query.active.toString());
+      .set('size', query.size.toString());
+
+    if (query.active !== undefined && query.active !== null) {
+      params = params.set('active', query.active.toString());
+    }
 
     if (query.sort) params = params.set('sort', query.sort);
     if (query.search) params = params.set('search', query.search)

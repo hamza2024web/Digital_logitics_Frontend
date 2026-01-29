@@ -75,7 +75,7 @@ export class ProductsListComponent implements OnInit {
   }
 
 
-  toggleStatusProduct(product: Product): void {
+  toggleProductStatus(product: Product): void {
     const action = product.active ? 'désactiver' : 'activer';
     if (!confirm(`Voulez-vous vraiment ${action} le produit ${product.name} ?`)) return;
 

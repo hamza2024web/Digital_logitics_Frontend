@@ -208,23 +208,6 @@ export class AdminDashboardComponent implements OnInit {
     ];
   }
 
-  getStrokeOffset(index: number): number {
-    let offset = 25; // Start from top
-    for (let i = 0; i < index; i++) {
-      offset -= this.userDistribution[i]?.percentage || 0;
-    }
-    return offset;
-  }
-
-  getRoleLabel(role: string): string {
-    const labels: Record<string, string> = {
-      'ADMIN': 'Admin',
-      'WAREHOUSE_MANAGER': 'Gestionnaire',
-      'CLIENT': 'Client'
-    };
-    return labels[role] || role;
-  }
-
   formatCurrency(amount: number): string {
     return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(amount);
   }
